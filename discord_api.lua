@@ -11,6 +11,7 @@ local ltn12 = require("ltn12")
 local socket = require("socket")
 local socketutil = require("socketutil")
 local bit = require("bit")
+local _ = require("discord_i18n")
 
 local API_BASE = "https://discord.com/api/v9"
 local USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
@@ -31,6 +32,8 @@ end
 local DiscordAPI = {
     token = nil,
     user = nil,
+    USER_AGENT = USER_AGENT,
+    stripNulls = stripNulls,
 }
 
 function DiscordAPI:new(o)
@@ -70,7 +73,7 @@ function DiscordAPI:request(method, path, body, no_auth, retried)
 
     if resp_headers == nil then
         logger.warn("Discord: network error", method, path, status or code)
-        return false, "Network error", nil
+        return false, _("Network error"), nil
     end
 
     local content = table.concat(sink)
@@ -115,7 +118,7 @@ function DiscordAPI:login(email, password)
     if not ok then
         err_data = err_data or {}
         if err_data.captcha_key or err_data.captcha_sitekey then
-            return false, "Discord is asking for a captcha. Log in with a token instead."
+            return false, _("Discord is asking for a captcha. Log in with a token instead.")
         end
         if err_data.errors then
             local e = err_data.errors.login or err_data.errors.password
@@ -132,9 +135,9 @@ function DiscordAPI:login(email, password)
         return true, nil, data.ticket
     end
     if data.suspended_user_token then
-        return false, "This account is suspended."
+        return false, _("This account is suspended.")
     end
-    return false, "Unexpected server response."
+    return false, _("Unexpected server response.")
 end
 
 function DiscordAPI:loginMFA(ticket, code)
@@ -145,7 +148,7 @@ function DiscordAPI:loginMFA(ticket, code)
     if ok and data and data.token then
         return true, data.token
     end
-    return false, data or "Invalid code"
+    return false, data or _("Invalid code")
 end
 
 function DiscordAPI:fetchMe()
@@ -176,12 +179,122 @@ function DiscordAPI:getDMChannels()
     return self:get("/users/@me/channels")
 end
 
+function DiscordAPI:getChannel(channel_id)
+    return self:get("/channels/" .. channel_id)
+end
+
 function DiscordAPI:getMessages(channel_id, opts)
     opts = opts or {}
     local q = "?limit=" .. (opts.limit or 50)
     if opts.before then q = q .. "&before=" .. opts.before end
     if opts.after then q = q .. "&after=" .. opts.after end
+    if opts.around then q = q .. "&around=" .. opts.around end
     return self:get("/channels/" .. channel_id .. "/messages" .. q)
+end
+
+--- Fetches every message after `after_id`, following pages (oldest first).
+-- Returns ok, list, complete (false if max_pages was reached first).
+function DiscordAPI:getMessagesAfter(channel_id, after_id, max_pages)
+    local all = {}
+    local cursor = after_id
+    for __ = 1, max_pages or 5 do
+        local ok, page = self:getMessages(channel_id, { limit = 100, after = cursor })
+        if not ok then return false, page end
+        table.sort(page, function(a, b) return DiscordAPI.idLess(a.id, b.id) end)
+        for __, m in ipairs(page) do table.insert(all, m) end
+        if #page < 100 then return true, all, true end
+        cursor = page[#page].id
+    end
+    return true, all, false
+end
+
+function DiscordAPI:getPins(channel_id)
+    local ok, data, code = self:get("/channels/" .. channel_id .. "/messages/pins?limit=50")
+    if ok and data and data.items then
+        local list = {}
+        for __, item in ipairs(data.items) do table.insert(list, item.message) end
+        return true, list
+    end
+    if not ok and code ~= 404 then return ok, data, code end
+    return self:get("/channels/" .. channel_id .. "/pins")
+end
+
+local function urlEncode(s)
+    return (s:gsub("[^%w%-_%.~]", function(c) return string.format("%%%02X", c:byte()) end))
+end
+DiscordAPI.urlEncode = urlEncode
+
+--- Searches messages. Returns ok, list_of_messages_or_error, total.
+function DiscordAPI:searchMessages(channel_id, guild_id, query)
+    local path
+    if guild_id then
+        path = "/guilds/" .. guild_id .. "/messages/search?channel_id=" .. channel_id .. "&content=" .. urlEncode(query)
+    else
+        path = "/channels/" .. channel_id .. "/messages/search?content=" .. urlEncode(query)
+    end
+    local ok, data, code = self:get(path)
+    if ok and code == 202 then
+        return false, _("The search index is not ready yet, try again in a few seconds.")
+    end
+    if not ok then return false, data end
+    local list = {}
+    for __, group in ipairs(data.messages or {}) do
+        if group[1] then table.insert(list, group[1]) end
+    end
+    return true, list, data.total_results
+end
+
+local function emojiPath(emoji)
+    if emoji.id then
+        return urlEncode((emoji.name or "_") .. ":" .. emoji.id)
+    end
+    return urlEncode(emoji.name)
+end
+
+function DiscordAPI:addReaction(channel_id, message_id, emoji)
+    return self:request("PUT", "/channels/" .. channel_id .. "/messages/" .. message_id
+        .. "/reactions/" .. emojiPath(emoji) .. "/@me?location=Message")
+end
+
+function DiscordAPI:removeReaction(channel_id, message_id, emoji)
+    return self:delete("/channels/" .. channel_id .. "/messages/" .. message_id
+        .. "/reactions/" .. emojiPath(emoji) .. "/@me?location=Message")
+end
+
+function DiscordAPI:sendTyping(channel_id)
+    return self:post("/channels/" .. channel_id .. "/typing")
+end
+
+--- Threads of a forum/media channel (most recently active first).
+function DiscordAPI:searchThreads(channel_id, archived)
+    local ok, data = self:get("/channels/" .. channel_id .. "/threads/search?archived="
+        .. (archived and "true" or "false") .. "&sort_by=last_message_time&sort_order=desc&limit=25&offset=0")
+    if not ok then return false, data end
+    return true, data.threads or {}
+end
+
+function DiscordAPI:getArchivedThreads(channel_id)
+    local ok, data = self:get("/channels/" .. channel_id .. "/threads/archived/public?limit=25")
+    if not ok then return false, data end
+    return true, data.threads or {}
+end
+
+--- Downloads a URL to a file. Returns ok, error.
+function DiscordAPI:download(url, path)
+    local f = io.open(path, "wb")
+    if not f then return false, "cannot write " .. path end
+    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
+    local code, _, status = socket.skip(1, http.request{
+        url = url,
+        headers = { ["User-Agent"] = USER_AGENT },
+        sink = ltn12.sink.file(f),
+    })
+    socketutil:reset_timeout()
+    if code ~= 200 then
+        os.remove(path)
+        return false, status or tostring(code)
+    end
+    return true
 end
 
 --- Discord-style snowflake for the nonce, based on the current time.
@@ -242,12 +355,12 @@ function DiscordAPI:permissionResolver(guild, member)
     local user_id = self.user and self.user.id
     local guild_id = guild.id
     local roles_by_id = {}
-    for _, role in ipairs(guild.roles or {}) do
+    for __, role in ipairs(guild.roles or {}) do
         roles_by_id[role.id] = low32(role.permissions)
     end
     local member_roles = {}
     local base = roles_by_id[guild_id] or 0
-    for _, rid in ipairs(member.roles or {}) do
+    for __, rid in ipairs(member.roles or {}) do
         member_roles[rid] = true
         base = bit.bor(base, roles_by_id[rid] or 0)
     end
@@ -257,21 +370,21 @@ function DiscordAPI:permissionResolver(guild, member)
         if is_admin then return bit.bnot(0) end
         local perms = base
         local ows = channel.permission_overwrites or {}
-        for _, ow in ipairs(ows) do
+        for __, ow in ipairs(ows) do
             if ow.id == guild_id then
                 perms = bit.band(perms, bit.bnot(low32(ow.deny)))
                 perms = bit.bor(perms, low32(ow.allow))
             end
         end
         local allow, deny = 0, 0
-        for _, ow in ipairs(ows) do
+        for __, ow in ipairs(ows) do
             if ow.type == 0 and member_roles[ow.id] then
                 allow = bit.bor(allow, low32(ow.allow))
                 deny = bit.bor(deny, low32(ow.deny))
             end
         end
         perms = bit.bor(bit.band(perms, bit.bnot(deny)), allow)
-        for _, ow in ipairs(ows) do
+        for __, ow in ipairs(ows) do
             if ow.type == 1 and ow.id == user_id then
                 perms = bit.band(perms, bit.bnot(low32(ow.deny)))
                 perms = bit.bor(perms, low32(ow.allow))

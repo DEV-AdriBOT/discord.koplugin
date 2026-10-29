@@ -1,0 +1,554 @@
+# Spanish translation for discord.koplugin
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+msgid "Discord"
+msgstr "Discord"
+
+msgid "Network error"
+msgstr "Error de red"
+
+msgid "Discord is asking for a captcha. Log in with a token instead."
+msgstr "Discord pide un captcha. Inicia sesión con un token."
+
+msgid "This account is suspended."
+msgstr "Esta cuenta está suspendida."
+
+msgid "Unexpected server response."
+msgstr "Respuesta inesperada del servidor."
+
+msgid "Invalid code"
+msgstr "Código incorrecto"
+
+msgid "The search index is not ready yet, try again in a few seconds."
+msgstr "El índice de búsqueda aún no está listo, inténtalo en unos segundos."
+
+msgid "added someone to the group"
+msgstr "añadió a alguien al grupo"
+
+msgid "removed someone from the group"
+msgstr "quitó a alguien del grupo"
+
+msgid "started a call"
+msgstr "inició una llamada"
+
+msgid "changed the channel name"
+msgstr "cambió el nombre del canal"
+
+msgid "changed the channel icon"
+msgstr "cambió el icono del canal"
+
+msgid "pinned a message"
+msgstr "fijó un mensaje"
+
+msgid "joined the server"
+msgstr "se unió al servidor"
+
+msgid "boosted the server"
+msgstr "mejoró el servidor"
+
+msgid "started a thread"
+msgstr "creó un hilo"
+
+msgid "Older"
+msgstr "Anteriores"
+
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgid "Messages"
+msgstr "Mensajes"
+
+msgid "Write"
+msgstr "Escribir"
+
+msgid "forwarded:"
+msgstr "reenviado:"
+
+msgid "image"
+msgstr "imagen"
+
+msgid "file"
+msgstr "archivo"
+
+msgid "(edited)"
+msgstr "(editado)"
+
+msgid "(deleted message)"
+msgstr "(mensaje eliminado)"
+
+msgid "No messages yet."
+msgstr "Todavía no hay mensajes."
+
+msgid "%1 is typing…"
+msgstr "%1 está escribiendo…"
+
+msgid "Several people are typing…"
+msgstr "Varias personas están escribiendo…"
+
+msgid "Could not load messages: "
+msgstr "No se pudieron cargar los mensajes: "
+
+msgid "Refreshing…"
+msgstr "Actualizando…"
+
+msgid "No older messages"
+msgstr "No hay mensajes más antiguos"
+
+msgid "Edit message"
+msgstr "Editar mensaje"
+
+msgid "Reply to "
+msgstr "Responder a "
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Quick"
+msgstr "Rápidas"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Could not send: "
+msgstr "No se pudo enviar: "
+
+msgid "No quick replies. Add some in Settings."
+msgstr "No hay respuestas rápidas. Añade algunas en Ajustes."
+
+msgid "Quick replies"
+msgstr "Respuestas rápidas"
+
+msgid "Search members…"
+msgstr "Buscar miembros…"
+
+msgid "Mention"
+msgstr "Mencionar"
+
+msgid "Search members"
+msgstr "Buscar miembros"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "No results"
+msgstr "Sin resultados"
+
+msgid "Member search needs the real-time connection."
+msgstr "La búsqueda de miembros necesita la conexión en tiempo real."
+
+msgid "No messages"
+msgstr "No hay mensajes"
+
+msgid "Choose a message"
+msgstr "Elige un mensaje"
+
+msgid "Loading pinned messages…"
+msgstr "Cargando mensajes fijados…"
+
+msgid "Could not load pinned messages: "
+msgstr "No se pudieron cargar los mensajes fijados: "
+
+msgid "Pinned messages"
+msgstr "Mensajes fijados"
+
+msgid "Search in this channel"
+msgstr "Buscar en este canal"
+
+msgid "Searching…"
+msgstr "Buscando…"
+
+msgid "Results for «%1» (%2)"
+msgstr "Resultados de «%1» (%2)"
+
+msgid "View full"
+msgstr "Ver completo"
+
+msgid "Jump to message"
+msgstr "Ir al mensaje"
+
+msgid "Loading messages…"
+msgstr "Cargando mensajes…"
+
+msgid "Showing older messages. Use Refresh to go back to the latest."
+msgstr "Mostrando mensajes antiguos. Usa Actualizar para volver a los últimos."
+
+msgid "Downloading image…"
+msgstr "Descargando imagen…"
+
+msgid "Could not download the image: "
+msgstr "No se pudo descargar la imagen: "
+
+msgid "Images"
+msgstr "Imágenes"
+
+msgid "Could not react: "
+msgstr "No se pudo reaccionar: "
+
+msgid "Remove"
+msgstr "Quitar"
+
+msgid "Add"
+msgstr "Añadir"
+
+msgid "React"
+msgstr "Reaccionar"
+
+msgid "Reply"
+msgstr "Responder"
+
+msgid "View images (%1)"
+msgstr "Ver imágenes (%1)"
+
+msgid "No images"
+msgstr "Sin imágenes"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copied"
+msgstr "Copiado"
+
+msgid "Direct message"
+msgstr "Mensaje directo"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Delete this message?"
+msgstr "¿Eliminar este mensaje?"
+
+msgid "Go to bottom"
+msgstr "Ir al final"
+
+msgid "Go to top"
+msgstr "Ir al principio"
+
+msgid "Threads"
+msgstr "Hilos"
+
+msgid "Remove favorite"
+msgstr "Quitar de favoritos"
+
+msgid "Add to favorites"
+msgstr "Añadir a favoritos"
+
+msgid "Open as document"
+msgstr "Abrir como documento"
+
+msgid "Normal layout"
+msgstr "Diseño normal"
+
+msgid "Compact layout"
+msgstr "Diseño compacto"
+
+msgid "Smaller text"
+msgstr "Texto más pequeño"
+
+msgid "Larger text"
+msgstr "Texto más grande"
+
+msgid "Open Discord"
+msgstr "Abrir Discord"
+
+msgid "Discord: direct messages"
+msgstr "Discord: mensajes directos"
+
+msgid "Discord: open last chat"
+msgstr "Discord: abrir último chat"
+
+msgid "Discord: low battery, real-time connection paused"
+msgstr "Discord: batería baja, conexión en tiempo real pausada"
+
+msgid "Discord rejected the saved session. Please log in again."
+msgstr "Discord ha rechazado la sesión guardada. Vuelve a iniciar sesión."
+
+msgid "[file]"
+msgstr "[archivo]"
+
+msgid "Log in with email and password"
+msgstr "Iniciar sesión con email y contraseña"
+
+msgid "Log in with token"
+msgstr "Iniciar sesión con token"
+
+msgid "Load token from %1"
+msgstr "Cargar token desde %1"
+
+msgid "off"
+msgstr "desactivada"
+
+msgid "connected"
+msgstr "conectado"
+
+msgid "connecting…"
+msgstr "conectando…"
+
+msgid "disconnected"
+msgstr "desconectado"
+
+msgid "Real-time connection: %1"
+msgstr "Conexión en tiempo real: %1"
+
+msgid "Stay connected in background (notifications)"
+msgstr "Seguir conectado en segundo plano (avisos)"
+
+msgid "Notify direct messages"
+msgstr "Avisar de mensajes directos"
+
+msgid "Notify mentions"
+msgstr "Avisar de menciones"
+
+msgid "Battery saver"
+msgstr "Ahorro de batería"
+
+msgid "Below this battery level the background connection is paused and polling slows down."
+msgstr "Por debajo de este nivel de batería se pausa la conexión en segundo plano y se comprueban mensajes con menos frecuencia."
+
+msgid "Off"
+msgstr "Desactivado"
+
+msgid "Check for new messages without real-time connection"
+msgstr "Comprobar mensajes sin conexión en tiempo real"
+
+msgid "Every 10 seconds"
+msgstr "Cada 10 segundos"
+
+msgid "Every 15 seconds"
+msgstr "Cada 15 segundos"
+
+msgid "Every 30 seconds"
+msgstr "Cada 30 segundos"
+
+msgid "Every minute"
+msgstr "Cada minuto"
+
+msgid "Messages per load"
+msgstr "Mensajes por carga"
+
+msgid "Messages in \"Open as document\""
+msgstr "Mensajes en \"Abrir como documento\""
+
+msgid "Mark channels as read when opened"
+msgstr "Marcar canales como leídos al abrirlos"
+
+msgid "Show channels without access"
+msgstr "Mostrar canales sin acceso"
+
+msgid "Hidden servers (%1)"
+msgstr "Servidores ocultos (%1)"
+
+msgid "Add quick reply…"
+msgstr "Añadir respuesta rápida…"
+
+msgid "New quick reply"
+msgstr "Nueva respuesta rápida"
+
+msgid "Remove quick reply \"%1\"?"
+msgstr "¿Quitar la respuesta rápida \"%1\"?"
+
+msgid "Direct messages"
+msgstr "Mensajes directos"
+
+msgid "Open last chat"
+msgstr "Abrir último chat"
+
+msgid "Recent notifications (%1)"
+msgstr "Avisos recientes (%1)"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "Log out (%1)"
+msgstr "Cerrar sesión (%1)"
+
+msgid "Log out of Discord on this device?"
+msgstr "¿Cerrar sesión de Discord en este dispositivo?"
+
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+msgid "Loading…"
+msgstr "Cargando…"
+
+msgid "Error: "
+msgstr "Error: "
+
+msgid "session expired or invalid token. Please log in again."
+msgstr "sesión caducada o token inválido. Vuelve a iniciar sesión."
+
+msgid "Show all"
+msgstr "Ver todo"
+
+msgid "%1 — «%2»"
+msgstr "%1 — «%2»"
+
+msgid "Login failed: "
+msgstr "No se pudo iniciar sesión: "
+
+msgid "Logged in as %1"
+msgstr "Sesión iniciada como %1"
+
+msgid "Discord token"
+msgstr "Token de Discord"
+
+msgid "Paste or type your user token."
+msgstr "Pega o escribe tu token de usuario."
+
+msgid "Log in"
+msgstr "Entrar"
+
+msgid "Checking token…"
+msgstr "Comprobando token…"
+
+msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
+msgstr "No se encontró %1.\n\nCrea ese archivo con tu token dentro (por USB o SSH) y vuelve a intentarlo."
+
+msgid "The token file is empty."
+msgstr "El archivo del token está vacío."
+
+msgid "Two-factor authentication"
+msgstr "Verificación en dos pasos"
+
+msgid "Enter the 6-digit code from your authenticator app."
+msgstr "Introduce el código de 6 dígitos de tu app de autenticación."
+
+msgid "Verify"
+msgstr "Verificar"
+
+msgid "Verifying…"
+msgstr "Verificando…"
+
+msgid "Log in to Discord"
+msgstr "Iniciar sesión en Discord"
+
+msgid "Email or phone"
+msgstr "Email o teléfono"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Logging in…"
+msgstr "Iniciando sesión…"
+
+msgid "Removed from favorites"
+msgstr "Quitado de favoritos"
+
+msgid "Added to favorites"
+msgstr "Añadido a favoritos"
+
+msgid "Hidden servers"
+msgstr "Servidores ocultos"
+
+msgid "tap to show"
+msgstr "toca para mostrar"
+
+msgid "No hidden servers."
+msgstr "No hay servidores ocultos."
+
+msgid "Recent notifications"
+msgstr "Avisos recientes"
+
+msgid "No notifications."
+msgstr "No hay avisos."
+
+msgid "Log in first from Tools → Discord."
+msgstr "Primero inicia sesión desde Herramientas → Discord."
+
+msgid "(unnamed)"
+msgstr "(sin nombre)"
+
+msgid "Hide server"
+msgstr "Ocultar servidor"
+
+msgid "Loading servers…"
+msgstr "Cargando servidores…"
+
+msgid "Could not load servers: "
+msgstr "No se pudieron cargar los servidores: "
+
+msgid "No recent chats yet."
+msgstr "Todavía no hay chats recientes."
+
+msgid "Could not open the chat: "
+msgstr "No se pudo abrir el chat: "
+
+msgid "Group"
+msgstr "Grupo"
+
+msgid "group"
+msgstr "grupo"
+
+msgid "You have no direct messages."
+msgstr "No tienes mensajes directos."
+
+msgid "Loading direct messages…"
+msgstr "Cargando mensajes directos…"
+
+msgid "Could not load direct messages: "
+msgstr "No se pudieron cargar los mensajes directos: "
+
+msgid "no access"
+msgstr "sin acceso"
+
+msgid "forum"
+msgstr "foro"
+
+msgid "read-only"
+msgstr "solo lectura"
+
+msgid "announcements"
+msgstr "anuncios"
+
+msgid "No visible text channels."
+msgstr "No hay canales de texto visibles."
+
+msgid "Loading channels…"
+msgstr "Cargando canales…"
+
+msgid "Could not load channels: "
+msgstr "No se pudieron cargar los canales: "
+
+msgid "Loading threads…"
+msgstr "Cargando hilos…"
+
+msgid "Threads in #%1"
+msgstr "Hilos en #%1"
+
+msgid "archived"
+msgstr "archivado"
+
+msgid "No threads."
+msgstr "No hay hilos."
+
+msgid "Preparing document…"
+msgstr "Preparando documento…"
+
+msgid "Could not write the document."
+msgstr "No se pudo escribir el documento."
+
+msgid "Send to Discord"
+msgstr "Enviar a Discord"
+
+msgid "Open a chat or add a favorite first, then you can send highlights to it."
+msgstr "Abre un chat o añade un favorito primero; después podrás enviarle subrayados."
+
+msgid "Sending…"
+msgstr "Enviando…"
+
+msgid "Sent to %1"
+msgstr "Enviado a %1"
+
+msgid "Send highlight to…"
+msgstr "Enviar subrayado a…"
+
+msgid "No one to mention yet."
+msgstr "Todavía no hay nadie a quien mencionar."
