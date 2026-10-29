@@ -23,6 +23,7 @@ local Menu = require("ui/widget/menu")
 local NetworkMgr = require("ui/network/manager")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
+local TextBoxWidget = require("ui/widget/textboxwidget")
 local Size = require("ui/size")
 local TitleBar = require("ui/widget/titlebar")
 local UIManager = require("ui/uimanager")
@@ -204,13 +205,19 @@ function ChatView:init()
     self:buildLayout("")
 end
 
+local LINE_SPACINGS = { 0.15, 0.3, 0.5, 0.8 }
+local MARGINS = { small = Size.padding.small, normal = Size.padding.large, large = Size.padding.large * 3 }
+
 function ChatView:buildLayout(text, position)
-    local padding = Size.padding.large
+    local padding = MARGINS[self.settings.chat_margin or "normal"] or Size.padding.large
     local top_line_num
     if type(position) == "number" then top_line_num = position end
-    self.scroll_widget = ScrollTextWidget:new{
+    -- ScrollTextWidget does not pass line_height on: use the class default while building
+    local default_line_height = TextBoxWidget.line_height
+    TextBoxWidget.line_height = self.settings.chat_line_height or default_line_height
+    local ok, widget = pcall(ScrollTextWidget.new, ScrollTextWidget, {
         text = text,
-        face = Font:getFace("x_smallinfofont", self.font_size),
+        face = Font:getFace(self.settings.chat_font or "x_smallinfofont", self.font_size),
         width = self.width - 2 * padding,
         height = self.text_height - 2 * padding,
         dialog = self,
@@ -218,7 +225,10 @@ function ChatView:buildLayout(text, position)
         justified = false,
         auto_para_direction = true,
         top_line_num = top_line_num,
-    }
+    })
+    TextBoxWidget.line_height = default_line_height
+    if not ok then error(widget) end
+    self.scroll_widget = widget
     self.frame = FrameContainer:new{
         width = self.width,
         height = self.height,
@@ -1662,21 +1672,122 @@ function ChatView:showMenu()
             },
             {
                 {
-                    text = _("Smaller text"),
+                    text = _("Reading theme"),
                     callback = function()
                         close()
+                        self:themeDialog()
+                    end,
+                },
+            },
+        },
+    }
+    UIManager:show(dialog)
+end
+
+function ChatView:pickFont()
+    local FontList = require("fontlist")
+    local items = {
+        {
+            text = _("Default"),
+            mandatory = self.settings.chat_font == nil and "✓" or nil,
+            callback = function()
+                self.settings.chat_font = nil
+                self:redraw()
+            end,
+        },
+    }
+    local seen = {}
+    for __, path in ipairs(FontList:getFontList()) do
+        local name = FontList:getLocalizedFontName(path, 0) or path:match("([^/]+)%.%w+$") or path
+        if not seen[name] then
+            seen[name] = true
+            table.insert(items, {
+                text = name,
+                mandatory = self.settings.chat_font == path and "✓" or nil,
+                callback = function()
+                    self.settings.chat_font = path
+                    self:redraw()
+                end,
+            })
+        end
+    end
+    table.sort(items, function(a, b)
+        if a.text == _("Default") then return true end
+        if b.text == _("Default") then return false end
+        return a.text:lower() < b.text:lower()
+    end)
+    local menu
+    menu = Menu:new{
+        title = _("Chat font"),
+        item_table = items,
+        is_borderless = true,
+        is_popout = false,
+        covers_fullscreen = true,
+        onMenuChoice = function(_menu, item) item.callback() end,
+    }
+    menu.close_callback = function() UIManager:close(menu) end
+    UIManager:show(menu)
+end
+
+function ChatView:themeDialog()
+    local dialog
+    local spacing = self.settings.chat_line_height or 0.3
+    local spacing_names = { [0.15] = _("tight"), [0.3] = _("normal"), [0.5] = _("relaxed"), [0.8] = _("loose") }
+    local margin_names = { small = _("small"), normal = _("normal"), large = _("large") }
+    local margin = self.settings.chat_margin or "normal"
+    local font_name = self.settings.chat_font and (self.settings.chat_font:match("([^/]+)%.%w+$")) or _("Default")
+    dialog = ButtonDialog:new{
+        title = _("Reading theme"),
+        buttons = {
+            {{
+                text = T(_("Font: %1"), font_name),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:pickFont()
+                end,
+            }},
+            {{
+                text = T(_("Line spacing: %1"), spacing_names[spacing] or tostring(spacing)),
+                callback = function()
+                    UIManager:close(dialog)
+                    local next_value = LINE_SPACINGS[1]
+                    for i, value in ipairs(LINE_SPACINGS) do
+                        if value == spacing then next_value = LINE_SPACINGS[i % #LINE_SPACINGS + 1] end
+                    end
+                    self.settings.chat_line_height = next_value
+                    self:redraw()
+                    self:themeDialog()
+                end,
+            }},
+            {{
+                text = T(_("Margins: %1"), margin_names[margin]),
+                callback = function()
+                    UIManager:close(dialog)
+                    local order = { small = "normal", normal = "large", large = "small" }
+                    self.settings.chat_margin = order[margin]
+                    self:redraw()
+                    self:themeDialog()
+                end,
+            }},
+            {
+                {
+                    text = _("Smaller text"),
+                    callback = function()
+                        UIManager:close(dialog)
                         self.font_size = math.max(12, self.font_size - 2)
                         self.settings.font_size = self.font_size
                         self:redraw()
+                        self:themeDialog()
                     end,
                 },
                 {
                     text = _("Larger text"),
                     callback = function()
-                        close()
+                        UIManager:close(dialog)
                         self.font_size = math.min(36, self.font_size + 2)
                         self.settings.font_size = self.font_size
                         self:redraw()
+                        self:themeDialog()
                     end,
                 },
             },

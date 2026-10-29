@@ -729,3 +729,39 @@ msgstr "Cada 6 páginas"
 
 msgid "Every 12 pages"
 msgstr "Cada 12 páginas"
+
+msgid "Default"
+msgstr "Predeterminada"
+
+msgid "Chat font"
+msgstr "Fuente del chat"
+
+msgid "tight"
+msgstr "estrecho"
+
+msgid "normal"
+msgstr "normal"
+
+msgid "relaxed"
+msgstr "amplio"
+
+msgid "loose"
+msgstr "muy amplio"
+
+msgid "small"
+msgstr "pequeños"
+
+msgid "large"
+msgstr "grandes"
+
+msgid "Reading theme"
+msgstr "Tema de lectura"
+
+msgid "Font: %1"
+msgstr "Fuente: %1"
+
+msgid "Line spacing: %1"
+msgstr "Interlineado: %1"
+
+msgid "Margins: %1"
+msgstr "Márgenes: %1"
