@@ -38,13 +38,16 @@ function Update.isOlder(a, b)
 end
 
 --- GET with manual redirect handling (GitHub sends downloads to another host).
-local function fetch(url, sink, accept)
+-- Returns true and the body of the final response, or false and an error.
+local function fetch(url, accept)
     for _ = 1, 5 do
+        -- A fresh sink per hop: only the final response's body is kept
+        local chunks = {}
         socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
         local code, resp_headers, status = socket.skip(1, http.request{
             url = url,
             redirect = false,
-            sink = sink,
+            sink = ltn12.sink.table(chunks),
             headers = {
                 ["User-Agent"] = USER_AGENT,
                 ["Accept"] = accept or "application/vnd.github+json",
@@ -55,7 +58,7 @@ local function fetch(url, sink, accept)
         if (code == 301 or code == 302 or code == 303 or code == 307 or code == 308) and resp_headers.location then
             url = resp_headers.location
         elseif code == 200 then
-            return true
+            return true, table.concat(chunks)
         else
             return false, status or tostring(code)
         end
@@ -65,10 +68,9 @@ end
 
 --- Latest release: { version, notes, url (zip) } or nil, error.
 function Update.latest()
-    local chunks = {}
-    local ok, err = fetch("https://api.github.com/repos/" .. REPO .. "/releases/latest", ltn12.sink.table(chunks))
-    if not ok then return nil, err end
-    local decoded_ok, release = pcall(rapidjson.decode, table.concat(chunks))
+    local ok, body = fetch("https://api.github.com/repos/" .. REPO .. "/releases/latest")
+    if not ok then return nil, body end
+    local decoded_ok, release = pcall(rapidjson.decode, body)
     if not decoded_ok or type(release) ~= "table" or type(release.tag_name) ~= "string" then
         return nil, "unexpected answer from GitHub"
     end
@@ -93,13 +95,12 @@ function Update.install(release)
     local dir = DataStorage:getDataDir() .. "/cache"
     lfs.mkdir(dir)
     local zip_path = dir .. "/discord.koplugin-update.zip"
+    local ok, body = fetch(release.url, "application/octet-stream")
+    if not ok then return false, body end
     local f = io.open(zip_path, "wb")
     if not f then return false, "cannot write " .. zip_path end
-    local ok, err = fetch(release.url, ltn12.sink.file(f), "application/octet-stream")
-    if not ok then
-        os.remove(zip_path)
-        return false, err
-    end
+    f:write(body)
+    f:close()
 
     local Archiver = require("ffi/archiver")
     local reader = Archiver.Reader:new()
