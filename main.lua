@@ -162,6 +162,11 @@ function Discord:onNetworkConnected()
     end
 end
 
+function Discord:onFlushSettings()
+    -- Also sent when KOReader exits or restarts: keep the session resumable
+    Gateway:saveState()
+end
+
 function Discord:onSuspend()
     -- Keep the session so it can be resumed (cheaper than a new READY)
     Gateway:stop(true)
@@ -599,10 +604,11 @@ local function errorText(prefix, err, code)
 end
 
 --- Waits (a few seconds at most) for the gateway to be ready, so lists can use its state.
+-- Returns at once when the state cached on disk is available; lists refresh when READY lands.
 function Discord:waitForGateway()
     if not self:realtimeEnabled() then return false end
     Gateway:start(self.api)
-    if Gateway:isReady() then return true end
+    if Gateway:hasState() then return true end
     if Gateway.state ~= "connecting" then return false end
     local deadline = os.time() + 15
     while Gateway.state == "connecting" and os.time() < deadline do
@@ -1281,7 +1287,7 @@ end
 function Discord:homeItems(guilds)
     local items = self:favoriteItems()
     local dm_unread, dm_mentions = 0, 0
-    if Gateway:isReady() then dm_unread, dm_mentions = Gateway:dmUnread() end
+    if Gateway:hasState() then dm_unread, dm_mentions = Gateway:dmUnread() end
     local bold, mark = unreadMarks(dm_unread > 0, dm_mentions)
     if dm_unread > 0 and dm_mentions == 0 then mark = tostring(dm_unread) end
     table.insert(items, {
@@ -1319,7 +1325,7 @@ function Discord:homeItems(guilds)
             hidden_count = hidden_count + 1
         else
             local unread, mentions = false, 0
-            if Gateway:isReady() then unread, mentions = Gateway:guildUnread(g.id) end
+            if Gateway:hasState() then unread, mentions = Gateway:guildUnread(g.id) end
             local b, m = unreadMarks(unread, mentions)
             table.insert(items, {
                 text = cleanName(g.name),
@@ -1382,11 +1388,7 @@ function Discord:onOpenDiscord()
     self:withLoading(_("Loading servers…"), function()
         local guilds
         if self:waitForGateway() then
-            guilds = {}
-            for __, id in ipairs(Gateway.guild_order) do
-                local g = Gateway.guilds[id]
-                if g then table.insert(guilds, { id = g.id, name = g.name }) end
-            end
+            guilds = nil -- read live from the gateway, it may still be loading
         else
             local ok, data, code = self.api:getGuilds()
             if not ok then
@@ -1395,9 +1397,21 @@ function Discord:onOpenDiscord()
             end
             guilds = data
         end
-        table.sort(guilds, function(a, b) return a.name:lower() < b.name:lower() end)
+        local by_name = function(a, b) return a.name:lower() < b.name:lower() end
+        if guilds then table.sort(guilds, by_name) end
         local user = self.settings.user or {}
-        self:showList(_("Discord"), function() return self:homeItems(guilds) end,
+        self:showList(_("Discord"), function()
+            local list = guilds
+            if not list then
+                list = {}
+                for __, id in ipairs(Gateway.guild_order) do
+                    local g = Gateway.guilds[id]
+                    if g then table.insert(list, { id = g.id, name = g.name }) end
+                end
+                table.sort(list, by_name)
+            end
+            return self:homeItems(list)
+        end,
             user.global_name or user.username, function(item)
                 if item.guild then self:guildHoldDialog(item.guild) end
             end)
@@ -1528,7 +1542,7 @@ function Discord:dmItems(channels)
                 table.insert(usernames, r.username or "")
             end
             local bold, mark = false, nil
-            if Gateway:isReady() then
+            if Gateway:hasState() then
                 bold, mark = unreadMarks(Gateway:isUnread(ch) and not Gateway:isMuted(ch), Gateway:mentionCount(ch.id))
             end
             local subtitle = ch.type == CHANNEL_GROUP_DM and _("Group") or _("Direct message")
@@ -1624,7 +1638,7 @@ function Discord:channelItems(guild, channels, threads, perms_of)
         local name = cleanName(ch.name)
         local is_forum = ch.type == CHANNEL_FORUM or ch.type == CHANNEL_MEDIA
         local bold, mark = false, nil
-        if Gateway:isReady() and not is_forum then
+        if Gateway:hasState() and not is_forum then
             bold, mark = unreadMarks(Gateway:isUnread(ch) and not Gateway:isMuted(ch), Gateway:mentionCount(ch.id))
         end
         local label = mark
@@ -1676,7 +1690,7 @@ end
 
 function Discord:openGuild(guild_summary)
     self:withLoading(_("Loading channels…"), function()
-        local gw_guild = Gateway:isReady() and Gateway.guilds[guild_summary.id]
+        local gw_guild = Gateway:hasState() and Gateway.guilds[guild_summary.id]
         if gw_guild then
             Gateway:subscribeGuild(gw_guild.id)
             local guild = self:guildFromGateway(gw_guild.id)
@@ -1751,7 +1765,7 @@ function Discord:openThreadList(parent_id, guild, channel_names)
                 channel_names[th.id] = th.name
                 local archived = th.thread_metadata and th.thread_metadata.archived
                 local bold, mark = false, nil
-                if Gateway:isReady() then
+                if Gateway:hasState() then
                     bold, mark = unreadMarks(Gateway:isUnread(th), Gateway:mentionCount(th.id))
                 end
                 table.insert(items, {

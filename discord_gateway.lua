@@ -8,6 +8,7 @@ It is driven by UIManager timers, never by a blocking loop.
 @module koplugin.discord.gateway
 ]]
 
+local DataStorage = require("datastorage")
 local DiscordAPI = require("discord_api")
 local NetworkMgr = require("ui/network/manager")
 local UIManager = require("ui/uimanager")
@@ -87,12 +88,113 @@ function Gateway:isReady()
     return self.state == "ready"
 end
 
+--- True when lists can use our state: live, or loaded from the disk cache.
+function Gateway:hasState()
+    return self.state == "ready" or self.cached == true
+end
+
+-- Disk cache: lets lists open at once and the session be resumed after a restart
+
+local function stateFile()
+    return DataStorage:getDataDir() .. "/cache/discord/gateway.json"
+end
+
+function Gateway:saveState()
+    if not self.me or not (self.state == "ready" or self.cached) then return end
+    local private = {}
+    for _, id in ipairs(self.private_channels) do
+        if self.channels[id] then table.insert(private, self.channels[id]) end
+    end
+    local guilds = {}
+    for _, id in ipairs(self.guild_order) do
+        if self.guilds[id] then table.insert(guilds, self.guilds[id]) end
+    end
+    local ok, json = pcall(rapidjson.encode, {
+        version = 1,
+        saved_at = os.time(),
+        me = { id = self.me.id, username = v(self.me.username), global_name = v(self.me.global_name) },
+        session_id = self.session_id,
+        seq = self.seq,
+        resume_url = self.resume_url,
+        guilds = guilds,
+        private = private,
+        read_states = self.read_states,
+        muted_guilds = self.muted_guilds,
+        muted_channels = self.muted_channels,
+        suppress_everyone = self.suppress_everyone,
+        users = self.users,
+        relationships = self.relationships,
+    })
+    if not ok then
+        logger.warn("Discord: could not encode gateway state", json)
+        return
+    end
+    local lfs = require("libs/libkoreader-lfs")
+    lfs.mkdir(DataStorage:getDataDir() .. "/cache")
+    lfs.mkdir(DataStorage:getDataDir() .. "/cache/discord")
+    local f = io.open(stateFile() .. ".tmp", "w")
+    if not f then return end
+    f:write(json)
+    f:close()
+    os.rename(stateFile() .. ".tmp", stateFile())
+end
+
+--- Saves the state after `delay` seconds, then every 10 minutes while connected.
+function Gateway:scheduleSave(delay)
+    self._save = self._save or function()
+        if self.state ~= "ready" then return end
+        self:saveState()
+        self:scheduleSave(600)
+    end
+    UIManager:unschedule(self._save)
+    UIManager:scheduleIn(delay, self._save)
+end
+
+--- Loads the cached state of `user_id`. Returns true if something was loaded.
+function Gateway:loadState(user_id)
+    if self.state == "ready" or self.cached then return true end
+    local f = io.open(stateFile(), "r")
+    if not f then return false end
+    local ok, d = pcall(rapidjson.decode, f:read("*a"))
+    f:close()
+    if not ok or type(d) ~= "table" or d.version ~= 1 or not d.me or d.me.id ~= user_id then
+        return false
+    end
+    stripNulls(d)
+    self.me = d.me
+    self.session_id, self.seq, self.resume_url = d.session_id, d.seq, d.resume_url
+    self.guilds, self.guild_order, self.channels, self.private_channels = {}, {}, {}, {}
+    for _, g in ipairs(d.guilds or {}) do
+        self.guilds[g.id] = g
+        table.insert(self.guild_order, g.id)
+        self.nicks[g.id] = self.nicks[g.id] or {}
+        for _, list in ipairs({ g.channels or {}, g.threads or {} }) do
+            for _, ch in ipairs(list) do self.channels[ch.id] = ch end
+        end
+        g.channels, g.threads, g.roles, g.my_roles = g.channels or {}, g.threads or {}, g.roles or {}, g.my_roles or {}
+    end
+    for _, ch in ipairs(d.private or {}) do
+        self.channels[ch.id] = ch
+        table.insert(self.private_channels, ch.id)
+    end
+    self.read_states = d.read_states or {}
+    self.muted_guilds = d.muted_guilds or {}
+    self.muted_channels = d.muted_channels or {}
+    self.suppress_everyone = d.suppress_everyone or {}
+    self.users = d.users or {}
+    self.relationships = d.relationships or {}
+    self.cached = true
+    logger.info("Discord: loaded cached gateway state from", os.date("%c", d.saved_at or 0))
+    return true
+end
+
 -- Connection
 
 function Gateway:start(api)
     self.api = api or self.api
     self.want_connected = true
     if self.state ~= "disconnected" or not self.api or not self.api.token then return end
+    if self.api.user then self:loadState(self.api.user.id) end
     if not NetworkMgr:isOnline() then return end
     self:connect()
 end
@@ -105,13 +207,15 @@ end
 function Gateway:disconnect(keep_session)
     UIManager:unschedule(self._tick)
     UIManager:unschedule(self._reconnect)
-    if self.ws then
-        self.ws:close(keep_session and 4000 or 1000)
-        self.ws = nil
-    end
+    UIManager:unschedule(self._save)
     if not keep_session then
         self.session_id = nil
         self.seq = nil
+    end
+    self:saveState()
+    if self.ws then
+        self.ws:close(keep_session and 4000 or 1000)
+        self.ws = nil
     end
     if self.state ~= "disconnected" then
         self.state = "disconnected"
@@ -431,17 +535,24 @@ end
 
 function Gateway:dispatch(t, d)
     if t == "READY" then
+        logger.info("Discord: gateway READY (new session)")
         self:loadReady(d)
+        self.cached = false
         self.state = "ready"
         self.retries = 0
         self:emit("state", self.state)
         self:emit("ready")
+        self:scheduleSave(30)
         return
     end
     if t == "RESUMED" then
+        logger.info("Discord: gateway session resumed")
+        self.cached = false
         self.state = "ready"
         self.retries = 0
         self:emit("state", self.state)
+        self:emit("resumed")
+        self:scheduleSave(30)
         return
     end
     if type(d) == "table" then stripNulls(d) end
