@@ -810,3 +810,18 @@ msgstr "Nota guardada"
 
 msgid "Could not save the note: "
 msgstr "No se pudo guardar la nota: "
+
+msgid "%1 unread DMs"
+msgstr "%1 MD sin leer"
+
+msgid "%1 mentions"
+msgstr "%1 menciones"
+
+msgid "Show unread DMs and mentions on the sleep screen"
+msgstr "Mostrar MD y menciones sin leer en la pantalla de reposo"
+
+msgid "Preview sleep screen text"
+msgstr "Vista previa del texto de reposo"
+
+msgid "Nothing unread right now: the normal sleep screen will be shown."
+msgstr "Ahora no hay nada sin leer: se mostrará la pantalla de reposo normal."

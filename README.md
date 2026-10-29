@@ -14,6 +14,7 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Favorites**: long-press a channel or DM to pin it to the top of the home screen
 - **Hide servers** you don't use (long-press a server)
 - **Search** in any list (DMs also match usernames)
+- **Server folders** from your account, in the same order as the official client
 - **Mark as read** a whole server or all DMs, and **mute / unmute** servers and channels
 - **Mentions inbox** with every recent message that mentions you, opened in context
 - **Friends** list and incoming friend requests (accept / ignore)
@@ -31,8 +32,11 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **"New" separator** at the last read position when a channel has unread messages
 - **Polls** with live results, and voting
 - **Drafts** kept per channel, even across restarts
+- **Only messages for me**: a per-channel mode for busy channels
+- **Forward** messages, and keep **private notes** on users
 - **Images on demand**: download a screen-sized version and open it in KOReader's image viewer — never loaded automatically
-- **Compact layout** and adjustable text size
+- **Reading theme**: any font (including the Kindle's own), line spacing, margins and text size; **compact layout**
+- **Page turning** like a book: swipe left/right or use page-turn keys, with a periodic full refresh for e-ink
 
 **E-reader**
 - **Notifications** for DMs and mentions while you read (optional background connection)
@@ -40,6 +44,7 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Send highlights** from a book to a chat (highlight menu → *Send to Discord*)
 - **Offline chats**: the latest messages of recent chats are saved and readable without Wi-Fi
 - **Links as QR codes**, to open them on your phone
+- **Sleep screen summary** (optional): unread DMs and mentions shown on the sleep screen
 - **Reading activity** (optional): your profile shows "Playing KOReader" with the book title, author and progress while a book is open
 - **Battery saver**: pauses the background connection and slows polling below a battery level
 - **Fast start**: the connection state is cached on disk, lists open at once and sessions are resumed after restarts

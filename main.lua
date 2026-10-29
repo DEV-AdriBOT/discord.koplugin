@@ -63,6 +63,24 @@ local shared = {
     battery_warned = false,
 }
 
+-- Sleep screen summary: wrap Screensaver:show() once, for every plugin instance
+local Screensaver = require("ui/screensaver")
+if not Screensaver._discord_wrapped then
+    Screensaver._discord_wrapped = true
+    local orig_show = Screensaver.show
+    Screensaver.show = function(screensaver, ...)
+        local summary = shared.sleep_summary and shared.sleep_summary()
+        if not summary then return orig_show(screensaver, ...) end
+        local key = screensaver.prefix .. "screensaver_message"
+        local had, previous = G_reader_settings:has(key), G_reader_settings:readSetting(key)
+        G_reader_settings:saveSetting(key, summary)
+        screensaver.show_message = true
+        local ok, err = pcall(orig_show, screensaver, ...)
+        if had then G_reader_settings:saveSetting(key, previous) else G_reader_settings:delSetting(key) end
+        if not ok then error(err) end
+    end
+end
+
 local Discord = WidgetContainer:extend{
     name = "discord",
     is_doc_only = false,
@@ -254,9 +272,34 @@ end
 
 -- Notifications
 
+--- Text for the sleep screen, or nil when there is nothing unread or the option is off.
+function Discord:sleepSummary()
+    if not (self.settings.sleep_summary and self:isLoggedIn() and Gateway:hasState()) then return nil end
+    local dm_unread, dm_mentions = Gateway:dmUnread()
+    local mentions = dm_mentions
+    for __, id in ipairs(Gateway.guild_order) do
+        local __, m = Gateway:guildUnread(id)
+        mentions = mentions + m
+    end
+    if dm_unread == 0 and mentions == 0 then return nil end
+    local lines = { "Discord" }
+    local counts = {}
+    if dm_unread > 0 then table.insert(counts, T(_("%1 unread DMs"), dm_unread)) end
+    if mentions > 0 then table.insert(counts, T(_("%1 mentions"), mentions)) end
+    table.insert(lines, table.concat(counts, " · "))
+    for i = 1, math.min(4, #shared.notifications) do
+        local text = shared.notifications[i].text
+        if #text > 90 then text = text:sub(1, 90) .. "…" end
+        table.insert(lines, "• " .. text)
+    end
+    -- KOReader expands %-placeholders in this message
+    return (table.concat(lines, "\n"):gsub("%%", "%%%%"))
+end
+
 function Discord:setupGatewayListeners()
     if shared.listeners_set then return end
     shared.listeners_set = true
+    shared.sleep_summary = function() return self:sleepSummary() end
     Gateway:on("MESSAGE_CREATE", function(d) self:maybeNotify(d) end)
     Gateway:on("auth_failed", function()
         UIManager:show(InfoMessage:new{ text = _("Discord rejected the saved session. Please log in again.") })
@@ -426,6 +469,18 @@ function Discord:getSettingsMenu()
             end
         end),
         toggleItem(self, _("Notify mentions"), "notify_mentions", true),
+        toggleItem(self, _("Show unread DMs and mentions on the sleep screen"), "sleep_summary", false),
+        {
+            text = _("Preview sleep screen text"),
+            enabled_func = function() return self.settings.sleep_summary == true end,
+            keep_menu_open = true,
+            callback = function()
+                local summary = self:sleepSummary()
+                UIManager:show(InfoMessage:new{
+                    text = summary and summary:gsub("%%%%", "%%") or _("Nothing unread right now: the normal sleep screen will be shown."),
+                })
+            end,
+        },
         {
             text = _("Battery saver"),
             help_text = _("Below this battery level the background connection is paused and polling slows down."),
