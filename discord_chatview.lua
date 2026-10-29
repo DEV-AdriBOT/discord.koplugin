@@ -163,6 +163,8 @@ function ChatView:init()
 
     if Device:hasKeys() then
         self.key_events.Close = { { Device.input.group.Back } }
+        self.key_events.PageNext = { { Device.input.group.PgFwd }, event = "TurnPage", args = 1 }
+        self.key_events.PagePrev = { { Device.input.group.PgBack }, event = "TurnPage", args = -1 }
     end
     if Device:isTouchDevice() then
         self.ges_events.Swipe = {
@@ -242,6 +244,12 @@ function ChatView:buildLayout(text, position)
         },
     }
     self[1] = self.frame
+    -- Count page turns (taps, swipes and keys all end up here) for the e-ink full refresh
+    local scroll_text = self.scroll_widget.scrollText
+    self.scroll_widget.scrollText = function(widget, direction)
+        scroll_text(widget, direction)
+        self:countPageTurn()
+    end
     if position == "top" then
         self.scroll_widget:scrollToTop()
     elseif position == "middle" then
@@ -861,8 +869,31 @@ function ChatView:onCloseWidget()
 end
 
 function ChatView:onSwipe(arg, ges)
-    if ges.direction == "west" or ges.direction == "east" then
-        return true
+    -- Like in a book: swipe left for the next page, right for the previous one
+    if ges.direction == "west" then
+        return self:onTurnPage(1)
+    elseif ges.direction == "east" then
+        return self:onTurnPage(-1)
+    end
+end
+
+function ChatView:onTurnPage(direction)
+    if direction > 0 then
+        self.scroll_widget:onScrollDown()
+    else
+        self.scroll_widget:onScrollUp()
+    end
+    return true
+end
+
+--- Every N page turns, flash the screen to clean e-ink ghosting (0 = never).
+function ChatView:countPageTurn()
+    local every = self.settings.full_refresh_pages or 6
+    if every <= 0 then return end
+    self.page_turns = (self.page_turns or 0) + 1
+    if self.page_turns >= every then
+        self.page_turns = 0
+        UIManager:setDirty(self, "full")
     end
 end
 

@@ -711,3 +711,21 @@ msgstr "un libro"
 
 msgid "Show the book I'm reading as my Discord activity"
 msgstr "Mostrar el libro que leo como mi actividad en Discord"
+
+msgid "Full screen refresh in chats"
+msgstr "Refresco completo de pantalla en los chats"
+
+msgid "Flash the screen every few page turns to remove e-ink ghosting."
+msgstr "Hace un parpadeo de pantalla cada pocas páginas para quitar los restos de la tinta electrónica."
+
+msgid "Never"
+msgstr "Nunca"
+
+msgid "Every 3 pages"
+msgstr "Cada 3 páginas"
+
+msgid "Every 6 pages"
+msgstr "Cada 6 páginas"
+
+msgid "Every 12 pages"
+msgstr "Cada 12 páginas"

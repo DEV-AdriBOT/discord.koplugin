@@ -466,6 +466,16 @@ function Discord:getSettingsMenu()
             separator = true,
         },
         toggleItem(self, _("Compact layout"), "compact", false),
+        {
+            text = _("Full screen refresh in chats"),
+            help_text = _("Flash the screen every few page turns to remove e-ink ghosting."),
+            sub_item_table = {
+                radioItem(self, _("Never"), "full_refresh_pages", 0, 6),
+                radioItem(self, _("Every 3 pages"), "full_refresh_pages", 3, 6),
+                radioItem(self, _("Every 6 pages"), "full_refresh_pages", 6, 6),
+                radioItem(self, _("Every 12 pages"), "full_refresh_pages", 12, 6),
+            },
+        },
         toggleItem(self, _("Mark channels as read when opened"), "mark_read", true),
         toggleItem(self, _("Show channels without access"), "show_hidden", false),
         {
