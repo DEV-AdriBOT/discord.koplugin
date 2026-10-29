@@ -53,13 +53,17 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 
 ## Installation
 
-1. Download or clone this repository.
+1. Download `discord.koplugin.zip` from the [latest release](https://github.com/DEV-AdriBOT/discord.koplugin/releases/latest) and unzip it.
 2. Copy the `discord.koplugin` folder into KOReader's `plugins` directory:
    - Kindle: `/mnt/us/koreader/plugins/`
    - Kobo: `/mnt/onboard/.adds/koreader/plugins/`
    - Other devices: the `plugins` folder inside your KOReader install
 3. Restart KOReader.
 4. Open **Tools → Discord**.
+
+## Updating
+
+*Tools → Discord → Check for updates* compares your version with the latest release, shows what changed and installs it. The plugin also checks once a day when you open Discord and lets you know (this can be turned off in Settings).
 
 ## Logging in
 

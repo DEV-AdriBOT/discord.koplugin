@@ -825,3 +825,39 @@ msgstr "Vista previa del texto de reposo"
 
 msgid "Nothing unread right now: the normal sleep screen will be shown."
 msgstr "Ahora no hay nada sin leer: se mostrará la pantalla de reposo normal."
+
+msgid "Check for updates (version %1)"
+msgstr "Buscar actualizaciones (versión %1)"
+
+msgid "Could not check for updates: "
+msgstr "No se pudo buscar actualizaciones: "
+
+msgid "You have the latest version (%1)."
+msgstr "Tienes la última versión (%1)."
+
+msgid "Discord plugin %1 is available: Tools → Discord → Check for updates"
+msgstr "Hay una nueva versión del plugin de Discord (%1): Herramientas → Discord → Buscar actualizaciones"
+
+msgid "Version %1 is available (you have %2)."
+msgstr "Está disponible la versión %1 (tienes la %2)."
+
+msgid "Update now?"
+msgstr "¿Actualizar ahora?"
+
+msgid "Update"
+msgstr "Actualizar"
+
+msgid "Downloading update…"
+msgstr "Descargando actualización…"
+
+msgid "The update failed: "
+msgstr "La actualización falló: "
+
+msgid "Discord plugin updated to %1. Restart KOReader now?"
+msgstr "Plugin de Discord actualizado a %1. ¿Reiniciar KOReader ahora?"
+
+msgid "Checking for updates…"
+msgstr "Buscando actualizaciones…"
+
+msgid "Check for plugin updates once a day"
+msgstr "Buscar actualizaciones del plugin una vez al día"

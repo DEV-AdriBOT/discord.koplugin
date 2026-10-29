@@ -24,6 +24,7 @@ local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
+local Update = require("discord_update")
 local util = require("util")
 local _ = require("discord_i18n")
 local T = require("ffi/util").template
@@ -398,7 +399,9 @@ function Discord:getLoginMenu()
             callback = function(touchmenu_instance)
                 self:loginWithTokenFile(touchmenu_instance)
             end,
+            separator = true,
         },
+        self:updateMenuItem(),
     }
 end
 
@@ -521,6 +524,7 @@ function Discord:getSettingsMenu()
             separator = true,
         },
         toggleItem(self, _("Group servers by folders"), "use_folders", true),
+        toggleItem(self, _("Check for plugin updates once a day"), "auto_update_check", true),
         toggleItem(self, _("Compact layout"), "compact", false),
         {
             text = _("Full screen refresh in chats"),
@@ -648,9 +652,9 @@ function Discord:getLoggedInMenu()
         },
         {
             text = _("Settings"),
-            separator = true,
             sub_item_table_func = function() return self:getSettingsMenu() end,
         },
+        (function() local item = self:updateMenuItem() item.separator = true return item end)(),
         {
             text = T(_("Log out (%1)"), user.global_name or user.username or "?"),
             keep_menu_open = true,
@@ -672,6 +676,77 @@ function Discord:getLoggedInMenu()
             end,
         },
     }
+end
+
+-- Updates
+
+function Discord:updateMenuItem()
+    return {
+        text_func = function() return T(_("Check for updates (version %1)"), Update.current) end,
+        keep_menu_open = true,
+        callback = function() self:checkForUpdates(true) end,
+    }
+end
+
+--- Looks for a newer release. Interactive: always reports; otherwise only notifies when there is one.
+function Discord:checkForUpdates(interactive)
+    local function check()
+        local release, err = Update.latest()
+        self.settings.last_update_check = os.time()
+        self:saveSettings()
+        if not release then
+            if interactive then
+                UIManager:show(InfoMessage:new{ text = _("Could not check for updates: ") .. tostring(err) })
+            end
+            return
+        end
+        if not Update.isOlder(Update.current, release.version) then
+            if interactive then
+                UIManager:show(InfoMessage:new{
+                    text = T(_("You have the latest version (%1)."), Update.current),
+                    timeout = 3,
+                })
+            end
+            return
+        end
+        if not interactive then
+            UIManager:show(Notification:new{
+                text = T(_("Discord plugin %1 is available: Tools → Discord → Check for updates"), release.version),
+                timeout = 6,
+            })
+            return
+        end
+        local notes = util.trim(release.notes or "")
+        if #notes > 700 then notes = notes:sub(1, 700) .. "…" end
+        UIManager:show(ConfirmBox:new{
+            text = T(_("Version %1 is available (you have %2)."), release.version, Update.current)
+                .. (notes ~= "" and ("\n\n" .. notes) or "") .. "\n\n" .. _("Update now?"),
+            ok_text = _("Update"),
+            ok_callback = function()
+                self:withLoading(_("Downloading update…"), function()
+                    local ok, install_err = Update.install(release)
+                    if not ok then
+                        UIManager:show(InfoMessage:new{ text = _("The update failed: ") .. tostring(install_err) })
+                        return
+                    end
+                    UIManager:askForRestart(T(_("Discord plugin updated to %1. Restart KOReader now?"), release.version))
+                end)
+            end,
+        })
+    end
+    if interactive then
+        self:withLoading(_("Checking for updates…"), check)
+    elseif NetworkMgr:isOnline() then
+        local ok, err = pcall(check)
+        if not ok then logger.warn("Discord: update check failed", err) end
+    end
+end
+
+--- At most once a day, when Discord is opened.
+function Discord:maybeCheckForUpdates()
+    if self.settings.auto_update_check == false then return end
+    if os.time() - (self.settings.last_update_check or 0) < 24 * 3600 then return end
+    UIManager:scheduleIn(3, function() self:checkForUpdates(false) end)
 end
 
 -- Status
@@ -1599,6 +1674,7 @@ end
 
 function Discord:onOpenDiscord()
     if not self:requireLogin() then return true end
+    self:maybeCheckForUpdates()
     self:withLoading(_("Loading servers…"), function()
         self:loadFolders()
         local guilds
