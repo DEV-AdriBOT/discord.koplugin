@@ -1959,6 +1959,20 @@ function Discord:shareText(text)
     if book and book ~= "" then
         quoted = quoted .. "\n— *" .. book .. "*"
     end
+    self:pickDestination(_("Send highlight to…"), function(e)
+        self:withLoading(_("Sending…"), function()
+            local ok, err = self.api:sendMessage(e.id, quoted)
+            if ok then
+                UIManager:show(Notification:new{ text = T(_("Sent to %1"), e.title or "?") })
+            else
+                UIManager:show(InfoMessage:new{ text = _("Could not send: ") .. tostring(err) })
+            end
+        end)
+    end)
+end
+
+--- Lets the user choose a chat among favorites and recents, then calls fn(entry).
+function Discord:pickDestination(title, fn)
     local destinations, seen = {}, {}
     for __, list in ipairs({ self.settings.favorites or {}, self.settings.recents or {} }) do
         for __, e in ipairs(list) do
@@ -1969,7 +1983,7 @@ function Discord:shareText(text)
         end
     end
     if #destinations == 0 then
-        UIManager:show(InfoMessage:new{ text = _("Open a chat or add a favorite first, then you can send highlights to it.") })
+        UIManager:show(InfoMessage:new{ text = _("Open a chat or add a favorite first, then you can send to it.") })
         return
     end
     local dialog
@@ -1979,19 +1993,25 @@ function Discord:shareText(text)
             text = (e.title or "?") .. (e.subtitle and (" · " .. cleanEmoji(e.subtitle)) or ""),
             callback = function()
                 UIManager:close(dialog)
-                self:withLoading(_("Sending…"), function()
-                    local ok, err = self.api:sendMessage(e.id, quoted)
-                    if ok then
-                        UIManager:show(Notification:new{ text = T(_("Sent to %1"), e.title or "?") })
-                    else
-                        UIManager:show(InfoMessage:new{ text = _("Could not send: ") .. tostring(err) })
-                    end
-                end)
+                fn(e)
             end,
         }})
     end
-    dialog = ButtonDialog:new{ title = _("Send highlight to…"), buttons = buttons }
+    dialog = ButtonDialog:new{ title = title, buttons = buttons }
     UIManager:show(dialog)
+end
+
+function Discord:forwardMessage(msg, src_channel_id, guild_id)
+    self:pickDestination(_("Forward to…"), function(e)
+        self:withLoading(_("Sending…"), function()
+            local ok, err = self.api:forwardMessage(e.id, src_channel_id, msg.id, guild_id)
+            if ok then
+                UIManager:show(Notification:new{ text = T(_("Forwarded to %1"), e.title or "?") })
+            else
+                UIManager:show(InfoMessage:new{ text = _("Could not forward: ") .. tostring(err) })
+            end
+        end)
+    end)
 end
 
 return Discord

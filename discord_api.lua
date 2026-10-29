@@ -374,6 +374,19 @@ function DiscordAPI:sendMessage(channel_id, content, reply_to)
     return self:post("/channels/" .. channel_id .. "/messages", body)
 end
 
+--- Forwards a message (Discord's native forwarding) to another channel.
+function DiscordAPI:forwardMessage(dest_channel_id, src_channel_id, message_id, guild_id)
+    return self:post("/channels/" .. dest_channel_id .. "/messages", {
+        message_reference = {
+            type = 1,
+            message_id = message_id,
+            channel_id = src_channel_id,
+            guild_id = guild_id,
+        },
+        nonce = makeNonce(),
+    })
+end
+
 function DiscordAPI:editMessage(channel_id, message_id, content)
     return self:patch("/channels/" .. channel_id .. "/messages/" .. message_id, { content = content })
 end

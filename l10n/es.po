@@ -774,3 +774,18 @@ msgstr "Ver todos los mensajes"
 
 msgid "Only messages for me"
 msgstr "Solo mensajes para mí"
+
+msgid "Open a chat or add a favorite first, then you can send to it."
+msgstr "Abre un chat o añade un favorito primero; después podrás enviarle cosas."
+
+msgid "Forward to…"
+msgstr "Reenviar a…"
+
+msgid "Forwarded to %1"
+msgstr "Reenviado a %1"
+
+msgid "Could not forward: "
+msgstr "No se pudo reenviar: "
+
+msgid "Forward"
+msgstr "Reenviar"

@@ -1568,6 +1568,15 @@ function ChatView:messageActions(msg)
                 end,
             },
         },
+        {
+            {
+                text = _("Forward"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self.plugin:forwardMessage(msg, self.channel.id, self.guild and self.guild.id)
+                end,
+            },
+        },
     }
     if self.offline then
         -- Only reading actions make sense without network
