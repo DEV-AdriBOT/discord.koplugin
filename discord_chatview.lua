@@ -1576,6 +1576,14 @@ function ChatView:messageActions(msg)
                     self.plugin:forwardMessage(msg, self.channel.id, self.guild and self.guild.id)
                 end,
             },
+            {
+                text = _("Note about user"),
+                enabled = not mine and msg.author ~= nil,
+                callback = function()
+                    UIManager:close(dialog)
+                    self:editNote(msg.author)
+                end,
+            },
         },
     }
     if self.offline then
@@ -1618,6 +1626,41 @@ function ChatView:messageActions(msg)
         buttons = buttons,
     }
     UIManager:show(dialog)
+end
+
+function ChatView:editNote(user)
+    self.plugin:withLoading(nil, function()
+        local ok, note = self.api:getNote(user.id)
+        if not ok then
+            UIManager:show(InfoMessage:new{ text = _("Could not load the note: ") .. tostring(note) })
+            return
+        end
+        local input
+        input = InputDialog:new{
+            title = T(_("Note about %1"), self:authorName(user)),
+            description = _("Only you can see this note."),
+            input = note,
+            allow_newline = true,
+            buttons = {{
+                { text = _("Cancel"), id = "close", callback = function() UIManager:close(input) end },
+                {
+                    text = _("Save"),
+                    callback = function()
+                        local text = input:getInputText()
+                        UIManager:close(input)
+                        local saved, err = self.api:setNote(user.id, text)
+                        if saved then
+                            UIManager:show(Notification:new{ text = _("Note saved") })
+                        else
+                            UIManager:show(InfoMessage:new{ text = _("Could not save the note: ") .. tostring(err) })
+                        end
+                    end,
+                },
+            }},
+        }
+        UIManager:show(input)
+        input:onShowKeyboard()
+    end)
 end
 
 -- Threads

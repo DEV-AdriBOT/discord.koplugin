@@ -328,6 +328,18 @@ function DiscordAPI:removeRelationship(user_id)
     return self:delete("/users/@me/relationships/" .. user_id)
 end
 
+--- Our private note about a user ("" when there is none).
+function DiscordAPI:getNote(user_id)
+    local ok, data, code = self:get("/users/@me/notes/" .. user_id)
+    if ok then return true, data and data.note or "" end
+    if code == 404 then return true, "" end
+    return false, data
+end
+
+function DiscordAPI:setNote(user_id, note)
+    return self:request("PUT", "/users/@me/notes/" .. user_id, { note = note })
+end
+
 function DiscordAPI:getMentions()
     return self:get("/users/@me/mentions?limit=50&roles=true&everyone=true")
 end

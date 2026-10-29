@@ -792,3 +792,21 @@ msgstr "Reenviar"
 
 msgid "Group servers by folders"
 msgstr "Agrupar servidores por carpetas"
+
+msgid "Note about user"
+msgstr "Nota sobre el usuario"
+
+msgid "Could not load the note: "
+msgstr "No se pudo cargar la nota: "
+
+msgid "Note about %1"
+msgstr "Nota sobre %1"
+
+msgid "Only you can see this note."
+msgstr "Solo tú puedes ver esta nota."
+
+msgid "Note saved"
+msgstr "Nota guardada"
+
+msgid "Could not save the note: "
+msgstr "No se pudo guardar la nota: "
