@@ -445,7 +445,15 @@ function ChatView:buildText()
     local out = {}
     local prev, prev_day
     local first_new = self:firstNewId()
-    for __, msg in ipairs(self.messages) do
+    local messages = self.messages
+    if self:isFocused() then
+        messages = {}
+        for __, m in ipairs(self.messages) do
+            if self:isForMe(m) then table.insert(messages, m) end
+        end
+        table.insert(out, T(_("Only messages for you · %1 hidden"), #self.messages - #messages))
+    end
+    for __, msg in ipairs(messages) do
         local ts = parseTimestamp(msg.timestamp) or 0
         local day = os.date("%Y-%m-%d", ts)
         if day ~= prev_day then
@@ -609,6 +617,31 @@ function ChatView:load()
     end
     self:requestNicknames()
     return true
+end
+
+function ChatView:isFocused()
+    return self.settings.focus_channels and self.settings.focus_channels[self.channel.id] or false
+end
+
+--- Messages kept in "only for me" mode: ours, mentioning us, or replying to us.
+function ChatView:isForMe(m)
+    local me = Gateway.me and Gateway.me.id or (self.api.user and self.api.user.id)
+    if m.author and m.author.id == me then return true end
+    local ref = m.referenced_message
+    if ref and ref.author and ref.author.id == me then return true end
+    return Gateway:mentionsMe({
+        author = m.author,
+        mentions = m.mentions,
+        mention_everyone = m.mention_everyone,
+        mention_roles = m.mention_roles,
+        guild_id = self.guild and self.guild.id,
+    })
+end
+
+function ChatView:toggleFocus()
+    self.settings.focus_channels = self.settings.focus_channels or {}
+    self.settings.focus_channels[self.channel.id] = not self:isFocused() or nil
+    self:redraw("bottom")
 end
 
 --- Id of the first unread message not written by us, if it is loaded.
@@ -1671,6 +1704,14 @@ function ChatView:showMenu()
                 },
             },
             {
+                {
+                    text = self:isFocused() and _("Show all messages") or _("Only messages for me"),
+                    enabled = self.guild ~= nil,
+                    callback = function()
+                        close()
+                        self:toggleFocus()
+                    end,
+                },
                 {
                     text = _("Reading theme"),
                     callback = function()

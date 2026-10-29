@@ -765,3 +765,12 @@ msgstr "Interlineado: %1"
 
 msgid "Margins: %1"
 msgstr "Márgenes: %1"
+
+msgid "Only messages for you · %1 hidden"
+msgstr "Solo mensajes para ti · %1 ocultos"
+
+msgid "Show all messages"
+msgstr "Ver todos los mensajes"
+
+msgid "Only messages for me"
+msgstr "Solo mensajes para mí"
