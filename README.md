@@ -14,6 +14,10 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Favorites**: long-press a channel or DM to pin it to the top of the home screen
 - **Hide servers** you don't use (long-press a server)
 - **Search** in any list (DMs also match usernames)
+- **Mark as read** a whole server or all DMs, and **mute / unmute** servers and channels
+- **Mentions inbox** with every recent message that mentions you, opened in context
+- **Friends** list and incoming friend requests (accept / ignore)
+- **Status**: online, idle, do not disturb or invisible
 
 **Chat**
 - **Real-time updates** through the Discord gateway (WebSocket), with polling as a fallback
@@ -24,6 +28,9 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Reactions**: shown under each message, add or remove them
 - **Quick replies** (configurable) and a **mention picker** with member search
 - **Pinned messages** and **search** within a channel, with "jump to message"
+- **"New" separator** at the last read position when a channel has unread messages
+- **Polls** with live results, and voting
+- **Drafts** kept per channel, even across restarts
 - **Images on demand**: download a screen-sized version and open it in KOReader's image viewer — never loaded automatically
 - **Compact layout** and adjustable text size
 
@@ -31,6 +38,8 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Notifications** for DMs and mentions while you read (optional background connection)
 - **Open as document**: read a long channel as a paginated book in KOReader's reader
 - **Send highlights** from a book to a chat (highlight menu → *Send to Discord*)
+- **Offline chats**: the latest messages of recent chats are saved and readable without Wi-Fi
+- **Links as QR codes**, to open them on your phone
 - **Battery saver**: pauses the background connection and slows polling below a battery level
 - Common emoji rendered as text, since e-reader fonts lack emoji glyphs
 - Interface in English and Spanish (follows KOReader's language)
