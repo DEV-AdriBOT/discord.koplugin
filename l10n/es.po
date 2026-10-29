@@ -705,3 +705,9 @@ msgstr "1 voto"
 
 msgid "ended a poll"
 msgstr "cerró una encuesta"
+
+msgid "a book"
+msgstr "un libro"
+
+msgid "Show the book I'm reading as my Discord activity"
+msgstr "Mostrar el libro que leo como mi actividad en Discord"

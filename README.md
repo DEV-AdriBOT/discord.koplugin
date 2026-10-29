@@ -40,7 +40,9 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Send highlights** from a book to a chat (highlight menu → *Send to Discord*)
 - **Offline chats**: the latest messages of recent chats are saved and readable without Wi-Fi
 - **Links as QR codes**, to open them on your phone
+- **Reading activity** (optional): your profile shows "Playing KOReader" with the book title, author and progress while a book is open
 - **Battery saver**: pauses the background connection and slows polling below a battery level
+- **Fast start**: the connection state is cached on disk, lists open at once and sessions are resumed after restarts
 - Common emoji rendered as text, since e-reader fonts lack emoji glyphs
 - Interface in English and Spanish (follows KOReader's language)
 

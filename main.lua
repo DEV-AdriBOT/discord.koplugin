@@ -149,7 +149,8 @@ function Discord:updateConnection()
         return
     end
     local screens_open = #shared.lists > 0 or #shared.views > 0
-    if self:wantsBackgroundConnection() or screens_open then
+    local sharing = shared.reading and self.settings.share_reading
+    if self:wantsBackgroundConnection() or screens_open or sharing then
         Gateway:start(self.api)
     else
         Gateway:stop()
@@ -160,6 +161,64 @@ function Discord:onNetworkConnected()
     if self:realtimeEnabled() then
         UIManager:scheduleIn(2, function() self:updateConnection() end)
     end
+end
+
+-- Reading activity
+
+function Discord:readingActivity()
+    local props = self.ui.doc_props or {}
+    local title = props.display_title or props.title or _("a book")
+    local activity = {
+        name = "KOReader",
+        type = 0,
+        details = title:sub(1, 128),
+        timestamps = { start = shared.reading_since * 1000 },
+    }
+    local parts = {}
+    if props.authors and props.authors ~= "" then
+        table.insert(parts, (props.authors:gsub("\n", ", ")))
+    end
+    local total = self.ui.document and self.ui.document:getPageCount()
+    if self.current_page and total and total > 0 then
+        table.insert(parts, math.floor(self.current_page / total * 100) .. " %")
+    end
+    if #parts > 0 then activity.state = table.concat(parts, " · "):sub(1, 128) end
+    return activity
+end
+
+function Discord:updateActivity(force)
+    if not (self.settings.share_reading and self:realtimeEnabled() and self.ui.document) then return end
+    local activity = self:readingActivity()
+    local now = os.time()
+    if not force and self.last_activity_state == activity.state and now - (self.last_activity_time or 0) < 600 then
+        return
+    end
+    -- Do not flood the gateway while turning pages
+    if not force and now - (self.last_activity_time or 0) < 60 then return end
+    self.last_activity_state = activity.state
+    self.last_activity_time = now
+    Gateway:setActivity(activity)
+end
+
+function Discord:onReaderReady()
+    shared.reading = true
+    shared.reading_since = os.time()
+    local ok, page = pcall(function() return self.ui:getCurrentPage() end)
+    if ok then self.current_page = page end
+    if self.settings.share_reading then
+        self:updateConnection()
+        self:updateActivity(true)
+    end
+end
+
+function Discord:onPageUpdate(pageno)
+    self.current_page = pageno
+    if self.settings.share_reading then self:updateActivity() end
+end
+
+function Discord:onCloseDocument()
+    shared.reading = false
+    if Gateway.activity then Gateway:setActivity(nil) end
 end
 
 function Discord:onFlushSettings()
@@ -356,6 +415,16 @@ function Discord:getSettingsMenu()
         },
         toggleItem(self, _("Stay connected in background (notifications)"), "background", true, update),
         toggleItem(self, _("Notify direct messages"), "notify_dms", true),
+        toggleItem(self, _("Show the book I'm reading as my Discord activity"), "share_reading", false, function()
+            if self.settings.share_reading then
+                if shared.reading then
+                    self:updateConnection()
+                    self:updateActivity(true)
+                end
+            elseif Gateway.activity then
+                Gateway:setActivity(nil)
+            end
+        end),
         toggleItem(self, _("Notify mentions"), "notify_mentions", true),
         {
             text = _("Battery saver"),

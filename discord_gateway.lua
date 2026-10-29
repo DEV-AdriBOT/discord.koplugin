@@ -311,16 +311,30 @@ function Gateway:identify()
             referring_domain = "",
             release_channel = "stable",
         },
-        presence = { status = self.status or "unknown", since = 0, activities = rapidjson.array({}), afk = false },
+        presence = self:presence(),
     })
+end
+
+function Gateway:presence()
+    local status = self.status or (self.activity and "online") or "unknown"
+    return {
+        status = status,
+        since = 0,
+        activities = rapidjson.array(self.activity and { self.activity } or {}),
+        afk = false,
+    }
 end
 
 --- Changes our presence for this session.
 function Gateway:setStatus(status)
     self.status = status
-    if self:isReady() then
-        self:sendOp(3, { status = status, since = 0, activities = rapidjson.array({}), afk = false })
-    end
+    if self:isReady() then self:sendOp(3, self:presence()) end
+end
+
+--- Sets (or clears, with nil) the activity shown on our profile, e.g. the book being read.
+function Gateway:setActivity(activity)
+    self.activity = activity
+    if self:isReady() then self:sendOp(3, self:presence()) end
 end
 
 function Gateway:tick()
@@ -551,6 +565,7 @@ function Gateway:dispatch(t, d)
         self.state = "ready"
         self.retries = 0
         self:emit("state", self.state)
+        if self.activity then self:sendOp(3, self:presence()) end
         self:emit("resumed")
         self:scheduleSave(30)
         return
