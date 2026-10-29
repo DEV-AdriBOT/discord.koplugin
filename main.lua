@@ -465,6 +465,7 @@ function Discord:getSettingsMenu()
             },
             separator = true,
         },
+        toggleItem(self, _("Group servers by folders"), "use_folders", true),
         toggleItem(self, _("Compact layout"), "compact", false),
         {
             text = _("Full screen refresh in chats"),
@@ -1399,10 +1400,84 @@ function Discord:homeItems(guilds)
         })
     end
     local hidden_count = 0
-    for __, g in ipairs(guilds) do
-        if self:isHidden(g.id) then
-            hidden_count = hidden_count + 1
+    local function guildItem(g, prefix)
+        local unread, mentions = false, 0
+        if Gateway:hasState() then unread, mentions = Gateway:guildUnread(g.id) end
+        local b, m = unreadMarks(unread, mentions)
+        return {
+            text = (prefix or "") .. cleanName(g.name),
+            search = g.name,
+            bold = b,
+            mandatory = m,
+            guild = g,
+            callback = function() self:openGuild(g) end,
+        }
+    end
+    local by_id = {}
+    for __, g in ipairs(guilds) do by_id[g.id] = g end
+    local placed = {}
+    local folders = self.settings.use_folders ~= false and shared.folders or nil
+    for __, folder in ipairs(folders or {}) do
+        local members = {}
+        for __, gid in ipairs(folder.guild_ids or {}) do
+            local g = by_id[gid]
+            if g then
+                placed[gid] = true
+                if self:isHidden(gid) then
+                    hidden_count = hidden_count + 1
+                else
+                    table.insert(members, g)
+                end
+            end
+        end
+        if folder.id and #members > 1 then
+            -- A real folder: one entry with the combined unread state
+            local unread, mentions = false, 0
+            if Gateway:hasState() then
+                for __, g in ipairs(members) do
+                    local u, m = Gateway:guildUnread(g.id)
+                    unread = unread or u
+                    mentions = mentions + m
+                end
+            end
+            local names = {}
+            for i = 1, math.min(2, #members) do names[i] = cleanName(members[i].name) end
+            local title = folder.name and cleanName(folder.name) or (table.concat(names, ", ") .. (#members > 2 and ", …" or ""))
+            local b, m = unreadMarks(unread, mentions)
+            table.insert(items, {
+                text = "▸ " .. title,
+                search = title,
+                bold = b,
+                mandatory = m or tostring(#members),
+                callback = function() self:openFolder(title, members) end,
+            })
         else
+            for __, g in ipairs(members) do table.insert(items, guildItem(g)) end
+        end
+    end
+    -- Servers that are in no folder (or all of them when folders are off)
+    for __, g in ipairs(guilds) do
+        if not placed[g.id] then
+            if self:isHidden(g.id) then
+                hidden_count = hidden_count + 1
+            else
+                table.insert(items, guildItem(g))
+            end
+        end
+    end
+    if hidden_count > 0 then
+        table.insert(items, {
+            text = T(_("Hidden servers (%1)"), hidden_count),
+            callback = function() self:showHiddenGuilds() end,
+        })
+    end
+    return items
+end
+
+function Discord:openFolder(title, members)
+    self:showList(title, function()
+        local items = {}
+        for __, g in ipairs(members) do
             local unread, mentions = false, 0
             if Gateway:hasState() then unread, mentions = Gateway:guildUnread(g.id) end
             local b, m = unreadMarks(unread, mentions)
@@ -1414,14 +1489,19 @@ function Discord:homeItems(guilds)
                 callback = function() self:openGuild(g) end,
             })
         end
+        return items
+    end, nil, function(item)
+        if item.guild then self:guildHoldDialog(item.guild) end
+    end)
+end
+
+--- Loads the server folders from the account settings (once per session).
+function Discord:loadFolders()
+    if shared.folders or self.settings.use_folders == false then return end
+    local ok, data = self.api:get("/users/@me/settings")
+    if ok and type(data) == "table" and data.guild_folders then
+        shared.folders = data.guild_folders
     end
-    if hidden_count > 0 then
-        table.insert(items, {
-            text = T(_("Hidden servers (%1)"), hidden_count),
-            callback = function() self:showHiddenGuilds() end,
-        })
-    end
-    return items
 end
 
 function Discord:guildHoldDialog(g)
@@ -1465,6 +1545,7 @@ end
 function Discord:onOpenDiscord()
     if not self:requireLogin() then return true end
     self:withLoading(_("Loading servers…"), function()
+        self:loadFolders()
         local guilds
         if self:waitForGateway() then
             guilds = nil -- read live from the gateway, it may still be loading

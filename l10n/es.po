@@ -789,3 +789,6 @@ msgstr "No se pudo reenviar: "
 
 msgid "Forward"
 msgstr "Reenviar"
+
+msgid "Group servers by folders"
+msgstr "Agrupar servidores por carpetas"
