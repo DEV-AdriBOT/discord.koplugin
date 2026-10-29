@@ -6,16 +6,34 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 
 ## Features
 
-- **Login** with email + password (with 2FA/TOTP support), a pasted token, or a token file
-- **Servers** with text and announcement channels grouped by category; channels you can't see are hidden and read-only ones are marked
-- **Direct messages** and group DMs, sorted by latest activity
-- **Search** in any list (servers, channels, DMs — DMs also match usernames)
-- **Chat view** with day separators, grouped messages, replies, mentions, forwarded messages, embeds, attachments and stickers shown as text
-- **Send, reply, edit and delete** your messages; copy message text; open a DM with a message author
-- **Auto refresh** while a chat is open (configurable, pauses on suspend)
-- **Mark as read** when opening a channel (optional)
+**Navigation**
+- Servers with text, announcement and forum channels grouped by category; channels you can't see are hidden, read-only ones are marked
+- Threads under their channel, forum posts, and archived threads
+- Direct messages and group DMs, sorted by latest activity
+- **Unread markers** (bold + `●`) and **mention counts** (`@3`) for servers, channels and DMs, respecting muted servers and channels
+- **Favorites**: long-press a channel or DM to pin it to the top of the home screen
+- **Hide servers** you don't use (long-press a server)
+- **Search** in any list (DMs also match usernames)
+
+**Chat**
+- **Real-time updates** through the Discord gateway (WebSocket), with polling as a fallback
+- Day separators, grouped messages, replies, mentions, forwarded messages, embeds, polls and stickers as text
+- **Server nicknames**
+- **Typing indicator** ("X is typing…") and your own typing is sent while you write
+- **Send, reply, edit, delete**, copy, and open a DM with any author
+- **Reactions**: shown under each message, add or remove them
+- **Quick replies** (configurable) and a **mention picker** with member search
+- **Pinned messages** and **search** within a channel, with "jump to message"
+- **Images on demand**: download a screen-sized version and open it in KOReader's image viewer — never loaded automatically
+- **Compact layout** and adjustable text size
+
+**E-reader**
+- **Notifications** for DMs and mentions while you read (optional background connection)
+- **Open as document**: read a long channel as a paginated book in KOReader's reader
+- **Send highlights** from a book to a chat (highlight menu → *Send to Discord*)
+- **Battery saver**: pauses the background connection and slows polling below a battery level
 - Common emoji rendered as text, since e-reader fonts lack emoji glyphs
-- Adjustable text size
+- Interface in English and Spanish (follows KOReader's language)
 
 ## Installation
 
@@ -37,14 +55,19 @@ The token is stored in KOReader's settings folder (`settings/discord.lua`). Anyo
 
 ## Gestures
 
-Two actions are available in KOReader's gesture manager:
+These actions are available in KOReader's gesture manager:
 
 - *Open Discord*
 - *Discord: direct messages*
+- *Discord: open last chat*
+
+## Translations
+
+Translations live in `l10n/<language>.po` (for example `l10n/es.po`) and are picked up automatically from KOReader's interface language. To add a language, copy `es.po`, rename it to your language code and translate the `msgstr` lines.
 
 ## Disclaimer
 
-This is an unofficial client that uses your user account through Discord's REST API. Using third-party clients is against Discord's Terms of Service and could, in theory, lead to your account being flagged. Use it at your own risk.
+This is an unofficial client that uses your user account through Discord's API and gateway. Using third-party clients is against Discord's Terms of Service and could, in theory, lead to your account being flagged. Use it at your own risk.
 
 ## License
 
