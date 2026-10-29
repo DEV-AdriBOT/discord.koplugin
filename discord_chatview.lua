@@ -187,8 +187,8 @@ function ChatView:init()
         width = self.width - 2 * Size.padding.default,
         buttons = {
             {
-                { text = _("Older"), callback = function() self:loadOlder() end },
-                { text = _("Refresh"), callback = function() self:refresh(true) end },
+                { text = _("Older"), enabled = not self.offline, callback = function() self:loadOlder() end },
+                { text = _("Refresh"), enabled = not self.offline, callback = function() self:refresh(true) end },
                 { text = _("Messages"), callback = function() self:pickMessage() end },
                 { text = _("Write"), enabled = self.can_send, callback = function() self:compose() end },
             },
