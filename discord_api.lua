@@ -279,6 +279,59 @@ function DiscordAPI:getArchivedThreads(channel_id)
     return true, data.threads or {}
 end
 
+--- Marks several channels as read at once. `entries` is a list of { channel_id, message_id }.
+function DiscordAPI:ackBulk(entries)
+    for i = 1, #entries, 100 do
+        local chunk = {}
+        for j = i, math.min(i + 99, #entries) do
+            table.insert(chunk, {
+                channel_id = entries[j].channel_id,
+                message_id = entries[j].message_id,
+                read_state_type = 0,
+            })
+        end
+        local ok, err = self:post("/read-states/ack-bulk", { read_states = chunk })
+        if not ok then return false, err end
+    end
+    return true
+end
+
+--- Mutes or unmutes a guild, a guild channel, or (guild_id = "@me") a DM.
+function DiscordAPI:setMuted(guild_id, channel_id, muted)
+    local body
+    if channel_id then
+        body = { channel_overrides = { [channel_id] = { muted = muted } } }
+    else
+        body = { muted = muted }
+    end
+    return self:patch("/users/@me/guilds/" .. (guild_id or "@me") .. "/settings", body)
+end
+
+function DiscordAPI:setStatus(status)
+    return self:patch("/users/@me/settings", { status = status })
+end
+
+function DiscordAPI:votePoll(channel_id, message_id, answer_ids)
+    return self:request("PUT", "/channels/" .. channel_id .. "/polls/" .. message_id .. "/answers/@me",
+        { answer_ids = rapidjson.array(answer_ids) })
+end
+
+function DiscordAPI:getRelationships()
+    return self:get("/users/@me/relationships")
+end
+
+function DiscordAPI:acceptFriend(user_id)
+    return self:request("PUT", "/users/@me/relationships/" .. user_id, {})
+end
+
+function DiscordAPI:removeRelationship(user_id)
+    return self:delete("/users/@me/relationships/" .. user_id)
+end
+
+function DiscordAPI:getMentions()
+    return self:get("/users/@me/mentions?limit=50&roles=true&everyone=true")
+end
+
 --- Downloads a URL to a file. Returns ok, error.
 function DiscordAPI:download(url, path)
     local f = io.open(path, "wb")
@@ -412,8 +465,19 @@ local EMOJI_TEXT = {
     ["⭐"] = "*", ["♂"] = "", ["♀"] = "", ["📢"] = "", ["📌"] = "", ["🔊"] = "", ["💬"] = "", ["📜"] = "", ["🎮"] = "", ["🎵"] = "",
 }
 
-function DiscordAPI.cleanEmoji(text)
+--- Replaces emoji the fonts cannot show. With `strip`, drops them instead (for names).
+function DiscordAPI.cleanEmoji(text, strip)
     if not text then return text end
+    if strip then
+        text = text:gsub("\239\184\143", ""):gsub("\226\128\141", ""):gsub("\240[\128-\191]+", "")
+        text = text:gsub("[\226][\128-\191]+", function(ch)
+            -- Keep punctuation and box drawing, drop pictographs (U+2600-U+27BF, U+2B00-U+2BFF)
+            local b2 = ch:byte(2)
+            if b2 and ((b2 >= 152 and b2 <= 159) or (b2 >= 172 and b2 <= 175)) then return "" end
+            return nil
+        end)
+        return (text:gsub("^%s+", ""):gsub("%s+$", ""))
+    end
     -- Variation selectors, zero width joiners and skin tones
     text = text:gsub("\239\184\143", ""):gsub("\226\128\141", ""):gsub("\240\159\143[\187-\191]", "")
     text = text:gsub("[\226\240][\128-\191]+", function(ch)

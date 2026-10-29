@@ -28,6 +28,7 @@ local TitleBar = require("ui/widget/titlebar")
 local UIManager = require("ui/uimanager")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local lfs = require("libs/libkoreader-lfs")
+local rapidjson = require("rapidjson")
 local logger = require("logger")
 local util = require("util")
 local _ = require("discord_i18n")
@@ -80,6 +81,7 @@ local SYSTEM_TYPES = {
     [7] = _("joined the server"),
     [8] = _("boosted the server"),
     [18] = _("started a thread"),
+    [46] = _("ended a poll"),
 }
 
 -- Reactions offered in the "React" dialog
@@ -88,6 +90,7 @@ local QUICK_REACTIONS = { "👍", "❤️", "😂", "😮", "😢", "🙏", "�
 local THREAD_TYPES = { [10] = true, [11] = true, [12] = true }
 
 local ChatView = InputContainer:extend{
+    NEW_MARKER = "──────── " .. _("New") .. " ────────",
     api = nil,
     channel = nil,       -- channel object
     guild = nil,         -- guild object (nil for DMs)
@@ -98,7 +101,48 @@ local ChatView = InputContainer:extend{
     can_send = true,
     plugin = nil,        -- main plugin, for favorites, documents and navigation
     around_id = nil,     -- open centered on this message instead of the latest ones
+    offline = false,     -- showing cached messages without network
 }
+
+local CACHE_KEEP = 30 -- channels kept in the offline cache
+
+local function cacheDir()
+    local dir = DataStorage:getDataDir() .. "/cache/discord/messages"
+    if lfs.attributes(dir, "mode") ~= "directory" then
+        lfs.mkdir(DataStorage:getDataDir() .. "/cache")
+        lfs.mkdir(DataStorage:getDataDir() .. "/cache/discord")
+        lfs.mkdir(dir)
+    end
+    return dir
+end
+
+--- Reads cached messages of a channel, or nil.
+function ChatView.readCache(channel_id)
+    local f = io.open(cacheDir() .. "/" .. channel_id .. ".json", "r")
+    if not f then return nil end
+    local ok, data = pcall(rapidjson.decode, f:read("*a"))
+    f:close()
+    if not ok or type(data) ~= "table" then return nil end
+    return DiscordAPI.stripNulls(data)
+end
+
+--- Lists cached chats, newest first: { id, title, subtitle, guild_id, time }.
+function ChatView.listCache()
+    local list = {}
+    local dir = cacheDir()
+    for name in lfs.dir(dir) do
+        local id = name:match("^(%d+)%.json$")
+        if id then
+            local data = ChatView.readCache(id)
+            if data and data.meta then
+                data.meta.time = lfs.attributes(dir .. "/" .. name, "modification") or 0
+                table.insert(list, data.meta)
+            end
+        end
+    end
+    table.sort(list, function(a, b) return a.time > b.time end)
+    return list
+end
 
 function ChatView:init()
     self.messages = {}
@@ -143,8 +187,8 @@ function ChatView:init()
         width = self.width - 2 * Size.padding.default,
         buttons = {
             {
-                { text = _("Older"), callback = function() self:loadOlder() end },
-                { text = _("Refresh"), callback = function() self:refresh(true) end },
+                { text = _("Older"), enabled = not self.offline, callback = function() self:loadOlder() end },
+                { text = _("Refresh"), enabled = not self.offline, callback = function() self:refresh(true) end },
                 { text = _("Messages"), callback = function() self:pickMessage() end },
                 { text = _("Write"), enabled = self.can_send, callback = function() self:compose() end },
             },
@@ -252,6 +296,8 @@ function ChatView:renderContent(msg)
     text = text:gsub("__(.-)__", "%1")
     text = text:gsub("~~(.-)~~", "%1")
     text = text:gsub("```%w*\n?", "")
+    -- Markdown headings and subtext
+    text = ("\n" .. text):gsub("\n%-?#+ ", "\n"):sub(2)
 
     local extras = {}
     for __, snap in ipairs(msg.message_snapshots or {}) do
@@ -279,7 +325,7 @@ function ChatView:renderContent(msg)
         end
     end
     if msg.poll and msg.poll.question then
-        table.insert(extras, "[poll: " .. (msg.poll.question.text or "") .. "]")
+        table.insert(extras, self:renderPoll(msg.poll))
     end
     if #extras > 0 then
         text = (text ~= "" and (text .. "\n") or "") .. table.concat(extras, "\n")
@@ -288,6 +334,80 @@ function ChatView:renderContent(msg)
         text = text .. " " .. _("(edited)")
     end
     return cleanEmoji(text)
+end
+
+function ChatView:renderPoll(poll)
+    local counts, mine = {}, {}
+    for __, r in ipairs(poll.results and poll.results.answer_counts or {}) do
+        counts[r.id] = r.count
+        mine[r.id] = r.me_voted
+    end
+    local lines = { "[" .. _("poll") .. "] " .. (poll.question.text or "") }
+    for i, a in ipairs(poll.answers or {}) do
+        local label = a.poll_media and a.poll_media.text or "?"
+        local n = counts[a.answer_id] or 0
+        table.insert(lines, "   " .. i .. ". " .. label .. " — " .. (n == 1 and _("1 vote") or T(_("%1 votes"), n)) .. (mine[a.answer_id] and " *" or ""))
+    end
+    if poll.results and poll.results.is_finalized then
+        table.insert(lines, "   " .. _("(closed)"))
+    end
+    return table.concat(lines, "\n")
+end
+
+function ChatView:votePoll(msg)
+    local poll = msg.poll
+    local dialog
+    local buttons = {}
+    local mine = {}
+    for __, r in ipairs(poll.results and poll.results.answer_counts or {}) do
+        if r.me_voted then mine[r.id] = true end
+    end
+    for i, a in ipairs(poll.answers or {}) do
+        table.insert(buttons, {{
+            text = i .. ". " .. cleanEmoji(a.poll_media and a.poll_media.text or "?") .. (mine[a.answer_id] and " *" or ""),
+            callback = function()
+                UIManager:close(dialog)
+                local ok, err = self.api:votePoll(self.channel.id, msg.id, { a.answer_id })
+                if not ok then
+                    UIManager:show(InfoMessage:new{ text = _("Could not vote: ") .. tostring(err) })
+                else
+                    UIManager:show(Notification:new{ text = _("Vote sent") })
+                end
+            end,
+        }})
+    end
+    if next(mine) then
+        table.insert(buttons, {{
+            text = _("Remove my vote"),
+            callback = function()
+                UIManager:close(dialog)
+                local ok, err = self.api:votePoll(self.channel.id, msg.id, {})
+                if not ok then UIManager:show(InfoMessage:new{ text = tostring(err) }) end
+            end,
+        }})
+    end
+    dialog = ButtonDialog:new{ title = cleanEmoji(poll.question.text or _("Poll")), buttons = buttons }
+    UIManager:show(dialog)
+end
+
+function ChatView:applyPollVote(d, delta)
+    local m = self.by_id[d.message_id]
+    if not (m and m.poll) then return end
+    m.poll.results = m.poll.results or { answer_counts = {} }
+    local counts = m.poll.results.answer_counts
+    local is_me = Gateway.me and d.user_id == Gateway.me.id
+    for __, r in ipairs(counts) do
+        if r.id == d.answer_id then
+            r.count = math.max(0, (r.count or 0) + delta)
+            if is_me then r.me_voted = delta > 0 end
+            self:redraw()
+            return
+        end
+    end
+    if delta > 0 then
+        table.insert(counts, { id = d.answer_id, count = 1, me_voted = is_me })
+        self:redraw()
+    end
 end
 
 function ChatView:renderReactions(msg)
@@ -306,6 +426,7 @@ function ChatView:buildText()
     local compact = self.settings.compact
     local out = {}
     local prev, prev_day
+    local first_new = self:firstNewId()
     for __, msg in ipairs(self.messages) do
         local ts = parseTimestamp(msg.timestamp) or 0
         local day = os.date("%Y-%m-%d", ts)
@@ -313,6 +434,11 @@ function ChatView:buildText()
             if not compact then table.insert(out, "") end
             table.insert(out, "═══════ " .. day .. " ═══════")
             prev_day = day
+            prev = nil
+        end
+        if msg.id == first_new then
+            if not compact then table.insert(out, "") end
+            table.insert(out, self.NEW_MARKER)
             prev = nil
         end
         local author = self:authorName(msg.author)
@@ -431,18 +557,92 @@ function ChatView:requestNicknames()
 end
 
 function ChatView:load()
+    if self.offline then
+        local cached = ChatView.readCache(self.channel.id)
+        if not cached then
+            UIManager:show(InfoMessage:new{ text = _("This chat is not available offline.") })
+            return false
+        end
+        self.messages, self.by_id = {}, {}
+        self:addMessages(cached.messages)
+        self:redraw("bottom")
+        return true
+    end
     local opts = { limit = self.settings.page_size or 50, around = self.around_id }
     local ok, data = self.api:getMessages(self.channel.id, opts)
     if not ok then
         UIManager:show(InfoMessage:new{ text = _("Could not load messages: ") .. tostring(data) })
         return false
     end
+    -- Remember where we stopped reading, for the "New" separator
+    if not self.around_id and self.new_after == nil then
+        local rs = Gateway.read_states[self.channel.id]
+        self.new_after = rs and rs.last_message_id or false
+    end
     self.messages, self.by_id = {}, {}
     self:addMessages(data)
-    self:redraw(self.around_id and "middle" or "bottom")
-    if not self.around_id then self:markRead() end
+    if self.around_id then
+        self:redraw("middle")
+    else
+        self:redraw("bottom")
+        self:scrollToNew()
+        self:markRead()
+        self:saveCache()
+    end
     self:requestNicknames()
     return true
+end
+
+--- Id of the first unread message not written by us, if it is loaded.
+function ChatView:firstNewId()
+    if not self.new_after then return nil end
+    local me = Gateway.me and Gateway.me.id
+    for __, m in ipairs(self.messages) do
+        if idLess(self.new_after, m.id) and not (m.author and m.author.id == me) then
+            return m.id
+        end
+    end
+end
+
+function ChatView:scrollToNew()
+    local text = self.scroll_widget.text_widget.text or ""
+    local pos = text:find(self.NEW_MARKER, 1, true)
+    if not pos then return end
+    -- TextBoxWidget positions count characters, not bytes
+    local charpos = #util.splitToChars(text:sub(1, pos - 1)) + 1
+    local line = self.scroll_widget:getCharPosLineNum(charpos)
+    if line then
+        self:buildLayout(text, math.max(1, line - 1))
+    end
+end
+
+function ChatView:saveCache()
+    if self.offline or #self.messages == 0 then return end
+    local keep = {}
+    for i = math.max(1, #self.messages - 49), #self.messages do
+        table.insert(keep, self.messages[i])
+    end
+    local ok, json = pcall(rapidjson.encode, {
+        meta = self:favoriteEntry(),
+        messages = keep,
+    })
+    if not ok then return end
+    local dir = cacheDir()
+    local f = io.open(dir .. "/" .. self.channel.id .. ".json", "w")
+    if not f then return end
+    f:write(json)
+    f:close()
+    -- Drop the oldest cached chats
+    local files = {}
+    for name in lfs.dir(dir) do
+        if name:match("%.json$") then
+            table.insert(files, { name = name, time = lfs.attributes(dir .. "/" .. name, "modification") or 0 })
+        end
+    end
+    table.sort(files, function(a, b) return a.time > b.time end)
+    for i = CACHE_KEEP + 1, #files do
+        os.remove(dir .. "/" .. files[i].name)
+    end
 end
 
 function ChatView:markRead()
@@ -598,6 +798,12 @@ function ChatView:subscribe()
             self.typing[d.user_id] = { name = cleanEmoji(name), until_time = os.time() + 10 }
             self:updateSubtitle()
         end,
+        MESSAGE_POLL_VOTE_ADD = function(d)
+            if mine(d) then self:applyPollVote(d, 1) end
+        end,
+        MESSAGE_POLL_VOTE_REMOVE = function(d)
+            if mine(d) then self:applyPollVote(d, -1) end
+        end,
         GUILD_MEMBERS_CHUNK = function(d)
             if self.guild and d.guild_id == self.guild.id and not d.nonce then
                 self:redraw()
@@ -627,6 +833,7 @@ end
 function ChatView:onShow()
     self.shown = true
     UIManager:setDirty(self, function() return "full", self.frame.dimen end)
+    if self.offline then return end
     self:subscribe()
     self:schedulePoll()
 end
@@ -647,6 +854,7 @@ end
 
 function ChatView:onCloseWidget()
     self.closed = true
+    self:saveCache()
     if self._poll then UIManager:unschedule(self._poll) end
     self:unsubscribe()
     UIManager:setDirty(nil, "full")
@@ -683,7 +891,7 @@ function ChatView:compose(prefill, edit_msg)
             id = "close",
             callback = function()
                 if not edit_msg then
-                    self.draft = dialog:getInputText()
+                    self:setDraft(dialog:getInputText())
                     self.reply_to = nil
                 end
                 UIManager:close(dialog)
@@ -713,7 +921,7 @@ function ChatView:compose(prefill, edit_msg)
     dialog = InputDialog:new{
         title = title,
         description = self.reply_to and not edit_msg and oneLine(self:renderContent(self.reply_to), 80) or nil,
-        input = prefill or self.draft or "",
+        input = prefill or self:getDraft() or "",
         allow_newline = true,
         text_height = Screen:scaleBySize(120),
         buttons = { row },
@@ -721,6 +929,18 @@ function ChatView:compose(prefill, edit_msg)
     }
     UIManager:show(dialog)
     dialog:onShowKeyboard()
+end
+
+function ChatView:getDraft()
+    local drafts = self.settings.drafts
+    return drafts and drafts[self.channel.id]
+end
+
+--- Stores unsent text for this channel (saved with the plugin settings).
+function ChatView:setDraft(text)
+    if text and text:match("^%s*$") then text = nil end
+    self.settings.drafts = self.settings.drafts or {}
+    self.settings.drafts[self.channel.id] = text
 end
 
 --- Turns "@Name" written with the mention picker into real mentions.
@@ -741,11 +961,11 @@ function ChatView:send(text, edit_msg)
         ok, data = self.api:sendMessage(self.channel.id, self:applyMentions(text), reply)
     end
     if not ok then
-        if not edit_msg then self.draft = text end
+        if not edit_msg then self:setDraft(text) end
         UIManager:show(InfoMessage:new{ text = _("Could not send: ") .. tostring(data) })
         return
     end
-    self.draft = nil
+    if not edit_msg then self:setDraft(nil) end
     self.reply_to = nil
     self.last_typing = nil
     self:addMessages({ data })
@@ -1151,10 +1371,55 @@ end
 
 -- Per-message actions
 
+function ChatView:linksOf(msg)
+    local links, seen = {}, {}
+    local function add(url)
+        if url and not seen[url] then
+            seen[url] = true
+            table.insert(links, url)
+        end
+    end
+    for url in (msg.content or ""):gmatch("https?://[^%s<>%)]+") do add(url) end
+    for __, e in ipairs(msg.embeds or {}) do add(e.url) end
+    for __, a in ipairs(msg.attachments or {}) do
+        if not (a.content_type or ""):match("^image/") then add(a.url) end
+    end
+    return links
+end
+
+function ChatView:showLinks(links)
+    local QRMessage = require("ui/widget/qrmessage")
+    local function show(url)
+        UIManager:show(QRMessage:new{
+            text = url,
+            width = Screen:getWidth(),
+            height = Screen:getHeight(),
+        })
+    end
+    if #links == 1 then
+        show(links[1])
+        return
+    end
+    local dialog
+    local buttons = {}
+    for __, url in ipairs(links) do
+        table.insert(buttons, {{
+            text = oneLine(url, 60),
+            callback = function()
+                UIManager:close(dialog)
+                show(url)
+            end,
+        }})
+    end
+    dialog = ButtonDialog:new{ title = _("Show link as QR code"), buttons = buttons }
+    UIManager:show(dialog)
+end
+
 function ChatView:messageActions(msg)
     local me = Gateway.me and Gateway.me.id or (self.api.user and self.api.user.id)
     local mine = msg.author and msg.author.id == me
     local images = self:imagesOf(msg)
+    local links = self:linksOf(msg)
     local dialog
     local buttons = {
         {
@@ -1211,8 +1476,30 @@ function ChatView:messageActions(msg)
                 end,
             },
         },
+        {
+            {
+                text = #links > 0 and T(_("Links as QR (%1)"), #links) or _("No links"),
+                enabled = #links > 0,
+                callback = function()
+                    UIManager:close(dialog)
+                    self:showLinks(links)
+                end,
+            },
+            {
+                text = _("Vote"),
+                enabled = msg.poll ~= nil and not (msg.poll.results and msg.poll.results.is_finalized),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:votePoll(msg)
+                end,
+            },
+        },
     }
-    if mine then
+    if self.offline then
+        -- Only reading actions make sense without network
+        buttons = { buttons[2], { buttons[3][1] }, { buttons[4][1] } }
+    end
+    if mine and not self.offline then
         table.insert(buttons, {
             {
                 text = _("Edit"),
@@ -1302,6 +1589,26 @@ function ChatView:showMenu()
                     callback = function()
                         close()
                         self.plugin:toggleFavorite(self:favoriteEntry())
+                    end,
+                },
+            },
+            {
+                {
+                    text = Gateway:isMuted(Gateway.channels[self.channel.id]) and _("Unmute channel") or _("Mute channel"),
+                    enabled = not self.offline,
+                    callback = function()
+                        close()
+                        self.plugin:toggleMute(self.guild and self.guild.id, self.channel.id)
+                    end,
+                },
+                {
+                    text = _("Jump to new messages"),
+                    enabled = self:firstNewId() ~= nil,
+                    callback = function()
+                        close()
+                        self:redraw("bottom")
+                        self:scrollToNew()
+                        UIManager:setDirty(self, "ui")
                     end,
                 },
             },

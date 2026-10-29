@@ -52,6 +52,8 @@ local Gateway = {
     muted_channels = {},
     suppress_everyone = {}, -- guild id -> true
     users = {},         -- id -> user
+    relationships = {}, -- user id -> { type = 1 friend / 3 incoming / 4 outgoing, user }
+    status = nil,       -- presence to announce ("online", "idle", "dnd", "invisible"), nil = unchanged
     nicks = {},         -- guild id -> { user id -> nick }
     pending_members = {}, -- guild id -> { user id -> true }
 }
@@ -205,8 +207,16 @@ function Gateway:identify()
             referring_domain = "",
             release_channel = "stable",
         },
-        presence = { status = "unknown", since = 0, activities = rapidjson.array({}), afk = false },
+        presence = { status = self.status or "unknown", since = 0, activities = rapidjson.array({}), afk = false },
     })
+end
+
+--- Changes our presence for this session.
+function Gateway:setStatus(status)
+    self.status = status
+    if self:isReady() then
+        self:sendOp(3, { status = status, since = 0, activities = rapidjson.array({}), afk = false })
+    end
 end
 
 function Gateway:tick()
@@ -378,6 +388,12 @@ function Gateway:loadReady(d)
         self.channels[c.id] = c
         table.insert(self.private_channels, c.id)
     end
+    self.relationships = {}
+    for _, r in ipairs(d.relationships or {}) do
+        local uid = v(r.user_id) or r.id
+        local user = r.user or self.users[uid] or { id = uid, username = uid }
+        self.relationships[uid] = { type = r.type, user = user, nickname = v(r.nickname) }
+    end
     local rs = d.read_state and (d.read_state.entries or d.read_state) or {}
     for _, r in ipairs(rs) do
         if (v(r.read_state_type) or 0) == 0 then
@@ -538,6 +554,12 @@ function Gateway:dispatch(t, d)
             nicks[uid] = false
             pending[uid] = nil
         end
+    elseif t == "RELATIONSHIP_ADD" or t == "RELATIONSHIP_UPDATE" then
+        local uid = d.user_id or d.id
+        local user = d.user or (self.relationships[uid] and self.relationships[uid].user) or self.users[uid]
+        self.relationships[uid] = { type = d.type, user = user or { id = uid, username = uid }, nickname = d.nickname }
+    elseif t == "RELATIONSHIP_REMOVE" then
+        self.relationships[d.user_id or d.id] = nil
     elseif t == "USER_GUILD_SETTINGS_UPDATE" then
         if d.guild_id then
             self.muted_guilds[d.guild_id] = d.muted or nil

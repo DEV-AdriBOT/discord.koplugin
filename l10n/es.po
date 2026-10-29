@@ -552,3 +552,156 @@ msgstr "Enviar subrayado a…"
 
 msgid "No one to mention yet."
 msgstr "Todavía no hay nadie a quien mencionar."
+
+msgid "New"
+msgstr "Nuevos"
+
+msgid "poll"
+msgstr "encuesta"
+
+msgid "%1 votes"
+msgstr "%1 votos"
+
+msgid "(closed)"
+msgstr "(cerrada)"
+
+msgid "Could not vote: "
+msgstr "No se pudo votar: "
+
+msgid "Vote sent"
+msgstr "Voto enviado"
+
+msgid "Remove my vote"
+msgstr "Quitar mi voto"
+
+msgid "Poll"
+msgstr "Encuesta"
+
+msgid "This chat is not available offline."
+msgstr "Este chat no está disponible sin conexión."
+
+msgid "Show link as QR code"
+msgstr "Mostrar enlace como código QR"
+
+msgid "Links as QR (%1)"
+msgstr "Enlaces en QR (%1)"
+
+msgid "No links"
+msgstr "Sin enlaces"
+
+msgid "Vote"
+msgstr "Votar"
+
+msgid "Unmute channel"
+msgstr "Reactivar canal"
+
+msgid "Mute channel"
+msgstr "Silenciar canal"
+
+msgid "Jump to new messages"
+msgstr "Ir a los mensajes nuevos"
+
+msgid "Mentions"
+msgstr "Menciones"
+
+msgid "Friends"
+msgstr "Amigos"
+
+msgid "Offline chats"
+msgstr "Chats sin conexión"
+
+msgid "Status: %1"
+msgstr "Estado: %1"
+
+msgid "Online"
+msgstr "En línea"
+
+msgid "Idle"
+msgstr "Ausente"
+
+msgid "Do not disturb"
+msgstr "No molestar"
+
+msgid "Invisible"
+msgstr "Invisible"
+
+msgid "unchanged"
+msgstr "sin cambiar"
+
+msgid "Could not change the status: "
+msgstr "No se pudo cambiar el estado: "
+
+msgid "Could not change mute: "
+msgstr "No se pudo cambiar el silencio: "
+
+msgid "Muted"
+msgstr "Silenciado"
+
+msgid "Unmuted"
+msgstr "Reactivado"
+
+msgid "Nothing to mark as read"
+msgstr "No hay nada que marcar como leído"
+
+msgid "Marking as read…"
+msgstr "Marcando como leído…"
+
+msgid "Could not mark as read: "
+msgstr "No se pudo marcar como leído: "
+
+msgid "Marked %1 channels as read"
+msgstr "%1 canales marcados como leídos"
+
+msgid "Friend request from %1"
+msgstr "Solicitud de amistad de %1"
+
+msgid "Ignore"
+msgstr "Ignorar"
+
+msgid "Accept"
+msgstr "Aceptar"
+
+msgid "Friend request accepted"
+msgstr "Solicitud de amistad aceptada"
+
+msgid "request"
+msgstr "solicitud"
+
+msgid "No friends yet."
+msgstr "Todavía no tienes amigos."
+
+msgid "Loading friends…"
+msgstr "Cargando amigos…"
+
+msgid "Loading mentions…"
+msgstr "Cargando menciones…"
+
+msgid "Could not load mentions: "
+msgstr "No se pudieron cargar las menciones: "
+
+msgid "No recent mentions."
+msgstr "No hay menciones recientes."
+
+msgid "offline"
+msgstr "sin conexión"
+
+msgid "No chats saved yet. Open a chat while online first."
+msgstr "Todavía no hay chats guardados. Abre un chat con conexión primero."
+
+msgid "%1 requests"
+msgstr "%1 solicitudes"
+
+msgid "Mark as read"
+msgstr "Marcar como leído"
+
+msgid "Unmute server"
+msgstr "Reactivar servidor"
+
+msgid "Mute server"
+msgstr "Silenciar servidor"
+
+msgid "1 vote"
+msgstr "1 voto"
+
+msgid "ended a poll"
+msgstr "cerró una encuesta"
