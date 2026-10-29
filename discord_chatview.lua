@@ -428,17 +428,17 @@ function ChatView:buildText()
     local prev, prev_day
     local first_new = self:firstNewId()
     for __, msg in ipairs(self.messages) do
-        if msg.id == first_new then
-            table.insert(out, "")
-            table.insert(out, self.NEW_MARKER)
-            prev = nil
-        end
         local ts = parseTimestamp(msg.timestamp) or 0
         local day = os.date("%Y-%m-%d", ts)
         if day ~= prev_day then
             if not compact then table.insert(out, "") end
             table.insert(out, "═══════ " .. day .. " ═══════")
             prev_day = day
+            prev = nil
+        end
+        if msg.id == first_new then
+            if not compact then table.insert(out, "") end
+            table.insert(out, self.NEW_MARKER)
             prev = nil
         end
         local author = self:authorName(msg.author)
