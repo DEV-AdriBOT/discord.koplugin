@@ -29,6 +29,12 @@ local _ = require("discord_i18n")
 local T = require("ffi/util").template
 
 local cleanEmoji = DiscordAPI.cleanEmoji
+--- Server, channel and category names: emoji are decoration there, drop them.
+local function cleanName(name)
+    local cleaned = cleanEmoji(name or "", true)
+    if cleaned == "" then cleaned = cleanEmoji(name or "?") end
+    return cleaned
+end
 local idLess = DiscordAPI.idLess
 
 local TOKEN_FILE = "/mnt/us/discord_token.txt"
@@ -73,6 +79,7 @@ function Discord:init()
     end
     self.settings = shared.settings_file.data
     self.api = shared.api
+    Gateway.status = self.settings.status
     self:onDispatcherRegisterActions()
     self.ui.menu:registerToMainMenu(self)
     if self.ui.highlight then
@@ -191,7 +198,8 @@ function Discord:setupGatewayListeners()
         UIManager:show(InfoMessage:new{ text = _("Discord rejected the saved session. Please log in again.") })
     end)
     local refresh = function() self:refreshLists() end
-    for __, ev in ipairs({ "ready", "MESSAGE_CREATE", "MESSAGE_ACK", "CHANNEL_UNREAD_UPDATE" }) do
+    for __, ev in ipairs({ "ready", "MESSAGE_CREATE", "MESSAGE_ACK", "CHANNEL_UNREAD_UPDATE",
+            "RELATIONSHIP_ADD", "RELATIONSHIP_REMOVE", "USER_GUILD_SETTINGS_UPDATE" }) do
         Gateway:on(ev, refresh)
     end
     -- Battery check once a minute
@@ -210,7 +218,7 @@ function Discord:channelLabel(channel_id)
         return self:dmName(ch)
     end
     local guild = ch.guild_id and Gateway.guilds[ch.guild_id]
-    return "#" .. cleanEmoji(ch.name or "?") .. (guild and (" · " .. cleanEmoji(guild.name)) or "")
+    return "#" .. cleanName(ch.name) .. (guild and (" · " .. cleanName(guild.name)) or "")
 end
 
 function Discord:maybeNotify(d)
@@ -228,7 +236,8 @@ function Discord:maybeNotify(d)
     local author = cleanEmoji((d.member and d.member.nick) or d.author.global_name or d.author.username or "?")
     local content = d.content or ""
     if content == "" and d.attachments and #d.attachments > 0 then content = _("[file]") end
-    content = cleanEmoji(content:gsub("<@!?%d+>", "@"):gsub("%s+", " "))
+    content = cleanEmoji(content:gsub("<@!?%d+>", "@"):gsub("<@&%d+>", "@role"):gsub("<#%d+>", "#channel")
+        :gsub("<a?:([%w_]+):%d+>", ":%1:"):gsub("%s+", " "))
     if #content > 120 then content = content:sub(1, 120) .. "…" end
     local where = is_dm and "" or (" — " .. self:channelLabel(d.channel_id))
     table.insert(shared.notifications, 1, {
@@ -477,6 +486,27 @@ function Discord:getLoggedInMenu()
             callback = function() self:showNotifications() end,
         },
         {
+            text = _("Mentions"),
+            callback = function() self:showMentions() end,
+        },
+        {
+            text = _("Friends"),
+            callback = function() self:showFriends() end,
+        },
+        {
+            text = _("Offline chats"),
+            callback = function() self:showOfflineChats() end,
+        },
+        {
+            text_func = function() return T(_("Status: %1"), self:statusLabel(self.settings.status)) end,
+            sub_item_table = {
+                self:statusItem("online"),
+                self:statusItem("idle"),
+                self:statusItem("dnd"),
+                self:statusItem("invisible"),
+            },
+        },
+        {
             text = _("Settings"),
             separator = true,
             sub_item_table_func = function() return self:getSettingsMenu() end,
@@ -501,6 +531,38 @@ function Discord:getLoggedInMenu()
                 })
             end,
         },
+    }
+end
+
+-- Status
+
+local STATUS_LABELS = {
+    online = _("Online"),
+    idle = _("Idle"),
+    dnd = _("Do not disturb"),
+    invisible = _("Invisible"),
+}
+
+function Discord:statusLabel(status)
+    return STATUS_LABELS[status] or _("unchanged")
+end
+
+function Discord:statusItem(status)
+    return {
+        text = STATUS_LABELS[status],
+        radio = true,
+        checked_func = function() return self.settings.status == status end,
+        callback = function()
+            self.settings.status = status
+            self:saveSettings()
+            Gateway:setStatus(status)
+            self:withLoading(nil, function()
+                local ok, err = self.api:setStatus(status)
+                if not ok then
+                    UIManager:show(InfoMessage:new{ text = _("Could not change the status: ") .. tostring(err) })
+                end
+            end)
+        end,
     }
 end
 
@@ -934,6 +996,233 @@ function Discord:showNotifications()
     end)
 end
 
+-- Mute and read state
+
+function Discord:toggleMute(guild_id, channel_id)
+    local muted
+    if channel_id then
+        muted = not Gateway.muted_channels[channel_id]
+    else
+        muted = not Gateway.muted_guilds[guild_id]
+    end
+    self:withLoading(nil, function()
+        local ok, err = self.api:setMuted(guild_id, channel_id, muted)
+        if not ok then
+            UIManager:show(InfoMessage:new{ text = _("Could not change mute: ") .. tostring(err) })
+            return
+        end
+        if channel_id then
+            Gateway.muted_channels[channel_id] = muted or nil
+        else
+            Gateway.muted_guilds[guild_id] = muted or nil
+        end
+        UIManager:show(Notification:new{ text = muted and _("Muted") or _("Unmuted") })
+        self:refreshLists()
+    end)
+end
+
+--- Acks every unread channel in the list. Returns the number marked.
+function Discord:markChannelsRead(channels)
+    local entries = {}
+    for __, ch in ipairs(channels) do
+        if ch.last_message_id and (Gateway:isUnread(ch) or Gateway:mentionCount(ch.id) > 0) then
+            table.insert(entries, { channel_id = ch.id, message_id = ch.last_message_id })
+        end
+    end
+    if #entries == 0 then
+        UIManager:show(Notification:new{ text = _("Nothing to mark as read") })
+        return
+    end
+    self:withLoading(_("Marking as read…"), function()
+        local ok, err = self.api:ackBulk(entries)
+        if not ok then
+            UIManager:show(InfoMessage:new{ text = _("Could not mark as read: ") .. tostring(err) })
+            return
+        end
+        for __, e in ipairs(entries) do Gateway:markRead(e.channel_id, e.message_id) end
+        UIManager:show(Notification:new{ text = T(_("Marked %1 channels as read"), #entries) })
+        self:refreshLists()
+    end)
+end
+
+function Discord:markGuildRead(guild_id)
+    local g = Gateway.guilds[guild_id]
+    if not g then return end
+    local list = {}
+    for __, l in ipairs({ g.channels, g.threads }) do
+        for __, ch in ipairs(l) do table.insert(list, ch) end
+    end
+    self:markChannelsRead(list)
+end
+
+function Discord:markDMsRead()
+    local list = {}
+    for __, id in ipairs(Gateway.private_channels) do
+        if Gateway.channels[id] then table.insert(list, Gateway.channels[id]) end
+    end
+    self:markChannelsRead(list)
+end
+
+-- Friends
+
+function Discord:friendRequestDialog(rel)
+    local name = cleanEmoji(rel.user.global_name or rel.user.username or "?")
+    local dialog
+    dialog = ButtonDialog:new{
+        title = T(_("Friend request from %1"), name),
+        buttons = {{
+            {
+                text = _("Ignore"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:withLoading(nil, function()
+                        local ok, err = self.api:removeRelationship(rel.user.id)
+                        if not ok then UIManager:show(InfoMessage:new{ text = tostring(err) }) return end
+                        Gateway.relationships[rel.user.id] = nil
+                        self:refreshLists()
+                    end)
+                end,
+            },
+            {
+                text = _("Accept"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:withLoading(nil, function()
+                        local ok, err = self.api:acceptFriend(rel.user.id)
+                        if not ok then UIManager:show(InfoMessage:new{ text = tostring(err) }) return end
+                        rel.type = 1
+                        UIManager:show(Notification:new{ text = _("Friend request accepted") })
+                        self:refreshLists()
+                    end)
+                end,
+            },
+        }},
+    }
+    UIManager:show(dialog)
+end
+
+function Discord:friendItems()
+    local requests, friends = {}, {}
+    for __, rel in pairs(Gateway.relationships) do
+        local name = cleanEmoji(rel.nickname or rel.user.global_name or rel.user.username or "?")
+        if rel.type == 3 then
+            table.insert(requests, {
+                text = name,
+                search = name .. " " .. (rel.user.username or ""),
+                bold = true,
+                mandatory = _("request"),
+                callback = function() self:friendRequestDialog(rel) end,
+            })
+        elseif rel.type == 1 then
+            table.insert(friends, {
+                text = name,
+                search = name .. " " .. (rel.user.username or ""),
+                mandatory = rel.user.username,
+                callback = function() self:openDMWith(rel.user) end,
+            })
+        end
+    end
+    local by_name = function(a, b) return a.text:lower() < b.text:lower() end
+    table.sort(requests, by_name)
+    table.sort(friends, by_name)
+    for __, f in ipairs(friends) do table.insert(requests, f) end
+    if #requests == 0 then
+        table.insert(requests, { text = _("No friends yet."), select_enabled = false })
+    end
+    return requests
+end
+
+function Discord:showFriends()
+    if not self:requireLogin() then return end
+    self:withLoading(_("Loading friends…"), function()
+        if not self:waitForGateway() then
+            local ok, list = self.api:getRelationships()
+            if not ok then
+                UIManager:show(InfoMessage:new{ text = tostring(list) })
+                return
+            end
+            Gateway.relationships = {}
+            for __, r in ipairs(list) do
+                Gateway.relationships[r.id] = { type = r.type, user = r.user, nickname = r.nickname }
+            end
+        end
+        self:showList(_("Friends"), function() return self:friendItems() end)
+    end)
+end
+
+-- Mentions inbox
+
+function Discord:showMentions()
+    if not self:requireLogin() then return end
+    self:withLoading(_("Loading mentions…"), function()
+        local ok, list = self.api:getMentions()
+        if not ok then
+            UIManager:show(InfoMessage:new{ text = _("Could not load mentions: ") .. tostring(list) })
+            return
+        end
+        self:waitForGateway()
+        self:showList(_("Mentions"), function()
+            local items = {}
+            for __, m in ipairs(list) do
+                local author = cleanEmoji(m.author and (m.author.global_name or m.author.username) or "?")
+                local content = cleanEmoji((m.content or ""):gsub("<@!?%d+>", "@"):gsub("<@&%d+>", "@role")
+                    :gsub("<#%d+>", "#channel"):gsub("<a?:([%w_]+):%d+>", ":%1:"):gsub("%s+", " "))
+                local ts = ChatView.parseTimestamp(m.timestamp) or 0
+                table.insert(items, {
+                    text = author .. " — " .. self:channelLabel(m.channel_id) .. ": " .. content,
+                    mandatory = os.date("%m-%d %H:%M", ts),
+                    callback = function()
+                        self:openEntry({ id = m.channel_id, guild_id = m.guild_id }, m.id)
+                    end,
+                })
+            end
+            if #items == 0 then
+                table.insert(items, { text = _("No recent mentions."), select_enabled = false })
+            end
+            return items
+        end)
+    end)
+end
+
+-- Offline chats
+
+function Discord:openOffline(entry)
+    local channel = { id = entry.id }
+    local guild = entry.guild_id and { id = entry.guild_id, name = entry.subtitle } or nil
+    local view
+    view = ChatView:new{
+        api = self.api,
+        channel = channel,
+        guild = guild,
+        title = entry.title or "?",
+        subtitle = (entry.subtitle or "") .. " · " .. _("offline"),
+        settings = self.settings,
+        can_send = false,
+        plugin = self,
+        offline = true,
+    }
+    if view:load() then
+        UIManager:show(view)
+    end
+end
+
+function Discord:showOfflineChats()
+    self:showList(_("Offline chats"), function()
+        local items = {}
+        for __, e in ipairs(ChatView.listCache()) do
+            table.insert(items, {
+                text = e.title or "?",
+                mandatory = e.subtitle and cleanEmoji(e.subtitle) or nil,
+                callback = function() self:openOffline(e) end,
+            })
+        end
+        if #items == 0 then
+            table.insert(items, { text = _("No chats saved yet. Open a chat while online first."), select_enabled = false })
+        end
+        return items
+    end)
+end
+
 -- Navigation
 
 function Discord:requireLogin()
@@ -1000,6 +1289,23 @@ function Discord:homeItems(guilds)
         bold = true,
         mandatory = mark,
         callback = function() self:onOpenDiscordDMs() end,
+        hold_callback = function()
+            if Gateway:isReady() then self:markDMsRead() end
+        end,
+    })
+    local requests = 0
+    for __, rel in pairs(Gateway.relationships) do
+        if rel.type == 3 then requests = requests + 1 end
+    end
+    table.insert(items, {
+        text = _("Friends"),
+        mandatory = requests > 0 and T(_("%1 requests"), requests) or nil,
+        bold = requests > 0,
+        callback = function() self:showFriends() end,
+    })
+    table.insert(items, {
+        text = _("Mentions"),
+        callback = function() self:showMentions() end,
     })
     if #shared.notifications > 0 then
         table.insert(items, {
@@ -1016,7 +1322,7 @@ function Discord:homeItems(guilds)
             if Gateway:isReady() then unread, mentions = Gateway:guildUnread(g.id) end
             local b, m = unreadMarks(unread, mentions)
             table.insert(items, {
-                text = cleanEmoji(g.name),
+                text = cleanName(g.name),
                 bold = b,
                 mandatory = m,
                 guild = g,
@@ -1035,17 +1341,38 @@ end
 
 function Discord:guildHoldDialog(g)
     local dialog
+    local ready = Gateway:isReady()
     dialog = ButtonDialog:new{
         title = cleanEmoji(g.name),
-        buttons = {{
+        buttons = {
             {
-                text = _("Hide server"),
-                callback = function()
-                    UIManager:close(dialog)
-                    self:setHidden(g.id, g.name, true)
-                end,
+                {
+                    text = _("Mark as read"),
+                    enabled = ready,
+                    callback = function()
+                        UIManager:close(dialog)
+                        self:markGuildRead(g.id)
+                    end,
+                },
+                {
+                    text = Gateway.muted_guilds[g.id] and _("Unmute server") or _("Mute server"),
+                    enabled = ready,
+                    callback = function()
+                        UIManager:close(dialog)
+                        self:toggleMute(g.id)
+                    end,
+                },
             },
-        }},
+            {
+                {
+                    text = _("Hide server"),
+                    callback = function()
+                        UIManager:close(dialog)
+                        self:setHidden(g.id, g.name, true)
+                    end,
+                },
+            },
+        },
     }
     UIManager:show(dialog)
 end
@@ -1090,7 +1417,11 @@ function Discord:onOpenDiscordLastChat()
 end
 
 --- Opens a chat from a stored entry { id, guild_id, title, subtitle }.
-function Discord:openEntry(entry)
+function Discord:openEntry(entry, around_id)
+    if not NetworkMgr:isOnline() and ChatView.readCache(entry.id) then
+        self:openOffline(entry)
+        return
+    end
     self:withLoading(_("Loading messages…"), function()
         self:waitForGateway()
         local channel = Gateway.channels[entry.id]
@@ -1118,18 +1449,22 @@ function Discord:openEntry(entry)
         local title = entry.title
         if not title then
             if guild then
-                title = "#" .. cleanEmoji(channel.name or "?")
+                title = "#" .. cleanName(channel.name)
             else
                 title = self:dmName(channel)
             end
         end
-        local subtitle = entry.subtitle or (guild and cleanEmoji(guild.name))
+        local subtitle = entry.subtitle or (guild and cleanName(guild.name))
             or (channel.type == CHANNEL_GROUP_DM and _("Group") or _("Direct message"))
-        self:openChannelNow(channel, guild, title, subtitle, guild and self:channelNames(guild.id), can_send)
+        self:openChannelNow(channel, guild, title, subtitle, guild and self:channelNames(guild.id), can_send, around_id)
     end)
 end
 
 function Discord:openChannel(channel, guild, title, subtitle, channel_names, can_send)
+    if not NetworkMgr:isOnline() and ChatView.readCache(channel.id) then
+        self:openOffline({ id = channel.id, guild_id = guild and guild.id, title = title, subtitle = subtitle })
+        return
+    end
     self:withLoading(_("Loading messages…"), function()
         self:openChannelNow(channel, guild, title, subtitle, channel_names, can_send)
     end)
@@ -1283,10 +1618,10 @@ function Discord:channelItems(guild, channels, threads, perms_of)
     end
     table.sort(groups, function(a, b) return by_position(a.channel, b.channel) end)
 
-    local guild_name = cleanEmoji(guild.name)
+    local guild_name = cleanName(guild.name)
     local items = {}
     local function addChannel(ch, prefix, can_send)
-        local name = util.trim((cleanEmoji(ch.name or "?"):gsub("%[emoji%]", "")))
+        local name = cleanName(ch.name)
         local is_forum = ch.type == CHANNEL_FORUM or ch.type == CHANNEL_MEDIA
         local bold, mark = false, nil
         if Gateway:isReady() and not is_forum then
@@ -1318,7 +1653,7 @@ function Discord:channelItems(guild, channels, threads, perms_of)
         table.sort(group.children, by_position)
         if group ~= top then
             table.insert(items, {
-                text = "— " .. util.trim((cleanEmoji(group.channel.name or ""):gsub("%[emoji%]", ""))):upper() .. " —",
+                text = "— " .. cleanName(group.channel.name):upper() .. " —",
                 bold = true,
                 select_enabled = false,
             })
@@ -1345,7 +1680,7 @@ function Discord:openGuild(guild_summary)
         if gw_guild then
             Gateway:subscribeGuild(gw_guild.id)
             local guild = self:guildFromGateway(gw_guild.id)
-            self:showList(cleanEmoji(guild.name), function()
+            self:showList(cleanName(guild.name), function()
                 local perms_of = Gateway:permissionResolver(gw_guild)
                 return (self:channelItems(guild, gw_guild.channels, gw_guild.threads, perms_of))
             end)
@@ -1406,13 +1741,13 @@ function Discord:openThreadList(parent_id, guild, channel_names)
         table.sort(threads, function(a, b)
             return idLess(b.last_message_id or b.id, a.last_message_id or a.id)
         end)
-        local parent_name = parent and cleanEmoji(parent.name or "?") or "?"
-        local guild_name = guild and cleanEmoji(guild.name) or ""
+        local parent_name = parent and cleanName(parent.name) or "?"
+        local guild_name = guild and cleanName(guild.name) or ""
         channel_names = channel_names or {}
         self:showList(T(_("Threads in #%1"), parent_name), function()
             local items = {}
             for __, th in ipairs(threads) do
-                local name = util.trim(cleanEmoji(th.name or "?"))
+                local name = cleanName(th.name)
                 channel_names[th.id] = th.name
                 local archived = th.thread_metadata and th.thread_metadata.archived
                 local bold, mark = false, nil
