@@ -83,7 +83,13 @@ These actions are available in KOReader's gesture manager:
 
 ## Translations
 
-Translations live in `l10n/<language>.po` (for example `l10n/es.po`) and are picked up automatically from KOReader's interface language. To add a language, copy `es.po`, rename it to your language code and translate the `msgstr` lines.
+The interface follows KOReader's language. Available: English, Spanish.
+
+Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
+
+## Contributing
+
+Bug reports, ideas and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Disclaimer
 

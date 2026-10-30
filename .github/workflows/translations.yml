@@ -1,0 +1,23 @@
+name: Translations
+
+on:
+  push:
+    paths: ["**.lua", "l10n/**", "tools/i18n.py"]
+  pull_request:
+    paths: ["**.lua", "l10n/**", "tools/i18n.py"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check translation files
+        run: |
+          python3 tools/i18n.py --check | tee report.txt
+      - name: Coverage summary
+        if: always()
+        run: |
+          echo '### Translations' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat report.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

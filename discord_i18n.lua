@@ -46,10 +46,17 @@ local function loadPo(path)
     return catalog
 end
 
+--- KOReader's language, e.g. "pt_BR" (not the system locale).
 local function currentLang()
-    -- Follow the language KOReader actually uses, not the system locale
-    local lang = gettext.current_lang or "C"
-    return lang:match("^(%a+)") or "C"
+    return (gettext.current_lang or "C"):match("^([%a_]+)") or "C"
+end
+
+--- Loads l10n/pt_BR.po if present, otherwise l10n/pt.po.
+local function loadCatalog(lang)
+    local base = lang:match("^(%a+)")
+    return loadPo(plugin_dir .. "/l10n/" .. lang .. ".po")
+        or (base ~= lang and loadPo(plugin_dir .. "/l10n/" .. base .. ".po"))
+        or false
 end
 
 local catalog
@@ -59,7 +66,7 @@ local function translate(msgid)
     local lang = currentLang()
     if lang ~= catalog_lang then
         catalog_lang = lang
-        catalog = loadPo(plugin_dir .. "/l10n/" .. lang .. ".po") or false
+        catalog = loadCatalog(lang)
     end
     if catalog and catalog[msgid] then
         return catalog[msgid]

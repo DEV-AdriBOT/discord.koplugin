@@ -4,860 +4,1142 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: es\n"
 
+#: _meta.lua main.lua
 msgid "Discord"
 msgstr "Discord"
 
+#: discord_api.lua
 msgid "Network error"
 msgstr "Error de red"
 
+#: discord_api.lua
 msgid "Discord is asking for a captcha. Log in with a token instead."
 msgstr "Discord pide un captcha. Inicia sesión con un token."
 
+#: discord_api.lua
 msgid "This account is suspended."
 msgstr "Esta cuenta está suspendida."
 
+#: discord_api.lua
 msgid "Unexpected server response."
 msgstr "Respuesta inesperada del servidor."
 
+#: discord_api.lua
 msgid "Invalid code"
 msgstr "Código incorrecto"
 
+#: discord_api.lua
 msgid "The search index is not ready yet, try again in a few seconds."
 msgstr "El índice de búsqueda aún no está listo, inténtalo en unos segundos."
 
+#: discord_chatview.lua
 msgid "added someone to the group"
 msgstr "añadió a alguien al grupo"
 
+#: discord_chatview.lua
 msgid "removed someone from the group"
 msgstr "quitó a alguien del grupo"
 
+#: discord_chatview.lua
 msgid "started a call"
 msgstr "inició una llamada"
 
+#: discord_chatview.lua
 msgid "changed the channel name"
 msgstr "cambió el nombre del canal"
 
+#: discord_chatview.lua
 msgid "changed the channel icon"
 msgstr "cambió el icono del canal"
 
+#: discord_chatview.lua
 msgid "pinned a message"
 msgstr "fijó un mensaje"
 
+#: discord_chatview.lua
 msgid "joined the server"
 msgstr "se unió al servidor"
 
+#: discord_chatview.lua
 msgid "boosted the server"
 msgstr "mejoró el servidor"
 
+#: discord_chatview.lua
 msgid "started a thread"
 msgstr "creó un hilo"
 
-msgid "Older"
-msgstr "Anteriores"
-
-msgid "Refresh"
-msgstr "Actualizar"
-
-msgid "Messages"
-msgstr "Mensajes"
-
-msgid "Write"
-msgstr "Escribir"
-
-msgid "forwarded:"
-msgstr "reenviado:"
-
-msgid "image"
-msgstr "imagen"
-
-msgid "file"
-msgstr "archivo"
-
-msgid "(edited)"
-msgstr "(editado)"
-
-msgid "(deleted message)"
-msgstr "(mensaje eliminado)"
-
-msgid "No messages yet."
-msgstr "Todavía no hay mensajes."
-
-msgid "%1 is typing…"
-msgstr "%1 está escribiendo…"
-
-msgid "Several people are typing…"
-msgstr "Varias personas están escribiendo…"
-
-msgid "Could not load messages: "
-msgstr "No se pudieron cargar los mensajes: "
-
-msgid "Refreshing…"
-msgstr "Actualizando…"
-
-msgid "No older messages"
-msgstr "No hay mensajes más antiguos"
-
-msgid "Edit message"
-msgstr "Editar mensaje"
-
-msgid "Reply to "
-msgstr "Responder a "
-
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgid "Quick"
-msgstr "Rápidas"
-
-msgid "Save"
-msgstr "Guardar"
-
-msgid "Send"
-msgstr "Enviar"
-
-msgid "Could not send: "
-msgstr "No se pudo enviar: "
-
-msgid "No quick replies. Add some in Settings."
-msgstr "No hay respuestas rápidas. Añade algunas en Ajustes."
-
-msgid "Quick replies"
-msgstr "Respuestas rápidas"
-
-msgid "Search members…"
-msgstr "Buscar miembros…"
-
-msgid "Mention"
-msgstr "Mencionar"
-
-msgid "Search members"
-msgstr "Buscar miembros"
-
-msgid "Search"
-msgstr "Buscar"
-
-msgid "No results"
-msgstr "Sin resultados"
-
-msgid "Member search needs the real-time connection."
-msgstr "La búsqueda de miembros necesita la conexión en tiempo real."
-
-msgid "No messages"
-msgstr "No hay mensajes"
-
-msgid "Choose a message"
-msgstr "Elige un mensaje"
-
-msgid "Loading pinned messages…"
-msgstr "Cargando mensajes fijados…"
-
-msgid "Could not load pinned messages: "
-msgstr "No se pudieron cargar los mensajes fijados: "
-
-msgid "Pinned messages"
-msgstr "Mensajes fijados"
-
-msgid "Search in this channel"
-msgstr "Buscar en este canal"
-
-msgid "Searching…"
-msgstr "Buscando…"
-
-msgid "Results for «%1» (%2)"
-msgstr "Resultados de «%1» (%2)"
-
-msgid "View full"
-msgstr "Ver completo"
-
-msgid "Jump to message"
-msgstr "Ir al mensaje"
-
-msgid "Loading messages…"
-msgstr "Cargando mensajes…"
-
-msgid "Showing older messages. Use Refresh to go back to the latest."
-msgstr "Mostrando mensajes antiguos. Usa Actualizar para volver a los últimos."
-
-msgid "Downloading image…"
-msgstr "Descargando imagen…"
-
-msgid "Could not download the image: "
-msgstr "No se pudo descargar la imagen: "
-
-msgid "Images"
-msgstr "Imágenes"
-
-msgid "Could not react: "
-msgstr "No se pudo reaccionar: "
-
-msgid "Remove"
-msgstr "Quitar"
-
-msgid "Add"
-msgstr "Añadir"
-
-msgid "React"
-msgstr "Reaccionar"
-
-msgid "Reply"
-msgstr "Responder"
-
-msgid "View images (%1)"
-msgstr "Ver imágenes (%1)"
-
-msgid "No images"
-msgstr "Sin imágenes"
-
-msgid "Copy"
-msgstr "Copiar"
-
-msgid "Copied"
-msgstr "Copiado"
-
-msgid "Direct message"
-msgstr "Mensaje directo"
-
-msgid "Edit"
-msgstr "Editar"
-
-msgid "Delete"
-msgstr "Eliminar"
-
-msgid "Delete this message?"
-msgstr "¿Eliminar este mensaje?"
-
-msgid "Go to bottom"
-msgstr "Ir al final"
-
-msgid "Go to top"
-msgstr "Ir al principio"
-
-msgid "Threads"
-msgstr "Hilos"
-
-msgid "Remove favorite"
-msgstr "Quitar de favoritos"
-
-msgid "Add to favorites"
-msgstr "Añadir a favoritos"
-
-msgid "Open as document"
-msgstr "Abrir como documento"
-
-msgid "Normal layout"
-msgstr "Diseño normal"
-
-msgid "Compact layout"
-msgstr "Diseño compacto"
-
-msgid "Smaller text"
-msgstr "Texto más pequeño"
-
-msgid "Larger text"
-msgstr "Texto más grande"
-
-msgid "Open Discord"
-msgstr "Abrir Discord"
-
-msgid "Discord: direct messages"
-msgstr "Discord: mensajes directos"
-
-msgid "Discord: open last chat"
-msgstr "Discord: abrir último chat"
-
-msgid "Discord: low battery, real-time connection paused"
-msgstr "Discord: batería baja, conexión en tiempo real pausada"
-
-msgid "Discord rejected the saved session. Please log in again."
-msgstr "Discord ha rechazado la sesión guardada. Vuelve a iniciar sesión."
-
-msgid "[file]"
-msgstr "[archivo]"
-
-msgid "Log in with email and password"
-msgstr "Iniciar sesión con email y contraseña"
-
-msgid "Log in with token"
-msgstr "Iniciar sesión con token"
-
-msgid "Load token from %1"
-msgstr "Cargar token desde %1"
-
-msgid "off"
-msgstr "desactivada"
-
-msgid "connected"
-msgstr "conectado"
-
-msgid "connecting…"
-msgstr "conectando…"
-
-msgid "disconnected"
-msgstr "desconectado"
-
-msgid "Real-time connection: %1"
-msgstr "Conexión en tiempo real: %1"
-
-msgid "Stay connected in background (notifications)"
-msgstr "Seguir conectado en segundo plano (avisos)"
-
-msgid "Notify direct messages"
-msgstr "Avisar de mensajes directos"
-
-msgid "Notify mentions"
-msgstr "Avisar de menciones"
-
-msgid "Battery saver"
-msgstr "Ahorro de batería"
-
-msgid "Below this battery level the background connection is paused and polling slows down."
-msgstr "Por debajo de este nivel de batería se pausa la conexión en segundo plano y se comprueban mensajes con menos frecuencia."
-
-msgid "Off"
-msgstr "Desactivado"
-
-msgid "Check for new messages without real-time connection"
-msgstr "Comprobar mensajes sin conexión en tiempo real"
-
-msgid "Every 10 seconds"
-msgstr "Cada 10 segundos"
-
-msgid "Every 15 seconds"
-msgstr "Cada 15 segundos"
-
-msgid "Every 30 seconds"
-msgstr "Cada 30 segundos"
-
-msgid "Every minute"
-msgstr "Cada minuto"
-
-msgid "Messages per load"
-msgstr "Mensajes por carga"
-
-msgid "Messages in \"Open as document\""
-msgstr "Mensajes en \"Abrir como documento\""
-
-msgid "Mark channels as read when opened"
-msgstr "Marcar canales como leídos al abrirlos"
-
-msgid "Show channels without access"
-msgstr "Mostrar canales sin acceso"
-
-msgid "Hidden servers (%1)"
-msgstr "Servidores ocultos (%1)"
-
-msgid "Add quick reply…"
-msgstr "Añadir respuesta rápida…"
-
-msgid "New quick reply"
-msgstr "Nueva respuesta rápida"
-
-msgid "Remove quick reply \"%1\"?"
-msgstr "¿Quitar la respuesta rápida \"%1\"?"
-
-msgid "Direct messages"
-msgstr "Mensajes directos"
-
-msgid "Open last chat"
-msgstr "Abrir último chat"
-
-msgid "Recent notifications (%1)"
-msgstr "Avisos recientes (%1)"
-
-msgid "Settings"
-msgstr "Ajustes"
-
-msgid "Log out (%1)"
-msgstr "Cerrar sesión (%1)"
-
-msgid "Log out of Discord on this device?"
-msgstr "¿Cerrar sesión de Discord en este dispositivo?"
-
-msgid "Log out"
-msgstr "Cerrar sesión"
-
-msgid "Loading…"
-msgstr "Cargando…"
-
-msgid "Error: "
-msgstr "Error: "
-
-msgid "session expired or invalid token. Please log in again."
-msgstr "sesión caducada o token inválido. Vuelve a iniciar sesión."
-
-msgid "Show all"
-msgstr "Ver todo"
-
-msgid "%1 — «%2»"
-msgstr "%1 — «%2»"
-
-msgid "Login failed: "
-msgstr "No se pudo iniciar sesión: "
-
-msgid "Logged in as %1"
-msgstr "Sesión iniciada como %1"
-
-msgid "Discord token"
-msgstr "Token de Discord"
-
-msgid "Paste or type your user token."
-msgstr "Pega o escribe tu token de usuario."
-
-msgid "Log in"
-msgstr "Entrar"
-
-msgid "Checking token…"
-msgstr "Comprobando token…"
-
-msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
-msgstr "No se encontró %1.\n\nCrea ese archivo con tu token dentro (por USB o SSH) y vuelve a intentarlo."
-
-msgid "The token file is empty."
-msgstr "El archivo del token está vacío."
-
-msgid "Two-factor authentication"
-msgstr "Verificación en dos pasos"
-
-msgid "Enter the 6-digit code from your authenticator app."
-msgstr "Introduce el código de 6 dígitos de tu app de autenticación."
-
-msgid "Verify"
-msgstr "Verificar"
-
-msgid "Verifying…"
-msgstr "Verificando…"
-
-msgid "Log in to Discord"
-msgstr "Iniciar sesión en Discord"
-
-msgid "Email or phone"
-msgstr "Email o teléfono"
-
-msgid "Password"
-msgstr "Contraseña"
-
-msgid "Logging in…"
-msgstr "Iniciando sesión…"
-
-msgid "Removed from favorites"
-msgstr "Quitado de favoritos"
-
-msgid "Added to favorites"
-msgstr "Añadido a favoritos"
-
-msgid "Hidden servers"
-msgstr "Servidores ocultos"
-
-msgid "tap to show"
-msgstr "toca para mostrar"
-
-msgid "No hidden servers."
-msgstr "No hay servidores ocultos."
-
-msgid "Recent notifications"
-msgstr "Avisos recientes"
-
-msgid "No notifications."
-msgstr "No hay avisos."
-
-msgid "Log in first from Tools → Discord."
-msgstr "Primero inicia sesión desde Herramientas → Discord."
-
-msgid "(unnamed)"
-msgstr "(sin nombre)"
-
-msgid "Hide server"
-msgstr "Ocultar servidor"
-
-msgid "Loading servers…"
-msgstr "Cargando servidores…"
-
-msgid "Could not load servers: "
-msgstr "No se pudieron cargar los servidores: "
-
-msgid "No recent chats yet."
-msgstr "Todavía no hay chats recientes."
-
-msgid "Could not open the chat: "
-msgstr "No se pudo abrir el chat: "
-
-msgid "Group"
-msgstr "Grupo"
-
-msgid "group"
-msgstr "grupo"
-
-msgid "You have no direct messages."
-msgstr "No tienes mensajes directos."
-
-msgid "Loading direct messages…"
-msgstr "Cargando mensajes directos…"
-
-msgid "Could not load direct messages: "
-msgstr "No se pudieron cargar los mensajes directos: "
-
-msgid "no access"
-msgstr "sin acceso"
-
-msgid "forum"
-msgstr "foro"
-
-msgid "read-only"
-msgstr "solo lectura"
-
-msgid "announcements"
-msgstr "anuncios"
-
-msgid "No visible text channels."
-msgstr "No hay canales de texto visibles."
-
-msgid "Loading channels…"
-msgstr "Cargando canales…"
-
-msgid "Could not load channels: "
-msgstr "No se pudieron cargar los canales: "
-
-msgid "Loading threads…"
-msgstr "Cargando hilos…"
-
-msgid "Threads in #%1"
-msgstr "Hilos en #%1"
-
-msgid "archived"
-msgstr "archivado"
-
-msgid "No threads."
-msgstr "No hay hilos."
-
-msgid "Preparing document…"
-msgstr "Preparando documento…"
-
-msgid "Could not write the document."
-msgstr "No se pudo escribir el documento."
-
-msgid "Send to Discord"
-msgstr "Enviar a Discord"
-
-msgid "Open a chat or add a favorite first, then you can send highlights to it."
-msgstr "Abre un chat o añade un favorito primero; después podrás enviarle subrayados."
-
-msgid "Sending…"
-msgstr "Enviando…"
-
-msgid "Sent to %1"
-msgstr "Enviado a %1"
-
-msgid "Send highlight to…"
-msgstr "Enviar subrayado a…"
-
-msgid "No one to mention yet."
-msgstr "Todavía no hay nadie a quien mencionar."
-
-msgid "New"
-msgstr "Nuevos"
-
-msgid "poll"
-msgstr "encuesta"
-
-msgid "%1 votes"
-msgstr "%1 votos"
-
-msgid "(closed)"
-msgstr "(cerrada)"
-
-msgid "Could not vote: "
-msgstr "No se pudo votar: "
-
-msgid "Vote sent"
-msgstr "Voto enviado"
-
-msgid "Remove my vote"
-msgstr "Quitar mi voto"
-
-msgid "Poll"
-msgstr "Encuesta"
-
-msgid "This chat is not available offline."
-msgstr "Este chat no está disponible sin conexión."
-
-msgid "Show link as QR code"
-msgstr "Mostrar enlace como código QR"
-
-msgid "Links as QR (%1)"
-msgstr "Enlaces en QR (%1)"
-
-msgid "No links"
-msgstr "Sin enlaces"
-
-msgid "Vote"
-msgstr "Votar"
-
-msgid "Unmute channel"
-msgstr "Reactivar canal"
-
-msgid "Mute channel"
-msgstr "Silenciar canal"
-
-msgid "Jump to new messages"
-msgstr "Ir a los mensajes nuevos"
-
-msgid "Mentions"
-msgstr "Menciones"
-
-msgid "Friends"
-msgstr "Amigos"
-
-msgid "Offline chats"
-msgstr "Chats sin conexión"
-
-msgid "Status: %1"
-msgstr "Estado: %1"
-
-msgid "Online"
-msgstr "En línea"
-
-msgid "Idle"
-msgstr "Ausente"
-
-msgid "Do not disturb"
-msgstr "No molestar"
-
-msgid "Invisible"
-msgstr "Invisible"
-
-msgid "unchanged"
-msgstr "sin cambiar"
-
-msgid "Could not change the status: "
-msgstr "No se pudo cambiar el estado: "
-
-msgid "Could not change mute: "
-msgstr "No se pudo cambiar el silencio: "
-
-msgid "Muted"
-msgstr "Silenciado"
-
-msgid "Unmuted"
-msgstr "Reactivado"
-
-msgid "Nothing to mark as read"
-msgstr "No hay nada que marcar como leído"
-
-msgid "Marking as read…"
-msgstr "Marcando como leído…"
-
-msgid "Could not mark as read: "
-msgstr "No se pudo marcar como leído: "
-
-msgid "Marked %1 channels as read"
-msgstr "%1 canales marcados como leídos"
-
-msgid "Friend request from %1"
-msgstr "Solicitud de amistad de %1"
-
-msgid "Ignore"
-msgstr "Ignorar"
-
-msgid "Accept"
-msgstr "Aceptar"
-
-msgid "Friend request accepted"
-msgstr "Solicitud de amistad aceptada"
-
-msgid "request"
-msgstr "solicitud"
-
-msgid "No friends yet."
-msgstr "Todavía no tienes amigos."
-
-msgid "Loading friends…"
-msgstr "Cargando amigos…"
-
-msgid "Loading mentions…"
-msgstr "Cargando menciones…"
-
-msgid "Could not load mentions: "
-msgstr "No se pudieron cargar las menciones: "
-
-msgid "No recent mentions."
-msgstr "No hay menciones recientes."
-
-msgid "offline"
-msgstr "sin conexión"
-
-msgid "No chats saved yet. Open a chat while online first."
-msgstr "Todavía no hay chats guardados. Abre un chat con conexión primero."
-
-msgid "%1 requests"
-msgstr "%1 solicitudes"
-
-msgid "Mark as read"
-msgstr "Marcar como leído"
-
-msgid "Unmute server"
-msgstr "Reactivar servidor"
-
-msgid "Mute server"
-msgstr "Silenciar servidor"
-
-msgid "1 vote"
-msgstr "1 voto"
-
+#: discord_chatview.lua
 msgid "ended a poll"
 msgstr "cerró una encuesta"
 
-msgid "a book"
-msgstr "un libro"
+#: discord_chatview.lua
+msgid "New"
+msgstr "Nuevos"
 
-msgid "Show the book I'm reading as my Discord activity"
-msgstr "Mostrar el libro que leo como mi actividad en Discord"
+#: discord_chatview.lua
+msgid "Older"
+msgstr "Anteriores"
 
-msgid "Full screen refresh in chats"
-msgstr "Refresco completo de pantalla en los chats"
+#: discord_chatview.lua
+msgid "Refresh"
+msgstr "Actualizar"
 
-msgid "Flash the screen every few page turns to remove e-ink ghosting."
-msgstr "Hace un parpadeo de pantalla cada pocas páginas para quitar los restos de la tinta electrónica."
+#: discord_chatview.lua
+msgid "Messages"
+msgstr "Mensajes"
 
-msgid "Never"
-msgstr "Nunca"
+#: discord_chatview.lua
+msgid "Write"
+msgstr "Escribir"
 
-msgid "Every 3 pages"
-msgstr "Cada 3 páginas"
+#: discord_chatview.lua
+msgid "forwarded:"
+msgstr "reenviado:"
 
-msgid "Every 6 pages"
-msgstr "Cada 6 páginas"
+#: discord_chatview.lua
+msgid "image"
+msgstr "imagen"
 
-msgid "Every 12 pages"
-msgstr "Cada 12 páginas"
+#: discord_chatview.lua
+msgid "file"
+msgstr "archivo"
 
-msgid "Default"
-msgstr "Predeterminada"
+#: discord_chatview.lua
+msgid "(edited)"
+msgstr "(editado)"
 
-msgid "Chat font"
-msgstr "Fuente del chat"
+#: discord_chatview.lua
+msgid "poll"
+msgstr "encuesta"
 
-msgid "tight"
-msgstr "estrecho"
+#: discord_chatview.lua
+msgid "1 vote"
+msgstr "1 voto"
 
-msgid "normal"
-msgstr "normal"
+#: discord_chatview.lua
+msgid "%1 votes"
+msgstr "%1 votos"
 
-msgid "relaxed"
-msgstr "amplio"
+#: discord_chatview.lua
+msgid "(closed)"
+msgstr "(cerrada)"
 
-msgid "loose"
-msgstr "muy amplio"
+#: discord_chatview.lua
+msgid "Could not vote: "
+msgstr "No se pudo votar: "
 
-msgid "small"
-msgstr "pequeños"
+#: discord_chatview.lua
+msgid "Vote sent"
+msgstr "Voto enviado"
 
-msgid "large"
-msgstr "grandes"
+#: discord_chatview.lua
+msgid "Remove my vote"
+msgstr "Quitar mi voto"
 
-msgid "Reading theme"
-msgstr "Tema de lectura"
+#: discord_chatview.lua
+msgid "Poll"
+msgstr "Encuesta"
 
-msgid "Font: %1"
-msgstr "Fuente: %1"
-
-msgid "Line spacing: %1"
-msgstr "Interlineado: %1"
-
-msgid "Margins: %1"
-msgstr "Márgenes: %1"
-
+#: discord_chatview.lua
 msgid "Only messages for you · %1 hidden"
 msgstr "Solo mensajes para ti · %1 ocultos"
 
-msgid "Show all messages"
-msgstr "Ver todos los mensajes"
+#: discord_chatview.lua
+msgid "(deleted message)"
+msgstr "(mensaje eliminado)"
 
-msgid "Only messages for me"
-msgstr "Solo mensajes para mí"
+#: discord_chatview.lua
+msgid "No messages yet."
+msgstr "Todavía no hay mensajes."
 
-msgid "Open a chat or add a favorite first, then you can send to it."
-msgstr "Abre un chat o añade un favorito primero; después podrás enviarle cosas."
+#: discord_chatview.lua
+msgid "%1 is typing…"
+msgstr "%1 está escribiendo…"
 
-msgid "Forward to…"
-msgstr "Reenviar a…"
+#: discord_chatview.lua
+msgid "Several people are typing…"
+msgstr "Varias personas están escribiendo…"
 
-msgid "Forwarded to %1"
-msgstr "Reenviado a %1"
+#: discord_chatview.lua
+msgid "This chat is not available offline."
+msgstr "Este chat no está disponible sin conexión."
 
-msgid "Could not forward: "
-msgstr "No se pudo reenviar: "
+#: discord_chatview.lua
+msgid "Could not load messages: "
+msgstr "No se pudieron cargar los mensajes: "
 
+#: discord_chatview.lua
+msgid "Refreshing…"
+msgstr "Actualizando…"
+
+#: discord_chatview.lua
+msgid "No older messages"
+msgstr "No hay mensajes más antiguos"
+
+#: discord_chatview.lua
+msgid "Edit message"
+msgstr "Editar mensaje"
+
+#: discord_chatview.lua
+msgid "Reply to "
+msgstr "Responder a "
+
+#: discord_chatview.lua main.lua
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: discord_chatview.lua
+msgid "Quick"
+msgstr "Rápidas"
+
+#: discord_chatview.lua
+msgid "Save"
+msgstr "Guardar"
+
+#: discord_chatview.lua
+msgid "Send"
+msgstr "Enviar"
+
+#: discord_chatview.lua main.lua
+msgid "Could not send: "
+msgstr "No se pudo enviar: "
+
+#: discord_chatview.lua
+msgid "No quick replies. Add some in Settings."
+msgstr "No hay respuestas rápidas. Añade algunas en Ajustes."
+
+#: discord_chatview.lua main.lua
+msgid "Quick replies"
+msgstr "Respuestas rápidas"
+
+#: discord_chatview.lua
+msgid "Search members…"
+msgstr "Buscar miembros…"
+
+#: discord_chatview.lua
+msgid "No one to mention yet."
+msgstr "Todavía no hay nadie a quien mencionar."
+
+#: discord_chatview.lua
+msgid "Mention"
+msgstr "Mencionar"
+
+#: discord_chatview.lua
+msgid "Search members"
+msgstr "Buscar miembros"
+
+#: discord_chatview.lua main.lua
+msgid "Search"
+msgstr "Buscar"
+
+#: discord_chatview.lua main.lua
+msgid "No results"
+msgstr "Sin resultados"
+
+#: discord_chatview.lua
+msgid "Member search needs the real-time connection."
+msgstr "La búsqueda de miembros necesita la conexión en tiempo real."
+
+#: discord_chatview.lua
+msgid "No messages"
+msgstr "No hay mensajes"
+
+#: discord_chatview.lua
+msgid "Choose a message"
+msgstr "Elige un mensaje"
+
+#: discord_chatview.lua
+msgid "Loading pinned messages…"
+msgstr "Cargando mensajes fijados…"
+
+#: discord_chatview.lua
+msgid "Could not load pinned messages: "
+msgstr "No se pudieron cargar los mensajes fijados: "
+
+#: discord_chatview.lua
+msgid "Pinned messages"
+msgstr "Mensajes fijados"
+
+#: discord_chatview.lua
+msgid "Search in this channel"
+msgstr "Buscar en este canal"
+
+#: discord_chatview.lua
+msgid "Searching…"
+msgstr "Buscando…"
+
+#: discord_chatview.lua
+msgid "Results for «%1» (%2)"
+msgstr "Resultados de «%1» (%2)"
+
+#: discord_chatview.lua
+msgid "View full"
+msgstr "Ver completo"
+
+#: discord_chatview.lua
+msgid "Jump to message"
+msgstr "Ir al mensaje"
+
+#: discord_chatview.lua main.lua
+msgid "Loading messages…"
+msgstr "Cargando mensajes…"
+
+#: discord_chatview.lua
+msgid "Showing older messages. Use Refresh to go back to the latest."
+msgstr "Mostrando mensajes antiguos. Usa Actualizar para volver a los últimos."
+
+#: discord_chatview.lua
+msgid "Downloading image…"
+msgstr "Descargando imagen…"
+
+#: discord_chatview.lua
+msgid "Could not download the image: "
+msgstr "No se pudo descargar la imagen: "
+
+#: discord_chatview.lua
+msgid "Images"
+msgstr "Imágenes"
+
+#: discord_chatview.lua
+msgid "Could not react: "
+msgstr "No se pudo reaccionar: "
+
+#: discord_chatview.lua main.lua
+msgid "Remove"
+msgstr "Quitar"
+
+#: discord_chatview.lua main.lua
+msgid "Add"
+msgstr "Añadir"
+
+#: discord_chatview.lua
+msgid "React"
+msgstr "Reaccionar"
+
+#: discord_chatview.lua
+msgid "Show link as QR code"
+msgstr "Mostrar enlace como código QR"
+
+#: discord_chatview.lua
+msgid "Reply"
+msgstr "Responder"
+
+#: discord_chatview.lua
+msgid "View images (%1)"
+msgstr "Ver imágenes (%1)"
+
+#: discord_chatview.lua
+msgid "No images"
+msgstr "Sin imágenes"
+
+#: discord_chatview.lua
+msgid "Copy"
+msgstr "Copiar"
+
+#: discord_chatview.lua
+msgid "Copied"
+msgstr "Copiado"
+
+#: discord_chatview.lua main.lua
+msgid "Direct message"
+msgstr "Mensaje directo"
+
+#: discord_chatview.lua
+msgid "Links as QR (%1)"
+msgstr "Enlaces en QR (%1)"
+
+#: discord_chatview.lua
+msgid "No links"
+msgstr "Sin enlaces"
+
+#: discord_chatview.lua
+msgid "Vote"
+msgstr "Votar"
+
+#: discord_chatview.lua
 msgid "Forward"
 msgstr "Reenviar"
 
-msgid "Group servers by folders"
-msgstr "Agrupar servidores por carpetas"
-
+#: discord_chatview.lua
 msgid "Note about user"
 msgstr "Nota sobre el usuario"
 
+#: discord_chatview.lua
+msgid "Edit"
+msgstr "Editar"
+
+#: discord_chatview.lua
+msgid "Delete"
+msgstr "Eliminar"
+
+#: discord_chatview.lua
+msgid "Delete this message?"
+msgstr "¿Eliminar este mensaje?"
+
+#: discord_chatview.lua
 msgid "Could not load the note: "
 msgstr "No se pudo cargar la nota: "
 
+#: discord_chatview.lua
 msgid "Note about %1"
 msgstr "Nota sobre %1"
 
+#: discord_chatview.lua
 msgid "Only you can see this note."
 msgstr "Solo tú puedes ver esta nota."
 
+#: discord_chatview.lua
 msgid "Note saved"
 msgstr "Nota guardada"
 
+#: discord_chatview.lua
 msgid "Could not save the note: "
 msgstr "No se pudo guardar la nota: "
 
+#: discord_chatview.lua
+msgid "Go to bottom"
+msgstr "Ir al final"
+
+#: discord_chatview.lua
+msgid "Go to top"
+msgstr "Ir al principio"
+
+#: discord_chatview.lua
+msgid "Threads"
+msgstr "Hilos"
+
+#: discord_chatview.lua
+msgid "Remove favorite"
+msgstr "Quitar de favoritos"
+
+#: discord_chatview.lua
+msgid "Add to favorites"
+msgstr "Añadir a favoritos"
+
+#: discord_chatview.lua
+msgid "Unmute channel"
+msgstr "Reactivar canal"
+
+#: discord_chatview.lua
+msgid "Mute channel"
+msgstr "Silenciar canal"
+
+#: discord_chatview.lua
+msgid "Jump to new messages"
+msgstr "Ir a los mensajes nuevos"
+
+#: discord_chatview.lua
+msgid "Open as document"
+msgstr "Abrir como documento"
+
+#: discord_chatview.lua
+msgid "Normal layout"
+msgstr "Diseño normal"
+
+#: discord_chatview.lua main.lua
+msgid "Compact layout"
+msgstr "Diseño compacto"
+
+#: discord_chatview.lua
+msgid "Show all messages"
+msgstr "Ver todos los mensajes"
+
+#: discord_chatview.lua
+msgid "Only messages for me"
+msgstr "Solo mensajes para mí"
+
+#: discord_chatview.lua
+msgid "Reading theme"
+msgstr "Tema de lectura"
+
+#: discord_chatview.lua
+msgid "Default"
+msgstr "Predeterminada"
+
+#: discord_chatview.lua
+msgid "Chat font"
+msgstr "Fuente del chat"
+
+#: discord_chatview.lua
+msgid "tight"
+msgstr "estrecho"
+
+#: discord_chatview.lua
+msgid "normal"
+msgstr "normal"
+
+#: discord_chatview.lua
+msgid "relaxed"
+msgstr "amplio"
+
+#: discord_chatview.lua
+msgid "loose"
+msgstr "muy amplio"
+
+#: discord_chatview.lua
+msgid "small"
+msgstr "pequeños"
+
+#: discord_chatview.lua
+msgid "large"
+msgstr "grandes"
+
+#: discord_chatview.lua
+msgid "Font: %1"
+msgstr "Fuente: %1"
+
+#: discord_chatview.lua
+msgid "Line spacing: %1"
+msgstr "Interlineado: %1"
+
+#: discord_chatview.lua
+msgid "Margins: %1"
+msgstr "Márgenes: %1"
+
+#: discord_chatview.lua
+msgid "Smaller text"
+msgstr "Texto más pequeño"
+
+#: discord_chatview.lua
+msgid "Larger text"
+msgstr "Texto más grande"
+
+#: main.lua
+msgid "Open Discord"
+msgstr "Abrir Discord"
+
+#: main.lua
+msgid "Discord: direct messages"
+msgstr "Discord: mensajes directos"
+
+#: main.lua
+msgid "Discord: open last chat"
+msgstr "Discord: abrir último chat"
+
+#: main.lua
+msgid "a book"
+msgstr "un libro"
+
+#: main.lua
+msgid "Discord: low battery, real-time connection paused"
+msgstr "Discord: batería baja, conexión en tiempo real pausada"
+
+#: main.lua
 msgid "%1 unread DMs"
 msgstr "%1 MD sin leer"
 
+#: main.lua
 msgid "%1 mentions"
 msgstr "%1 menciones"
 
+#: main.lua
+msgid "Discord rejected the saved session. Please log in again."
+msgstr "Discord ha rechazado la sesión guardada. Vuelve a iniciar sesión."
+
+#: main.lua
+msgid "[file]"
+msgstr "[archivo]"
+
+#: main.lua
+msgid "Log in with email and password"
+msgstr "Iniciar sesión con email y contraseña"
+
+#: main.lua
+msgid "Log in with token"
+msgstr "Iniciar sesión con token"
+
+#: main.lua
+msgid "Load token from %1"
+msgstr "Cargar token desde %1"
+
+#: main.lua
+msgid "off"
+msgstr "desactivada"
+
+#: main.lua
+msgid "connected"
+msgstr "conectado"
+
+#: main.lua
+msgid "connecting…"
+msgstr "conectando…"
+
+#: main.lua
+msgid "disconnected"
+msgstr "desconectado"
+
+#: main.lua
+msgid "Real-time connection: %1"
+msgstr "Conexión en tiempo real: %1"
+
+#: main.lua
+msgid "Stay connected in background (notifications)"
+msgstr "Seguir conectado en segundo plano (avisos)"
+
+#: main.lua
+msgid "Notify direct messages"
+msgstr "Avisar de mensajes directos"
+
+#: main.lua
+msgid "Show the book I'm reading as my Discord activity"
+msgstr "Mostrar el libro que leo como mi actividad en Discord"
+
+#: main.lua
+msgid "Notify mentions"
+msgstr "Avisar de menciones"
+
+#: main.lua
 msgid "Show unread DMs and mentions on the sleep screen"
 msgstr "Mostrar MD y menciones sin leer en la pantalla de reposo"
 
+#: main.lua
 msgid "Preview sleep screen text"
 msgstr "Vista previa del texto de reposo"
 
+#: main.lua
 msgid "Nothing unread right now: the normal sleep screen will be shown."
 msgstr "Ahora no hay nada sin leer: se mostrará la pantalla de reposo normal."
 
+#: main.lua
+msgid "Battery saver"
+msgstr "Ahorro de batería"
+
+#: main.lua
+msgid "Below this battery level the background connection is paused and polling slows down."
+msgstr "Por debajo de este nivel de batería se pausa la conexión en segundo plano y se comprueban mensajes con menos frecuencia."
+
+#: main.lua
+msgid "Off"
+msgstr "Desactivado"
+
+#: main.lua
+msgid "Check for new messages without real-time connection"
+msgstr "Comprobar mensajes sin conexión en tiempo real"
+
+#: main.lua
+msgid "Every 10 seconds"
+msgstr "Cada 10 segundos"
+
+#: main.lua
+msgid "Every 15 seconds"
+msgstr "Cada 15 segundos"
+
+#: main.lua
+msgid "Every 30 seconds"
+msgstr "Cada 30 segundos"
+
+#: main.lua
+msgid "Every minute"
+msgstr "Cada minuto"
+
+#: main.lua
+msgid "Messages per load"
+msgstr "Mensajes por carga"
+
+#: main.lua
+msgid "Messages in \"Open as document\""
+msgstr "Mensajes en \"Abrir como documento\""
+
+#: main.lua
+msgid "Group servers by folders"
+msgstr "Agrupar servidores por carpetas"
+
+#: main.lua
+msgid "Check for plugin updates once a day"
+msgstr "Buscar actualizaciones del plugin una vez al día"
+
+#: main.lua
+msgid "Full screen refresh in chats"
+msgstr "Refresco completo de pantalla en los chats"
+
+#: main.lua
+msgid "Flash the screen every few page turns to remove e-ink ghosting."
+msgstr "Hace un parpadeo de pantalla cada pocas páginas para quitar los restos de la tinta electrónica."
+
+#: main.lua
+msgid "Never"
+msgstr "Nunca"
+
+#: main.lua
+msgid "Every 3 pages"
+msgstr "Cada 3 páginas"
+
+#: main.lua
+msgid "Every 6 pages"
+msgstr "Cada 6 páginas"
+
+#: main.lua
+msgid "Every 12 pages"
+msgstr "Cada 12 páginas"
+
+#: main.lua
+msgid "Mark channels as read when opened"
+msgstr "Marcar canales como leídos al abrirlos"
+
+#: main.lua
+msgid "Show channels without access"
+msgstr "Mostrar canales sin acceso"
+
+#: main.lua
+msgid "Hidden servers (%1)"
+msgstr "Servidores ocultos (%1)"
+
+#: main.lua
+msgid "Add quick reply…"
+msgstr "Añadir respuesta rápida…"
+
+#: main.lua
+msgid "New quick reply"
+msgstr "Nueva respuesta rápida"
+
+#: main.lua
+msgid "Remove quick reply \"%1\"?"
+msgstr "¿Quitar la respuesta rápida \"%1\"?"
+
+#: main.lua
+msgid "Direct messages"
+msgstr "Mensajes directos"
+
+#: main.lua
+msgid "Open last chat"
+msgstr "Abrir último chat"
+
+#: main.lua
+msgid "Recent notifications (%1)"
+msgstr "Avisos recientes (%1)"
+
+#: main.lua
+msgid "Mentions"
+msgstr "Menciones"
+
+#: main.lua
+msgid "Friends"
+msgstr "Amigos"
+
+#: main.lua
+msgid "Offline chats"
+msgstr "Chats sin conexión"
+
+#: main.lua
+msgid "Status: %1"
+msgstr "Estado: %1"
+
+#: main.lua
+msgid "Settings"
+msgstr "Ajustes"
+
+#: main.lua
+msgid "Log out (%1)"
+msgstr "Cerrar sesión (%1)"
+
+#: main.lua
+msgid "Log out of Discord on this device?"
+msgstr "¿Cerrar sesión de Discord en este dispositivo?"
+
+#: main.lua
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+#: main.lua
 msgid "Check for updates (version %1)"
 msgstr "Buscar actualizaciones (versión %1)"
 
+#: main.lua
 msgid "Could not check for updates: "
 msgstr "No se pudo buscar actualizaciones: "
 
+#: main.lua
 msgid "You have the latest version (%1)."
 msgstr "Tienes la última versión (%1)."
 
+#: main.lua
 msgid "Discord plugin %1 is available: Tools → Discord → Check for updates"
 msgstr "Hay una nueva versión del plugin de Discord (%1): Herramientas → Discord → Buscar actualizaciones"
 
+#: main.lua
 msgid "Version %1 is available (you have %2)."
 msgstr "Está disponible la versión %1 (tienes la %2)."
 
+#: main.lua
 msgid "Update now?"
 msgstr "¿Actualizar ahora?"
 
+#: main.lua
 msgid "Update"
 msgstr "Actualizar"
 
+#: main.lua
 msgid "Downloading update…"
 msgstr "Descargando actualización…"
 
+#: main.lua
 msgid "The update failed: "
 msgstr "La actualización falló: "
 
+#: main.lua
 msgid "Discord plugin updated to %1. Restart KOReader now?"
 msgstr "Plugin de Discord actualizado a %1. ¿Reiniciar KOReader ahora?"
 
+#: main.lua
 msgid "Checking for updates…"
 msgstr "Buscando actualizaciones…"
 
-msgid "Check for plugin updates once a day"
-msgstr "Buscar actualizaciones del plugin una vez al día"
+#: main.lua
+msgid "Online"
+msgstr "En línea"
+
+#: main.lua
+msgid "Idle"
+msgstr "Ausente"
+
+#: main.lua
+msgid "Do not disturb"
+msgstr "No molestar"
+
+#: main.lua
+msgid "Invisible"
+msgstr "Invisible"
+
+#: main.lua
+msgid "unchanged"
+msgstr "sin cambiar"
+
+#: main.lua
+msgid "Could not change the status: "
+msgstr "No se pudo cambiar el estado: "
+
+#: main.lua
+msgid "Loading…"
+msgstr "Cargando…"
+
+#: main.lua
+msgid "Error: "
+msgstr "Error: "
+
+#: main.lua
+msgid "session expired or invalid token. Please log in again."
+msgstr "sesión caducada o token inválido. Vuelve a iniciar sesión."
+
+#: main.lua
+msgid "Show all"
+msgstr "Ver todo"
+
+#: main.lua
+msgid "%1 — «%2»"
+msgstr "%1 — «%2»"
+
+#: main.lua
+msgid "Login failed: "
+msgstr "No se pudo iniciar sesión: "
+
+#: main.lua
+msgid "Logged in as %1"
+msgstr "Sesión iniciada como %1"
+
+#: main.lua
+msgid "Discord token"
+msgstr "Token de Discord"
+
+#: main.lua
+msgid "Paste or type your user token."
+msgstr "Pega o escribe tu token de usuario."
+
+#: main.lua
+msgid "Log in"
+msgstr "Entrar"
+
+#: main.lua
+msgid "Checking token…"
+msgstr "Comprobando token…"
+
+#: main.lua
+msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
+msgstr "No se encontró %1.\n\nCrea ese archivo con tu token dentro (por USB o SSH) y vuelve a intentarlo."
+
+#: main.lua
+msgid "The token file is empty."
+msgstr "El archivo del token está vacío."
+
+#: main.lua
+msgid "Two-factor authentication"
+msgstr "Verificación en dos pasos"
+
+#: main.lua
+msgid "Enter the 6-digit code from your authenticator app."
+msgstr "Introduce el código de 6 dígitos de tu app de autenticación."
+
+#: main.lua
+msgid "Verify"
+msgstr "Verificar"
+
+#: main.lua
+msgid "Verifying…"
+msgstr "Verificando…"
+
+#: main.lua
+msgid "Log in to Discord"
+msgstr "Iniciar sesión en Discord"
+
+#: main.lua
+msgid "Email or phone"
+msgstr "Email o teléfono"
+
+#: main.lua
+msgid "Password"
+msgstr "Contraseña"
+
+#: main.lua
+msgid "Logging in…"
+msgstr "Iniciando sesión…"
+
+#: main.lua
+msgid "Removed from favorites"
+msgstr "Quitado de favoritos"
+
+#: main.lua
+msgid "Added to favorites"
+msgstr "Añadido a favoritos"
+
+#: main.lua
+msgid "Hidden servers"
+msgstr "Servidores ocultos"
+
+#: main.lua
+msgid "tap to show"
+msgstr "toca para mostrar"
+
+#: main.lua
+msgid "No hidden servers."
+msgstr "No hay servidores ocultos."
+
+#: main.lua
+msgid "Recent notifications"
+msgstr "Avisos recientes"
+
+#: main.lua
+msgid "No notifications."
+msgstr "No hay avisos."
+
+#: main.lua
+msgid "Could not change mute: "
+msgstr "No se pudo cambiar el silencio: "
+
+#: main.lua
+msgid "Muted"
+msgstr "Silenciado"
+
+#: main.lua
+msgid "Unmuted"
+msgstr "Reactivado"
+
+#: main.lua
+msgid "Nothing to mark as read"
+msgstr "No hay nada que marcar como leído"
+
+#: main.lua
+msgid "Marking as read…"
+msgstr "Marcando como leído…"
+
+#: main.lua
+msgid "Could not mark as read: "
+msgstr "No se pudo marcar como leído: "
+
+#: main.lua
+msgid "Marked %1 channels as read"
+msgstr "%1 canales marcados como leídos"
+
+#: main.lua
+msgid "Friend request from %1"
+msgstr "Solicitud de amistad de %1"
+
+#: main.lua
+msgid "Ignore"
+msgstr "Ignorar"
+
+#: main.lua
+msgid "Accept"
+msgstr "Aceptar"
+
+#: main.lua
+msgid "Friend request accepted"
+msgstr "Solicitud de amistad aceptada"
+
+#: main.lua
+msgid "request"
+msgstr "solicitud"
+
+#: main.lua
+msgid "No friends yet."
+msgstr "Todavía no tienes amigos."
+
+#: main.lua
+msgid "Loading friends…"
+msgstr "Cargando amigos…"
+
+#: main.lua
+msgid "Loading mentions…"
+msgstr "Cargando menciones…"
+
+#: main.lua
+msgid "Could not load mentions: "
+msgstr "No se pudieron cargar las menciones: "
+
+#: main.lua
+msgid "No recent mentions."
+msgstr "No hay menciones recientes."
+
+#: main.lua
+msgid "offline"
+msgstr "sin conexión"
+
+#: main.lua
+msgid "No chats saved yet. Open a chat while online first."
+msgstr "Todavía no hay chats guardados. Abre un chat con conexión primero."
+
+#: main.lua
+msgid "Log in first from Tools → Discord."
+msgstr "Primero inicia sesión desde Herramientas → Discord."
+
+#: main.lua
+msgid "(unnamed)"
+msgstr "(sin nombre)"
+
+#: main.lua
+msgid "%1 requests"
+msgstr "%1 solicitudes"
+
+#: main.lua
+msgid "Mark as read"
+msgstr "Marcar como leído"
+
+#: main.lua
+msgid "Unmute server"
+msgstr "Reactivar servidor"
+
+#: main.lua
+msgid "Mute server"
+msgstr "Silenciar servidor"
+
+#: main.lua
+msgid "Hide server"
+msgstr "Ocultar servidor"
+
+#: main.lua
+msgid "Loading servers…"
+msgstr "Cargando servidores…"
+
+#: main.lua
+msgid "Could not load servers: "
+msgstr "No se pudieron cargar los servidores: "
+
+#: main.lua
+msgid "No recent chats yet."
+msgstr "Todavía no hay chats recientes."
+
+#: main.lua
+msgid "Could not open the chat: "
+msgstr "No se pudo abrir el chat: "
+
+#: main.lua
+msgid "Group"
+msgstr "Grupo"
+
+#: main.lua
+msgid "group"
+msgstr "grupo"
+
+#: main.lua
+msgid "You have no direct messages."
+msgstr "No tienes mensajes directos."
+
+#: main.lua
+msgid "Loading direct messages…"
+msgstr "Cargando mensajes directos…"
+
+#: main.lua
+msgid "Could not load direct messages: "
+msgstr "No se pudieron cargar los mensajes directos: "
+
+#: main.lua
+msgid "no access"
+msgstr "sin acceso"
+
+#: main.lua
+msgid "forum"
+msgstr "foro"
+
+#: main.lua
+msgid "read-only"
+msgstr "solo lectura"
+
+#: main.lua
+msgid "announcements"
+msgstr "anuncios"
+
+#: main.lua
+msgid "No visible text channels."
+msgstr "No hay canales de texto visibles."
+
+#: main.lua
+msgid "Loading channels…"
+msgstr "Cargando canales…"
+
+#: main.lua
+msgid "Could not load channels: "
+msgstr "No se pudieron cargar los canales: "
+
+#: main.lua
+msgid "Loading threads…"
+msgstr "Cargando hilos…"
+
+#: main.lua
+msgid "Threads in #%1"
+msgstr "Hilos en #%1"
+
+#: main.lua
+msgid "archived"
+msgstr "archivado"
+
+#: main.lua
+msgid "No threads."
+msgstr "No hay hilos."
+
+#: main.lua
+msgid "Preparing document…"
+msgstr "Preparando documento…"
+
+#: main.lua
+msgid "Could not write the document."
+msgstr "No se pudo escribir el documento."
+
+#: main.lua
+msgid "Send to Discord"
+msgstr "Enviar a Discord"
+
+#: main.lua
+msgid "Send highlight to…"
+msgstr "Enviar subrayado a…"
+
+#: main.lua
+msgid "Sending…"
+msgstr "Enviando…"
+
+#: main.lua
+msgid "Sent to %1"
+msgstr "Enviado a %1"
+
+#: main.lua
+msgid "Open a chat or add a favorite first, then you can send to it."
+msgstr "Abre un chat o añade un favorito primero; después podrás enviarle cosas."
+
+#: main.lua
+msgid "Forward to…"
+msgstr "Reenviar a…"
+
+#: main.lua
+msgid "Forwarded to %1"
+msgstr "Reenviado a %1"
+
+#: main.lua
+msgid "Could not forward: "
+msgstr "No se pudo reenviar: "

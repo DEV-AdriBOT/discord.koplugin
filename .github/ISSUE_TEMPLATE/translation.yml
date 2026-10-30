@@ -1,0 +1,31 @@
+name: Translation
+description: Offer a new language, or report a wrong or missing translation.
+title: "Translation: "
+labels: ["i18n"]
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: Name and KOReader code, e.g. "French (fr)" or "Portuguese, Brazil (pt_BR)".
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is it about?
+      options:
+        - A new language (I am attaching or will send a .po file)
+        - A wrong translation
+        - Missing translations
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: |
+        For a new language, attach your `.po` file (start from `l10n/discord.pot`, see CONTRIBUTING.md).
+        For a fix, paste the English text, the current translation and your suggestion.
+    validations:
+      required: true

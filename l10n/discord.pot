@@ -1,0 +1,1145 @@
+# Template for discord.koplugin translations. Copy it to <language>.po.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: \n"
+
+#: _meta.lua main.lua
+msgid "Discord"
+msgstr ""
+
+#: discord_api.lua
+msgid "Network error"
+msgstr ""
+
+#: discord_api.lua
+msgid "Discord is asking for a captcha. Log in with a token instead."
+msgstr ""
+
+#: discord_api.lua
+msgid "This account is suspended."
+msgstr ""
+
+#: discord_api.lua
+msgid "Unexpected server response."
+msgstr ""
+
+#: discord_api.lua
+msgid "Invalid code"
+msgstr ""
+
+#: discord_api.lua
+msgid "The search index is not ready yet, try again in a few seconds."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "added someone to the group"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "removed someone from the group"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "started a call"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "changed the channel name"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "changed the channel icon"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "pinned a message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "joined the server"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "boosted the server"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "started a thread"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "ended a poll"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "New"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Older"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Refresh"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Write"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "forwarded:"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "image"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "file"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "(edited)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "poll"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "1 vote"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "%1 votes"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "(closed)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not vote: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Vote sent"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Remove my vote"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Poll"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Only messages for you · %1 hidden"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "(deleted message)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No messages yet."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "%1 is typing…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Several people are typing…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "This chat is not available offline."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not load messages: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Refreshing…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No older messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Edit message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Reply to "
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Cancel"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Quick"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Save"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Send"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Could not send: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No quick replies. Add some in Settings."
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Quick replies"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Search members…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No one to mention yet."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Mention"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Search members"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Search"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "No results"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Member search needs the real-time connection."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Choose a message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Loading pinned messages…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not load pinned messages: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Pinned messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Search in this channel"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Searching…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Results for «%1» (%2)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "View full"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Jump to message"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Loading messages…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Showing older messages. Use Refresh to go back to the latest."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Downloading image…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not download the image: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Images"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not react: "
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Remove"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Add"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "React"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Show link as QR code"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Reply"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "View images (%1)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No images"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Copy"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Copied"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Direct message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Links as QR (%1)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No links"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Vote"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Forward"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Note about user"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Edit"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Delete"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Delete this message?"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not load the note: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Note about %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Only you can see this note."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Note saved"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not save the note: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Go to bottom"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Go to top"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Threads"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Remove favorite"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Add to favorites"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Unmute channel"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Mute channel"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Jump to new messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Open as document"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Normal layout"
+msgstr ""
+
+#: discord_chatview.lua main.lua
+msgid "Compact layout"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Show all messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Only messages for me"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Reading theme"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Default"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Chat font"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "tight"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "normal"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "relaxed"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "loose"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "small"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "large"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Font: %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Line spacing: %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Margins: %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Smaller text"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Larger text"
+msgstr ""
+
+#: main.lua
+msgid "Open Discord"
+msgstr ""
+
+#: main.lua
+msgid "Discord: direct messages"
+msgstr ""
+
+#: main.lua
+msgid "Discord: open last chat"
+msgstr ""
+
+#: main.lua
+msgid "a book"
+msgstr ""
+
+#: main.lua
+msgid "Discord: low battery, real-time connection paused"
+msgstr ""
+
+#: main.lua
+msgid "%1 unread DMs"
+msgstr ""
+
+#: main.lua
+msgid "%1 mentions"
+msgstr ""
+
+#: main.lua
+msgid "Discord rejected the saved session. Please log in again."
+msgstr ""
+
+#: main.lua
+msgid "[file]"
+msgstr ""
+
+#: main.lua
+msgid "Log in with email and password"
+msgstr ""
+
+#: main.lua
+msgid "Log in with token"
+msgstr ""
+
+#: main.lua
+msgid "Load token from %1"
+msgstr ""
+
+#: main.lua
+msgid "off"
+msgstr ""
+
+#: main.lua
+msgid "connected"
+msgstr ""
+
+#: main.lua
+msgid "connecting…"
+msgstr ""
+
+#: main.lua
+msgid "disconnected"
+msgstr ""
+
+#: main.lua
+msgid "Real-time connection: %1"
+msgstr ""
+
+#: main.lua
+msgid "Stay connected in background (notifications)"
+msgstr ""
+
+#: main.lua
+msgid "Notify direct messages"
+msgstr ""
+
+#: main.lua
+msgid "Show the book I'm reading as my Discord activity"
+msgstr ""
+
+#: main.lua
+msgid "Notify mentions"
+msgstr ""
+
+#: main.lua
+msgid "Show unread DMs and mentions on the sleep screen"
+msgstr ""
+
+#: main.lua
+msgid "Preview sleep screen text"
+msgstr ""
+
+#: main.lua
+msgid "Nothing unread right now: the normal sleep screen will be shown."
+msgstr ""
+
+#: main.lua
+msgid "Battery saver"
+msgstr ""
+
+#: main.lua
+msgid "Below this battery level the background connection is paused and polling slows down."
+msgstr ""
+
+#: main.lua
+msgid "Off"
+msgstr ""
+
+#: main.lua
+msgid "Check for new messages without real-time connection"
+msgstr ""
+
+#: main.lua
+msgid "Every 10 seconds"
+msgstr ""
+
+#: main.lua
+msgid "Every 15 seconds"
+msgstr ""
+
+#: main.lua
+msgid "Every 30 seconds"
+msgstr ""
+
+#: main.lua
+msgid "Every minute"
+msgstr ""
+
+#: main.lua
+msgid "Messages per load"
+msgstr ""
+
+#: main.lua
+msgid "Messages in \"Open as document\""
+msgstr ""
+
+#: main.lua
+msgid "Group servers by folders"
+msgstr ""
+
+#: main.lua
+msgid "Check for plugin updates once a day"
+msgstr ""
+
+#: main.lua
+msgid "Full screen refresh in chats"
+msgstr ""
+
+#: main.lua
+msgid "Flash the screen every few page turns to remove e-ink ghosting."
+msgstr ""
+
+#: main.lua
+msgid "Never"
+msgstr ""
+
+#: main.lua
+msgid "Every 3 pages"
+msgstr ""
+
+#: main.lua
+msgid "Every 6 pages"
+msgstr ""
+
+#: main.lua
+msgid "Every 12 pages"
+msgstr ""
+
+#: main.lua
+msgid "Mark channels as read when opened"
+msgstr ""
+
+#: main.lua
+msgid "Show channels without access"
+msgstr ""
+
+#: main.lua
+msgid "Hidden servers (%1)"
+msgstr ""
+
+#: main.lua
+msgid "Add quick reply…"
+msgstr ""
+
+#: main.lua
+msgid "New quick reply"
+msgstr ""
+
+#: main.lua
+msgid "Remove quick reply \"%1\"?"
+msgstr ""
+
+#: main.lua
+msgid "Direct messages"
+msgstr ""
+
+#: main.lua
+msgid "Open last chat"
+msgstr ""
+
+#: main.lua
+msgid "Recent notifications (%1)"
+msgstr ""
+
+#: main.lua
+msgid "Mentions"
+msgstr ""
+
+#: main.lua
+msgid "Friends"
+msgstr ""
+
+#: main.lua
+msgid "Offline chats"
+msgstr ""
+
+#: main.lua
+msgid "Status: %1"
+msgstr ""
+
+#: main.lua
+msgid "Settings"
+msgstr ""
+
+#: main.lua
+msgid "Log out (%1)"
+msgstr ""
+
+#: main.lua
+msgid "Log out of Discord on this device?"
+msgstr ""
+
+#: main.lua
+msgid "Log out"
+msgstr ""
+
+#: main.lua
+msgid "Check for updates (version %1)"
+msgstr ""
+
+#: main.lua
+msgid "Could not check for updates: "
+msgstr ""
+
+#: main.lua
+msgid "You have the latest version (%1)."
+msgstr ""
+
+#: main.lua
+msgid "Discord plugin %1 is available: Tools → Discord → Check for updates"
+msgstr ""
+
+#: main.lua
+msgid "Version %1 is available (you have %2)."
+msgstr ""
+
+#: main.lua
+msgid "Update now?"
+msgstr ""
+
+#: main.lua
+msgid "Update"
+msgstr ""
+
+#: main.lua
+msgid "Downloading update…"
+msgstr ""
+
+#: main.lua
+msgid "The update failed: "
+msgstr ""
+
+#: main.lua
+msgid "Discord plugin updated to %1. Restart KOReader now?"
+msgstr ""
+
+#: main.lua
+msgid "Checking for updates…"
+msgstr ""
+
+#: main.lua
+msgid "Online"
+msgstr ""
+
+#: main.lua
+msgid "Idle"
+msgstr ""
+
+#: main.lua
+msgid "Do not disturb"
+msgstr ""
+
+#: main.lua
+msgid "Invisible"
+msgstr ""
+
+#: main.lua
+msgid "unchanged"
+msgstr ""
+
+#: main.lua
+msgid "Could not change the status: "
+msgstr ""
+
+#: main.lua
+msgid "Loading…"
+msgstr ""
+
+#: main.lua
+msgid "Error: "
+msgstr ""
+
+#: main.lua
+msgid "session expired or invalid token. Please log in again."
+msgstr ""
+
+#: main.lua
+msgid "Show all"
+msgstr ""
+
+#: main.lua
+msgid "%1 — «%2»"
+msgstr ""
+
+#: main.lua
+msgid "Login failed: "
+msgstr ""
+
+#: main.lua
+msgid "Logged in as %1"
+msgstr ""
+
+#: main.lua
+msgid "Discord token"
+msgstr ""
+
+#: main.lua
+msgid "Paste or type your user token."
+msgstr ""
+
+#: main.lua
+msgid "Log in"
+msgstr ""
+
+#: main.lua
+msgid "Checking token…"
+msgstr ""
+
+#: main.lua
+msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
+msgstr ""
+
+#: main.lua
+msgid "The token file is empty."
+msgstr ""
+
+#: main.lua
+msgid "Two-factor authentication"
+msgstr ""
+
+#: main.lua
+msgid "Enter the 6-digit code from your authenticator app."
+msgstr ""
+
+#: main.lua
+msgid "Verify"
+msgstr ""
+
+#: main.lua
+msgid "Verifying…"
+msgstr ""
+
+#: main.lua
+msgid "Log in to Discord"
+msgstr ""
+
+#: main.lua
+msgid "Email or phone"
+msgstr ""
+
+#: main.lua
+msgid "Password"
+msgstr ""
+
+#: main.lua
+msgid "Logging in…"
+msgstr ""
+
+#: main.lua
+msgid "Removed from favorites"
+msgstr ""
+
+#: main.lua
+msgid "Added to favorites"
+msgstr ""
+
+#: main.lua
+msgid "Hidden servers"
+msgstr ""
+
+#: main.lua
+msgid "tap to show"
+msgstr ""
+
+#: main.lua
+msgid "No hidden servers."
+msgstr ""
+
+#: main.lua
+msgid "Recent notifications"
+msgstr ""
+
+#: main.lua
+msgid "No notifications."
+msgstr ""
+
+#: main.lua
+msgid "Could not change mute: "
+msgstr ""
+
+#: main.lua
+msgid "Muted"
+msgstr ""
+
+#: main.lua
+msgid "Unmuted"
+msgstr ""
+
+#: main.lua
+msgid "Nothing to mark as read"
+msgstr ""
+
+#: main.lua
+msgid "Marking as read…"
+msgstr ""
+
+#: main.lua
+msgid "Could not mark as read: "
+msgstr ""
+
+#: main.lua
+msgid "Marked %1 channels as read"
+msgstr ""
+
+#: main.lua
+msgid "Friend request from %1"
+msgstr ""
+
+#: main.lua
+msgid "Ignore"
+msgstr ""
+
+#: main.lua
+msgid "Accept"
+msgstr ""
+
+#: main.lua
+msgid "Friend request accepted"
+msgstr ""
+
+#: main.lua
+msgid "request"
+msgstr ""
+
+#: main.lua
+msgid "No friends yet."
+msgstr ""
+
+#: main.lua
+msgid "Loading friends…"
+msgstr ""
+
+#: main.lua
+msgid "Loading mentions…"
+msgstr ""
+
+#: main.lua
+msgid "Could not load mentions: "
+msgstr ""
+
+#: main.lua
+msgid "No recent mentions."
+msgstr ""
+
+#: main.lua
+msgid "offline"
+msgstr ""
+
+#: main.lua
+msgid "No chats saved yet. Open a chat while online first."
+msgstr ""
+
+#: main.lua
+msgid "Log in first from Tools → Discord."
+msgstr ""
+
+#: main.lua
+msgid "(unnamed)"
+msgstr ""
+
+#: main.lua
+msgid "%1 requests"
+msgstr ""
+
+#: main.lua
+msgid "Mark as read"
+msgstr ""
+
+#: main.lua
+msgid "Unmute server"
+msgstr ""
+
+#: main.lua
+msgid "Mute server"
+msgstr ""
+
+#: main.lua
+msgid "Hide server"
+msgstr ""
+
+#: main.lua
+msgid "Loading servers…"
+msgstr ""
+
+#: main.lua
+msgid "Could not load servers: "
+msgstr ""
+
+#: main.lua
+msgid "No recent chats yet."
+msgstr ""
+
+#: main.lua
+msgid "Could not open the chat: "
+msgstr ""
+
+#: main.lua
+msgid "Group"
+msgstr ""
+
+#: main.lua
+msgid "group"
+msgstr ""
+
+#: main.lua
+msgid "You have no direct messages."
+msgstr ""
+
+#: main.lua
+msgid "Loading direct messages…"
+msgstr ""
+
+#: main.lua
+msgid "Could not load direct messages: "
+msgstr ""
+
+#: main.lua
+msgid "no access"
+msgstr ""
+
+#: main.lua
+msgid "forum"
+msgstr ""
+
+#: main.lua
+msgid "read-only"
+msgstr ""
+
+#: main.lua
+msgid "announcements"
+msgstr ""
+
+#: main.lua
+msgid "No visible text channels."
+msgstr ""
+
+#: main.lua
+msgid "Loading channels…"
+msgstr ""
+
+#: main.lua
+msgid "Could not load channels: "
+msgstr ""
+
+#: main.lua
+msgid "Loading threads…"
+msgstr ""
+
+#: main.lua
+msgid "Threads in #%1"
+msgstr ""
+
+#: main.lua
+msgid "archived"
+msgstr ""
+
+#: main.lua
+msgid "No threads."
+msgstr ""
+
+#: main.lua
+msgid "Preparing document…"
+msgstr ""
+
+#: main.lua
+msgid "Could not write the document."
+msgstr ""
+
+#: main.lua
+msgid "Send to Discord"
+msgstr ""
+
+#: main.lua
+msgid "Send highlight to…"
+msgstr ""
+
+#: main.lua
+msgid "Sending…"
+msgstr ""
+
+#: main.lua
+msgid "Sent to %1"
+msgstr ""
+
+#: main.lua
+msgid "Open a chat or add a favorite first, then you can send to it."
+msgstr ""
+
+#: main.lua
+msgid "Forward to…"
+msgstr ""
+
+#: main.lua
+msgid "Forwarded to %1"
+msgstr ""
+
+#: main.lua
+msgid "Could not forward: "
+msgstr ""
