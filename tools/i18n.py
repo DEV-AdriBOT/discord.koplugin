@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Keeps the translation files in sync with the code.
 
-    python3 tools/i18n.py           regenerate l10n/discord.pot and update every l10n/*.po
-    python3 tools/i18n.py --check   fail if the template or a language file is out of date
+    python3 tools/i18n.py           regenerate l10n/discord.pot, every l10n/*.po and the README table
+    python3 tools/i18n.py --check   fail if anything above is out of date (or a file is invalid)
+    python3 tools/i18n.py --lint    only validate the language files (syntax, placeholders)
     python3 tools/i18n.py --stats   only print how complete each language is
 
 Strings are collected from _("...") calls in the plugin's .lua files.
@@ -19,6 +20,17 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 L10N = os.path.join(ROOT, "l10n")
 TEMPLATE = os.path.join(L10N, "discord.pot")
+README = os.path.join(ROOT, "README.md")
+TABLE_START = "<!-- translations:start -->"
+TABLE_END = "<!-- translations:end -->"
+
+# Display names for the README table (KOReader language codes)
+NAMES = {
+    "en": "English", "es": "Español", "fr": "Français", "de": "Deutsch", "it": "Italiano",
+    "pt": "Português", "pt_BR": "Português (Brasil)", "ca": "Català", "nl": "Nederlands",
+    "pl": "Polski", "ru": "Русский", "uk": "Українська", "tr": "Türkçe", "ja": "日本語",
+    "zh_CN": "简体中文", "zh_TW": "繁體中文", "ko": "한국어", "sv": "Svenska", "cs": "Čeština",
+}
 
 CALL = re.compile(r'_\("((?:[^"\\]|\\.)*)"\)')
 
@@ -98,6 +110,25 @@ def render(header, language, strings, translations):
     return "\n".join(out)
 
 
+def badge(percent):
+    color = "brightgreen" if percent >= 100 else "green" if percent >= 80 else "yellow" if percent >= 50 else "orange"
+    return f"![{percent} %](https://img.shields.io/badge/{percent}%25-{color})"
+
+
+def readme_table(rows, total):
+    lines = [
+        TABLE_START,
+        "| Language | Code | Translated | Progress |",
+        "| --- | --- | --- | --- |",
+        f"| English (source) | `en` | {total} / {total} | {badge(100)} |",
+    ]
+    for language, done, _total in sorted(rows, key=lambda r: (-r[1], NAMES.get(r[0], r[0]))):
+        percent = 100 * done // max(total, 1)
+        lines.append(f"| {NAMES.get(language, language)} | `{language}` | {done} / {total} | {badge(percent)} |")
+    lines.append(TABLE_END)
+    return "\n".join(lines)
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else ""
     strings = collect()
@@ -132,6 +163,18 @@ def main():
         elif mode == "":
             with open(path, "w", encoding="utf-8") as f:
                 f.write(updated)
+
+    if mode in ("", "--check") and os.path.exists(README):
+        readme = open(README, encoding="utf-8").read()
+        if TABLE_START in readme and TABLE_END in readme:
+            before = readme[:readme.index(TABLE_START)]
+            after = readme[readme.index(TABLE_END) + len(TABLE_END):]
+            updated_readme = before + readme_table(rows, len(strings)) + after
+            if mode == "--check" and updated_readme != readme:
+                problems.append("the README translation table is out of date: run python3 tools/i18n.py")
+            elif mode == "":
+                with open(README, "w", encoding="utf-8") as f:
+                    f.write(updated_readme)
 
     print(f"{len(strings)} strings")
     for language, done, total in rows:

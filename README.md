@@ -83,7 +83,14 @@ These actions are available in KOReader's gesture manager:
 
 ## Translations
 
-The interface follows KOReader's language, or the one chosen in *Discord → Settings → Language*. Available: English, Spanish.
+The interface follows KOReader's language, or the one chosen in *Discord → Settings → Language*.
+
+<!-- translations:start -->
+| Language | Code | Translated | Progress |
+| --- | --- | --- | --- |
+| English (source) | `en` | 289 / 289 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| Español | `es` | 289 / 289 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+<!-- translations:end -->
 
 Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
 

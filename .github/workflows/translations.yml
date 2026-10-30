@@ -2,18 +2,49 @@ name: Translations
 
 on:
   push:
-    paths: ["**.lua", "l10n/**", "tools/i18n.py"]
+    branches: [main]
+    paths: ["**.lua", "l10n/**", "tools/i18n.py", "README.md"]
   pull_request:
     paths: ["**.lua", "l10n/**", "tools/i18n.py"]
 
 jobs:
-  check:
+  # Pull requests: only make sure the files are valid, so translators
+  # don't have to regenerate anything themselves.
+  lint:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Check translation files
+        run: python3 tools/i18n.py --lint | tee report.txt
+      - name: Coverage summary
+        if: always()
         run: |
-          python3 tools/i18n.py --check | tee report.txt
+          echo '### Translations' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat report.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+  # main: regenerate the template, the language files and the README table.
+  sync:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate translation files
+        run: python3 tools/i18n.py | tee report.txt
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "Translation files are up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Update translation files and progress table"
+          git push
       - name: Coverage summary
         if: always()
         run: |

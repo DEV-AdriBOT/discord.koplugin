@@ -48,7 +48,9 @@ After changing interface strings in the code, run:
 python3 tools/i18n.py
 ```
 
-It regenerates `l10n/discord.pot`, adds new strings to every language file (empty, so they show in English until translated), removes strings that are no longer used and prints how complete each language is. `python3 tools/i18n.py --check` runs in CI on every pull request; it also checks that placeholders match between English and the translation.
+It regenerates `l10n/discord.pot`, adds new strings to every language file (empty, so they show in English until translated), removes strings that are no longer used, updates the progress table in the README and prints how complete each language is.
+
+You don't have to do this by hand: on every push to `main` a GitHub Action runs it and commits the result. Pull requests only get a validity check (`python3 tools/i18n.py --lint`: file syntax and matching placeholders), so translators never need to run anything.
 
 ## Code contributions
 
