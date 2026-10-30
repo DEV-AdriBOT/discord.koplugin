@@ -53,6 +53,12 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 
 ## Installation
 
+### From KOReader's App Store
+
+If you use the [App Store plugin](https://github.com/omer-faruq/appstore.koplugin): *Tools → App Store → Plugins*, search for **discord** and install. It also shows when a new version is available.
+
+### By hand
+
 1. Download `discord.koplugin.zip` from the [latest release](https://github.com/DEV-AdriBOT/discord.koplugin/releases/latest) and unzip it.
 2. Copy the `discord.koplugin` folder into KOReader's `plugins` directory:
    - Kindle: `/mnt/us/koreader/plugins/`
@@ -63,7 +69,7 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 
 ## Updating
 
-*Tools → Discord → Check for updates* compares your version with the latest release, shows what changed and installs it. The plugin also checks once a day when you open Discord and lets you know (this can be turned off in Settings).
+Either from the App Store, or with the plugin's own *Tools → Discord → Check for updates*, which compares your version with the latest release, shows what changed and installs it. The plugin also checks once a day when you open Discord and lets you know (this can be turned off in Settings).
 
 ## Logging in
 

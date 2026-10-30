@@ -55,3 +55,15 @@ You don't have to do this by hand: on every push to `main` a GitHub Action runs 
 ## Code contributions
 
 Bug reports and pull requests are welcome. Please test changes on a real device (or the KOReader emulator) and keep the plugin usable on e-ink: few screen refreshes, nothing loaded automatically that could be loaded on demand.
+
+## Releasing (maintainers)
+
+1. Bump `version` in `_meta.lua` (it is the only place the version lives) and push to `main`.
+2. Create and push a matching tag, with the release notes as the tag message:
+
+   ```sh
+   git tag -a v1.2.1 -m "Short summary of the release"
+   git push origin v1.2.1
+   ```
+
+The *Release* workflow checks that the tag matches `_meta.lua`, builds `discord.koplugin.zip` and publishes the release with the tag message and the list of commits since the previous version. The built-in updater and KOReader's App Store pick it up from there.

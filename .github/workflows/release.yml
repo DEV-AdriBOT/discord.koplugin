@@ -1,0 +1,55 @@
+name: Release
+
+# Pushing a tag like v1.2.1 publishes a release with discord.koplugin.zip,
+# which the built-in updater and KOReader's App Store install from.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check that the tag matches _meta.lua
+        run: |
+          meta=$(grep -oP 'version\s*=\s*"\K[^"]+' _meta.lua)
+          tag="${GITHUB_REF_NAME#v}"
+          echo "_meta.lua: $meta, tag: $tag"
+          if [ "$meta" != "$tag" ]; then
+            echo "::error::The tag $GITHUB_REF_NAME does not match version \"$meta\" in _meta.lua"
+            exit 1
+          fi
+
+      - name: Check translation files
+        run: python3 tools/i18n.py --lint
+
+      - name: Build discord.koplugin.zip
+        run: |
+          mkdir -p build/discord.koplugin
+          git archive HEAD | tar -x -C build/discord.koplugin
+          (cd build && zip -qr discord.koplugin.zip discord.koplugin)
+          unzip -l build/discord.koplugin.zip
+
+      - name: Release notes from the tag message and closed issues
+        run: |
+          previous=$(git describe --tags --abbrev=0 "$GITHUB_REF_NAME^" 2>/dev/null || true)
+          {
+            git tag -l --format='%(contents)' "$GITHUB_REF_NAME"
+            echo
+            if [ -n "$previous" ]; then
+              echo "Changes since $previous:"
+              git log --format='- %s' "$previous..$GITHUB_REF_NAME" | grep -v "Update translation files" || true
+            fi
+          } > notes.md
+          cat notes.md
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/discord.koplugin.zip --title "$GITHUB_REF_NAME" --notes-file notes.md
