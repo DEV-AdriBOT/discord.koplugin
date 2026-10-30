@@ -569,6 +569,22 @@ msgid "disconnected"
 msgstr "desconectado"
 
 #: main.lua
+msgid "The language changes after restarting KOReader. Restart now?"
+msgstr "El idioma cambia al reiniciar KOReader. ¿Reiniciar ahora?"
+
+#: main.lua
+msgid "Automatic (KOReader's language)"
+msgstr "Automático (idioma de KOReader)"
+
+#: main.lua
+msgid "Language: %1"
+msgstr "Idioma: %1"
+
+#: main.lua
+msgid "automatic"
+msgstr "automático"
+
+#: main.lua
 msgid "Real-time connection: %1"
 msgstr "Conexión en tiempo real: %1"
 

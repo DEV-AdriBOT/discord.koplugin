@@ -447,9 +447,44 @@ function Discord:connectionStatus()
     return _("disconnected")
 end
 
+function Discord:getLanguageMenu()
+    local function choose(code)
+        if (self.settings.language or "auto") == code then return end
+        self.settings.language = code
+        self:saveSettings()
+        UIManager:askForRestart(_("The language changes after restarting KOReader. Restart now?"))
+    end
+    local items = {
+        {
+            text = _("Automatic (KOReader's language)"),
+            radio = true,
+            checked_func = function() return (self.settings.language or "auto") == "auto" end,
+            callback = function() choose("auto") end,
+            separator = true,
+        },
+    }
+    for __, code in ipairs(_.available()) do
+        table.insert(items, {
+            text = _.name(code),
+            radio = true,
+            checked_func = function() return self.settings.language == code end,
+            callback = function() choose(code) end,
+        })
+    end
+    return items
+end
+
 function Discord:getSettingsMenu()
     local update = function() self:updateConnection() end
     return {
+        {
+            text_func = function()
+                local code = self.settings.language
+                return T(_("Language: %1"), (code and code ~= "auto") and _.name(code) or _("automatic"))
+            end,
+            sub_item_table_func = function() return self:getLanguageMenu() end,
+            separator = true,
+        },
         {
             text_func = function() return T(_("Real-time connection: %1"), self:connectionStatus()) end,
             checked_func = function() return self.settings.realtime ~= false end,
@@ -716,7 +751,8 @@ function Discord:checkForUpdates(interactive)
             })
             return
         end
-        local notes = util.trim(release.notes or "")
+        -- Release notes are Markdown: drop the markup for the plain dialog
+        local notes = util.trim((release.notes or ""):gsub("%*%*", ""):gsub("[`*]", ""):gsub("\r", ""))
         if #notes > 700 then notes = notes:sub(1, 700) .. "…" end
         UIManager:show(ConfirmBox:new{
             text = T(_("Version %1 is available (you have %2)."), release.version, Update.current)
