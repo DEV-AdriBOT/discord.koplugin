@@ -38,6 +38,8 @@ jobs:
 
       - name: Release notes from the tag message and closed issues
         run: |
+          # actions/checkout turns annotated tags into lightweight ones: fetch the real tag
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
           previous=$(git describe --tags --abbrev=0 "$GITHUB_REF_NAME^" 2>/dev/null || true)
           {
             git tag -l --format='%(contents)' "$GITHUB_REF_NAME"
