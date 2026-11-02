@@ -21,6 +21,7 @@ local InputContainer = require("ui/widget/container/inputcontainer")
 local InputDialog = require("ui/widget/inputdialog")
 local Menu = require("ui/widget/menu")
 local NetworkMgr = require("ui/network/manager")
+local Outbox = require("discord_outbox")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
@@ -501,8 +502,18 @@ function ChatView:buildText()
             prev = msg
         end
     end
-    if #self.messages == 0 then
+    local pending = self.around_id and {} or Outbox.list(self.channel.id)
+    if #self.messages == 0 and #pending == 0 then
         table.insert(out, _("No messages yet."))
+    end
+    if #pending > 0 then
+        if not compact then table.insert(out, "") end
+        table.insert(out, "───── " .. _("Pending") .. " ─────")
+        for __, e in ipairs(pending) do
+            local head = os.date("%H:%M", e.time) .. " " .. (e.error and ("⚠ " .. _("not sent") .. ": " .. e.error) or ("⏳ " .. _("pending")))
+            table.insert(out, head)
+            table.insert(out, e.content)
+        end
     end
     return table.concat(out, "\n")
 end
@@ -773,6 +784,7 @@ function ChatView:schedulePoll()
     if interval <= 0 then return end
     self._poll = self._poll or function()
         if self.closed then return end
+        pcall(self.flushOutbox, self)
         if not Gateway:isReady() and NetworkMgr:isOnline() then
             local ok, err = pcall(self.refresh, self)
             if not ok then logger.warn("Discord: poll failed", err) end
@@ -893,6 +905,11 @@ function ChatView:onResume()
     if not self.closed then self:schedulePoll() end
 end
 
+function ChatView:onNetworkConnected()
+    if self.closed then return end
+    UIManager:scheduleIn(3, function() pcall(self.flushOutbox, self) end)
+end
+
 function ChatView:onSuspend()
     if self._poll then UIManager:unschedule(self._poll) end
 end
@@ -941,6 +958,65 @@ function ChatView:countPageTurn()
 end
 
 -- Sending
+
+--- Sends queued messages when the network is back; refreshes this chat if needed.
+function ChatView:flushOutbox()
+    if self.offline or Outbox.count() == 0 or not NetworkMgr:isOnline() then return end
+    local had_here = #Outbox.list(self.channel.id) > 0
+    local sent = Outbox.flush(self.api)
+    if #sent > 0 or had_here then
+        local mine = {}
+        for __, m in ipairs(sent) do
+            if m.channel_id == self.channel.id then table.insert(mine, m) end
+        end
+        self:addMessages(mine)
+        self:redraw(self:isAtBottom() and "bottom" or nil)
+    end
+end
+
+--- Lists the pending messages of this chat, to cancel or retry them.
+function ChatView:showPending()
+    local menu
+    local function fill()
+        local items = {}
+        for __, e in ipairs(Outbox.list(self.channel.id)) do
+            table.insert(items, {
+                text = oneLine(e.content, 120),
+                mandatory = e.error and _("not sent") or os.date("%H:%M", e.time),
+                entry = e,
+            })
+        end
+        if #items == 0 then
+            table.insert(items, { text = _("No pending messages"), select_enabled = false })
+        end
+        return items
+    end
+    menu = Menu:new{
+        title = _("Pending messages"),
+        item_table = fill(),
+        is_borderless = true,
+        is_popout = false,
+        covers_fullscreen = true,
+        items_max_lines = 3,
+        onMenuSelect = function(_menu, item)
+            local e = item.entry
+            if not e then return true end
+            UIManager:show(ConfirmBox:new{
+                text = _("Cancel this pending message?") .. "\n\n" .. oneLine(e.content, 200),
+                ok_text = _("Cancel message"),
+                cancel_text = _("Keep"),
+                ok_callback = function()
+                    Outbox.remove(e.id)
+                    menu:switchItemTable(_("Pending messages"), fill())
+                    self:redraw()
+                end,
+            })
+            return true
+        end,
+    }
+    menu.close_callback = function() UIManager:close(menu) end
+    UIManager:show(menu)
+end
 
 function ChatView:sendTyping()
     local now = os.time()
@@ -1026,15 +1102,26 @@ function ChatView:applyMentions(text)
 end
 
 function ChatView:send(text, edit_msg)
-    local ok, data
+    local ok, data, code
     if edit_msg then
-        ok, data = self.api:editMessage(self.channel.id, edit_msg.id, self:applyMentions(text))
+        ok, data, code = self.api:editMessage(self.channel.id, edit_msg.id, self:applyMentions(text))
     else
         local reply = self.reply_to
         if reply then reply.guild_id = self.guild and self.guild.id end
-        ok, data = self.api:sendMessage(self.channel.id, self:applyMentions(text), reply)
+        ok, data, code = self.api:sendMessage(self.channel.id, self:applyMentions(text), reply)
     end
     if not ok then
+        if not edit_msg and (code == nil or code == 429 or code >= 500) then
+            -- No network or server trouble: keep it in the queue
+            local reply = self.reply_to
+            if reply then reply.guild_id = self.guild and self.guild.id end
+            Outbox.add(self.channel.id, self:applyMentions(text), reply)
+            self:setDraft(nil)
+            self.reply_to = nil
+            self:redraw("bottom")
+            UIManager:show(Notification:new{ text = _("No connection: the message will be sent later.") })
+            return
+        end
         if not edit_msg then self:setDraft(text) end
         UIManager:show(InfoMessage:new{ text = _("Could not send: ") .. tostring(data) })
         return
@@ -1736,6 +1823,13 @@ function ChatView:showMenu()
                         self:scrollToNew()
                         UIManager:setDirty(self, "ui")
                     end,
+                },
+            },
+            {
+                {
+                    text = T(_("Pending messages (%1)"), #Outbox.list(self.channel.id)),
+                    enabled = #Outbox.list(self.channel.id) > 0,
+                    callback = function() close() self:showPending() end,
                 },
             },
             {

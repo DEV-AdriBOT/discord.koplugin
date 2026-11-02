@@ -153,6 +153,18 @@ msgid "No messages yet."
 msgstr ""
 
 #: discord_chatview.lua
+msgid "Pending"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "not sent"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "pending"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "%1 is typing…"
 msgstr ""
 
@@ -177,6 +189,26 @@ msgid "No older messages"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "No pending messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Pending messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Cancel this pending message?"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Cancel message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Keep"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Edit message"
 msgstr ""
 
@@ -198,6 +230,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Send"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "No connection: the message will be sent later."
 msgstr ""
 
 #: discord_chatview.lua main.lua
@@ -426,6 +462,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Jump to new messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Pending messages (%1)"
 msgstr ""
 
 #: discord_chatview.lua

@@ -177,6 +177,11 @@ function Discord:updateConnection()
 end
 
 function Discord:onNetworkConnected()
+    if require("discord_outbox").count() > 0 then
+        UIManager:scheduleIn(4, function()
+            if #shared.views == 0 then require("discord_outbox").flush(self.api) end
+        end)
+    end
     if self:realtimeEnabled() then
         UIManager:scheduleIn(2, function() self:updateConnection() end)
     end

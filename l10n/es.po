@@ -153,6 +153,18 @@ msgid "No messages yet."
 msgstr "Todavía no hay mensajes."
 
 #: discord_chatview.lua
+msgid "Pending"
+msgstr "Pendiente"
+
+#: discord_chatview.lua
+msgid "not sent"
+msgstr "no enviado"
+
+#: discord_chatview.lua
+msgid "pending"
+msgstr "pendiente"
+
+#: discord_chatview.lua
 msgid "%1 is typing…"
 msgstr "%1 está escribiendo…"
 
@@ -177,6 +189,26 @@ msgid "No older messages"
 msgstr "No hay mensajes más antiguos"
 
 #: discord_chatview.lua
+msgid "No pending messages"
+msgstr "No hay mensajes pendientes"
+
+#: discord_chatview.lua
+msgid "Pending messages"
+msgstr "Mensajes pendientes"
+
+#: discord_chatview.lua
+msgid "Cancel this pending message?"
+msgstr "¿Cancelar este mensaje pendiente?"
+
+#: discord_chatview.lua
+msgid "Cancel message"
+msgstr "Cancelar mensaje"
+
+#: discord_chatview.lua
+msgid "Keep"
+msgstr "Conservar"
+
+#: discord_chatview.lua
 msgid "Edit message"
 msgstr "Editar mensaje"
 
@@ -199,6 +231,10 @@ msgstr "Guardar"
 #: discord_chatview.lua
 msgid "Send"
 msgstr "Enviar"
+
+#: discord_chatview.lua
+msgid "No connection: the message will be sent later."
+msgstr "Sin conexión: el mensaje se enviará más tarde."
 
 #: discord_chatview.lua main.lua
 msgid "Could not send: "
@@ -427,6 +463,10 @@ msgstr "Silenciar canal"
 #: discord_chatview.lua
 msgid "Jump to new messages"
 msgstr "Ir a los mensajes nuevos"
+
+#: discord_chatview.lua
+msgid "Pending messages (%1)"
+msgstr "Mensajes pendientes (%1)"
 
 #: discord_chatview.lua
 msgid "Open as document"

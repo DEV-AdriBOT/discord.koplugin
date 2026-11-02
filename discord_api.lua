@@ -369,10 +369,15 @@ local function makeNonce()
     return string.format("%.0f", ms * 4194304 + math.random(0, 4194303))
 end
 
-function DiscordAPI:sendMessage(channel_id, content, reply_to)
+DiscordAPI.makeNonce = makeNonce
+
+--- Sends a message. A fixed nonce lets Discord drop duplicates when a retry
+-- follows a request that actually arrived.
+function DiscordAPI:sendMessage(channel_id, content, reply_to, nonce)
     local body = {
         content = content,
-        nonce = makeNonce(),
+        nonce = nonce or makeNonce(),
+        enforce_nonce = nonce ~= nil or nil,
         tts = false,
         flags = 0,
     }
