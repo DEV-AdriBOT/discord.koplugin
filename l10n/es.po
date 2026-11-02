@@ -216,7 +216,7 @@ msgstr "Editar mensaje"
 msgid "Reply to "
 msgstr "Responder a "
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_emoji.lua main.lua
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -264,7 +264,7 @@ msgstr "Mencionar"
 msgid "Search members"
 msgstr "Buscar miembros"
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_emoji.lua main.lua
 msgid "Search"
 msgstr "Buscar"
 
@@ -347,6 +347,10 @@ msgstr "Quitar"
 #: discord_chatview.lua main.lua
 msgid "Add"
 msgstr "Añadir"
+
+#: discord_chatview.lua
+msgid "More emoji…"
+msgstr "Más emojis…"
 
 #: discord_chatview.lua
 msgid "React"
@@ -543,6 +547,22 @@ msgstr "Texto más pequeño"
 #: discord_chatview.lua
 msgid "Larger text"
 msgstr "Texto más grande"
+
+#: discord_emoji.lua
+msgid "Search emoji…"
+msgstr "Buscar emoji…"
+
+#: discord_emoji.lua
+msgid "No emoji found"
+msgstr "No se encontró ningún emoji"
+
+#: discord_emoji.lua
+msgid "Emoji"
+msgstr "Emoji"
+
+#: discord_emoji.lua
+msgid "Part of the name, for example: fire"
+msgstr "Parte del nombre, por ejemplo: fire"
 
 #: main.lua
 msgid "Open Discord"

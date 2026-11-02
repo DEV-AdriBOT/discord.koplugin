@@ -110,7 +110,7 @@ function Gateway:saveState()
         if self.guilds[id] then table.insert(guilds, self.guilds[id]) end
     end
     local ok, json = pcall(rapidjson.encode, {
-        version = 1,
+        version = 2, -- 2: guilds keep their custom emojis
         saved_at = os.time(),
         me = { id = self.me.id, username = v(self.me.username), global_name = v(self.me.global_name) },
         session_id = self.session_id,
@@ -157,7 +157,7 @@ function Gateway:loadState(user_id)
     if not f then return false end
     local ok, d = pcall(rapidjson.decode, f:read("*a"))
     f:close()
-    if not ok or type(d) ~= "table" or d.version ~= 1 or not d.me or d.me.id ~= user_id then
+    if not ok or type(d) ~= "table" or d.version ~= 2 or not d.me or d.me.id ~= user_id then
         return false
     end
     stripNulls(d)
@@ -172,6 +172,7 @@ function Gateway:loadState(user_id)
             for _, ch in ipairs(list) do self.channels[ch.id] = ch end
         end
         g.channels, g.threads, g.roles, g.my_roles = g.channels or {}, g.threads or {}, g.roles or {}, g.my_roles or {}
+        g.emojis = g.emojis or {}
     end
     for _, ch in ipairs(d.private or {}) do
         self.channels[ch.id] = ch
@@ -440,6 +441,17 @@ local function trimChannel(ch, guild_id)
     }
 end
 
+--- Keeps only what the emoji picker needs from a guild's custom emojis.
+local function trimEmojis(list)
+    local out = {}
+    for _, e in ipairs(list or {}) do
+        if e.id and v(e.name) and v(e.available) ~= false then
+            table.insert(out, { id = e.id, name = e.name, animated = v(e.animated) and true or nil })
+        end
+    end
+    return out
+end
+
 function Gateway:addGuild(g, my_member)
     local props = g.properties or g
     local guild = {
@@ -450,6 +462,7 @@ function Gateway:addGuild(g, my_member)
         channels = {},
         threads = {},
         my_roles = my_member and my_member.roles or {},
+        emojis = trimEmojis(g.emojis),
     }
     for _, r in ipairs(g.roles or {}) do
         table.insert(guild.roles, { id = r.id, name = v(r.name), permissions = v(r.permissions) })
@@ -644,6 +657,9 @@ function Gateway:dispatch(t, d)
                 if not found then table.insert(guild.threads, c) end
             end
         end
+    elseif t == "GUILD_EMOJIS_UPDATE" then
+        local guild = self.guilds[d.guild_id]
+        if guild then guild.emojis = trimEmojis(d.emojis) end
     elseif t == "GUILD_CREATE" then
         self:addGuild(d, d.members and (function()
             for _, m in ipairs(d.members) do

@@ -216,7 +216,7 @@ msgstr ""
 msgid "Reply to "
 msgstr ""
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_emoji.lua main.lua
 msgid "Cancel"
 msgstr ""
 
@@ -264,7 +264,7 @@ msgstr ""
 msgid "Search members"
 msgstr ""
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_emoji.lua main.lua
 msgid "Search"
 msgstr ""
 
@@ -346,6 +346,10 @@ msgstr ""
 
 #: discord_chatview.lua main.lua
 msgid "Add"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "More emoji…"
 msgstr ""
 
 #: discord_chatview.lua
@@ -542,6 +546,22 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Larger text"
+msgstr ""
+
+#: discord_emoji.lua
+msgid "Search emoji…"
+msgstr ""
+
+#: discord_emoji.lua
+msgid "No emoji found"
+msgstr ""
+
+#: discord_emoji.lua
+msgid "Emoji"
+msgstr ""
+
+#: discord_emoji.lua
+msgid "Part of the name, for example: fire"
 msgstr ""
 
 #: main.lua

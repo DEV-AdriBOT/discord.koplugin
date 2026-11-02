@@ -21,6 +21,7 @@ local InputContainer = require("ui/widget/container/inputcontainer")
 local InputDialog = require("ui/widget/inputdialog")
 local Menu = require("ui/widget/menu")
 local NetworkMgr = require("ui/network/manager")
+local Emoji = require("discord_emoji")
 local Outbox = require("discord_outbox")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
@@ -152,6 +153,7 @@ function ChatView:init()
     self.reply_to = nil
     self.typing = {}
     self.mention_map = {}
+    self.emoji_map = {}
     self.width = Screen:getWidth()
     self.height = Screen:getHeight()
     self.dimen = Geom:new{ x = 0, y = 0, w = self.width, h = self.height }
@@ -1057,6 +1059,10 @@ function ChatView:compose(prefill, edit_msg)
             text = "@",
             callback = function() self:pickMention(dialog) end,
         })
+        table.insert(row, {
+            text = ":)",
+            callback = function() self:pickEmoji(dialog) end,
+        })
     end
     table.insert(row, {
         text = edit_msg and _("Save") or _("Send"),
@@ -1098,7 +1104,7 @@ function ChatView:applyMentions(text)
     for name, id in pairs(self.mention_map) do
         text = text:gsub("@" .. name:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0"), "<@" .. id .. ">")
     end
-    return text
+    return Emoji.resolve(text, self.guild and self.guild.id, self.emoji_map)
 end
 
 function ChatView:send(text, edit_msg)
@@ -1153,6 +1159,19 @@ function ChatView:pickQuickReply(input_dialog)
     end
     dialog = ButtonDialog:new{ title = _("Quick replies"), buttons = buttons }
     UIManager:show(dialog)
+end
+
+--- Inserts an emoji, by name, into the message being written.
+function ChatView:pickEmoji(input_dialog)
+    input_dialog:onCloseKeyboard()
+    Emoji.pick{
+        guild_id = self.guild and self.guild.id,
+        settings = self.settings,
+        on_pick = function(item)
+            self.emoji_map[item.name] = item
+            insertText(input_dialog, ":" .. item.name .. ": ")
+        end,
+    }
 end
 
 function ChatView:insertMention(input_dialog, user)
@@ -1526,6 +1545,18 @@ function ChatView:reactDialog(msg)
             end,
         }})
     end
+    table.insert(buttons, {{
+        text = _("More emoji…"),
+        callback = function()
+            UIManager:close(dialog)
+            Emoji.pick{
+                guild_id = self.guild and self.guild.id,
+                settings = self.settings,
+                title = _("React"),
+                on_pick = function(item) self:toggleReaction(msg, Emoji.reactionOf(item)) end,
+            }
+        end,
+    }})
     dialog = ButtonDialog:new{ title = _("React"), buttons = buttons }
     UIManager:show(dialog)
 end
