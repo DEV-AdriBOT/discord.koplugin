@@ -497,6 +497,22 @@ msgid "Reading theme"
 msgstr "Tema de lectura"
 
 #: discord_chatview.lua
+msgid "Tap turns pages"
+msgstr "El toque pasa de página"
+
+#: discord_chatview.lua
+msgid "Tap opens message actions"
+msgstr "El toque abre las acciones del mensaje"
+
+#: discord_chatview.lua
+msgid "Tap a message to open its actions. Swipe to turn pages."
+msgstr "Toca un mensaje para abrir sus acciones. Desliza para pasar de página."
+
+#: discord_chatview.lua
+msgid "Tap turns pages. Hold a message to open its actions."
+msgstr "El toque pasa de página. Mantén pulsado un mensaje para abrir sus acciones."
+
+#: discord_chatview.lua
 msgid "Default"
 msgstr "Predeterminada"
 

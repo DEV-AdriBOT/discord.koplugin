@@ -497,6 +497,22 @@ msgid "Reading theme"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "Tap turns pages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Tap opens message actions"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Tap a message to open its actions. Swipe to turn pages."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Tap turns pages. Hold a message to open its actions."
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Default"
 msgstr ""
 

@@ -174,6 +174,9 @@ function ChatView:init()
         self.ges_events.Swipe = {
             GestureRange:new{ ges = "swipe", range = self.dimen },
         }
+        self.ges_events.HoldMessage = {
+            GestureRange:new{ ges = "hold", range = self.dimen },
+        }
     end
 
     self.titlebar = TitleBar:new{
@@ -232,6 +235,9 @@ function ChatView:buildLayout(text, position)
     TextBoxWidget.line_height = default_line_height
     if not ok then error(widget) end
     self.scroll_widget = widget
+    -- Taps on the text go through us first (message actions) and fall back to paging
+    self._scroll_tap = self._scroll_tap or ScrollTextWidget.onTapScrollText
+    widget.onTapScrollText = function(w, arg, ges) return self:onTapMessage(arg, ges) end
     self.frame = FrameContainer:new{
         width = self.width,
         height = self.height,
@@ -448,6 +454,7 @@ function ChatView:buildText()
     local out = {}
     local prev, prev_day
     local first_new = self:firstNewId()
+    local spans = {} -- which lines of the text belong to which message
     local messages = self.messages
     if self:isFocused() then
         messages = {}
@@ -485,8 +492,9 @@ function ChatView:buildText()
                 reply_line = "   ↪ " .. _("(deleted message)")
             end
             local content = self:renderContent(msg)
+            local first_idx, reply_idx = #out + 1, nil
             if compact then
-                if reply_line then table.insert(out, reply_line) end
+                if reply_line then table.insert(out, reply_line) reply_idx = #out end
                 table.insert(out, os.date("%H:%M", ts) .. " " .. author .. ": " .. content)
             else
                 local grouped = prev and not reply_line
@@ -496,11 +504,12 @@ function ChatView:buildText()
                     table.insert(out, "")
                     table.insert(out, "▌" .. author .. " · " .. os.date("%H:%M", ts))
                 end
-                if reply_line then table.insert(out, reply_line) end
+                if reply_line then table.insert(out, reply_line) reply_idx = #out end
                 if content ~= "" then table.insert(out, content) end
             end
             local reactions = self:renderReactions(msg)
             if reactions then table.insert(out, reactions) end
+            table.insert(spans, { first = first_idx, last = #out, reply = reply_idx, msg = msg })
             prev = msg
         end
     end
@@ -516,6 +525,20 @@ function ChatView:buildText()
             table.insert(out, head)
             table.insert(out, e.content)
         end
+    end
+    -- Character ranges of each message, to find the one under a finger
+    local starts, ends, pos = {}, {}, 1
+    for i, line in ipairs(out) do
+        starts[i] = pos
+        pos = pos + select(2, line:gsub("[^\128-\191]", "")) + 1
+        ends[i] = pos - 1 -- includes the line break
+    end
+    self.spans = {}
+    for __, sp in ipairs(spans) do
+        table.insert(self.spans, {
+            from = starts[sp.first], to = ends[sp.last], msg = sp.msg,
+            reply_from = sp.reply and starts[sp.reply], reply_to = sp.reply and ends[sp.reply],
+        })
     end
     return table.concat(out, "\n")
 end
@@ -928,6 +951,46 @@ function ChatView:onCloseWidget()
     if self._poll then UIManager:unschedule(self._poll) end
     self:unsubscribe()
     UIManager:setDirty(nil, "full")
+end
+
+--- The message (and whether its reply line) at a screen position, or nil.
+function ChatView:messageAt(pos)
+    local sw = self.scroll_widget
+    if not sw or not self.spans or not sw.dimen then return nil end
+    local tw = sw.text_widget
+    local charpos = tw:getCharPosAtXY(pos.x - sw.dimen.x, pos.y - sw.dimen.y)
+    for __, sp in ipairs(self.spans) do
+        if charpos >= sp.from and charpos <= sp.to then
+            local on_reply = sp.reply_from and charpos >= sp.reply_from and charpos <= sp.reply_to
+            return sp.msg, on_reply and true or false
+        end
+    end
+    return nil
+end
+
+function ChatView:inTextArea(pos)
+    local sw = self.scroll_widget
+    return sw and sw.dimen and pos.y >= sw.dimen.y and pos.y < sw.dimen.y + sw.dimen.h
+end
+
+function ChatView:onHoldMessage(arg, ges)
+    if not self:inTextArea(ges.pos) then return false end
+    local msg = self:messageAt(ges.pos)
+    if not msg then return false end
+    self:messageActions(msg)
+    return true
+end
+
+--- Tap on the text: opens the message if enabled in the menu, otherwise turns the page.
+function ChatView:onTapMessage(arg, ges)
+    if self.settings.tap_actions and self:inTextArea(ges.pos) then
+        local msg = self:messageAt(ges.pos)
+        if msg then
+            self:messageActions(msg)
+            return true
+        end
+    end
+    return self._scroll_tap(self.scroll_widget, arg, ges)
 end
 
 function ChatView:onSwipe(arg, ges)
@@ -1894,6 +1957,19 @@ function ChatView:showMenu()
                     callback = function()
                         close()
                         self:themeDialog()
+                    end,
+                },
+            },
+            {
+                {
+                    text = self.settings.tap_actions and _("Tap turns pages") or _("Tap opens message actions"),
+                    callback = function()
+                        close()
+                        self.settings.tap_actions = not self.settings.tap_actions or nil
+                        UIManager:show(Notification:new{
+                            text = self.settings.tap_actions and _("Tap a message to open its actions. Swipe to turn pages.")
+                                or _("Tap turns pages. Hold a message to open its actions."),
+                        })
                     end,
                 },
             },
