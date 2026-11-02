@@ -181,11 +181,19 @@ msgid "Could not load messages: "
 msgstr ""
 
 #: discord_chatview.lua
+msgid "The original message could not be found. It may have been deleted."
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Refreshing…"
 msgstr ""
 
 #: discord_chatview.lua
 msgid "No older messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "The original message is not saved offline."
 msgstr ""
 
 #: discord_chatview.lua

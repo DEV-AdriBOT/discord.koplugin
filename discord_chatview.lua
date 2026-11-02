@@ -269,7 +269,11 @@ function ChatView:buildLayout(text, position)
         scroll_text(widget, direction)
         self:countPageTurn()
     end
-    if position == "top" then
+    if type(position) == "number" then
+        -- TextBoxWidget ignores top_line_num unless editable: scroll there ourselves
+        widget.text_widget:scrollLines(position - 1)
+        widget:updateScrollBar(true)
+    elseif position == "top" then
         self.scroll_widget:scrollToTop()
     elseif position == "middle" then
         self.scroll_widget:scrollToRatio(0.5)
@@ -645,6 +649,9 @@ function ChatView:load()
     self:addMessages(data)
     if self.around_id then
         self:redraw("middle")
+        if not self:scrollToMessage(self.around_id) then
+            UIManager:show(Notification:new{ text = _("The original message could not be found. It may have been deleted.") })
+        end
     else
         self:redraw("bottom")
         self:scrollToNew()
@@ -691,13 +698,20 @@ function ChatView:firstNewId()
     end
 end
 
+--- Absolute line number (in the whole text) of a character position.
+function ChatView:absLine(charpos)
+    local rel = self.scroll_widget:getCharPosLineNum(charpos)
+    if not rel then return nil end
+    return self.scroll_widget.text_widget.virtual_line_num - 1 + rel
+end
+
 function ChatView:scrollToNew()
     local text = self.scroll_widget.text_widget.text or ""
     local pos = text:find(self.NEW_MARKER, 1, true)
     if not pos then return end
     -- TextBoxWidget positions count characters, not bytes
     local charpos = #util.splitToChars(text:sub(1, pos - 1)) + 1
-    local line = self.scroll_widget:getCharPosLineNum(charpos)
+    local line = self:absLine(charpos)
     if line then
         self:buildLayout(text, math.max(1, line - 1))
     end
@@ -981,11 +995,42 @@ function ChatView:onHoldMessage(arg, ges)
     return true
 end
 
---- Tap on the text: opens the message if enabled in the menu, otherwise turns the page.
+--- Puts the top of the view on a loaded message. Returns false if it is not shown.
+function ChatView:scrollToMessage(message_id)
+    for __, sp in ipairs(self.spans or {}) do
+        if sp.msg.id == message_id then
+            local text = self.scroll_widget.text_widget.text or ""
+            local line = self:absLine(sp.from)
+            if not line then return false end
+            self:buildLayout(text, math.max(1, line - 1))
+            UIManager:setDirty(self, function() return "ui", self.frame.dimen end)
+            return true
+        end
+    end
+    return false
+end
+
+--- Goes to the message that `msg` replies to, loading its context if needed.
+function ChatView:goToReplied(msg)
+    local id = msg.message_reference and msg.message_reference.message_id
+    if not id then return end
+    if self.by_id[id] and self:scrollToMessage(id) then return end
+    if self.offline then
+        UIManager:show(Notification:new{ text = _("The original message is not saved offline.") })
+        return
+    end
+    self:jumpTo(id)
+end
+
+--- Tap on the text: the reply line jumps to the original message; the rest opens the
+-- message if enabled in the menu, otherwise turns the page.
 function ChatView:onTapMessage(arg, ges)
-    if self.settings.tap_actions and self:inTextArea(ges.pos) then
-        local msg = self:messageAt(ges.pos)
-        if msg then
+    if self:inTextArea(ges.pos) then
+        local msg, on_reply = self:messageAt(ges.pos)
+        if msg and on_reply then
+            self:goToReplied(msg)
+            return true
+        elseif msg and self.settings.tap_actions then
             self:messageActions(msg)
             return true
         end
