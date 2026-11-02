@@ -94,8 +94,8 @@ The interface follows KOReader's language, or the one chosen in *Discord → Set
 <!-- translations:start -->
 | Language | Code | Translated | Progress |
 | --- | --- | --- | --- |
-| English (source) | `en` | 310 / 310 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
-| Español | `es` | 310 / 310 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| English (source) | `en` | 318 / 318 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| Español | `es` | 318 / 318 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 <!-- translations:end -->
 
 Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).

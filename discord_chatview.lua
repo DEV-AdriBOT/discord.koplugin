@@ -297,6 +297,7 @@ function ChatView:authorName(user)
 end
 
 function ChatView:renderContent(msg)
+    if msg.deleted then return _("(deleted message)") end
     local text = msg.content or ""
     local mentions = {}
     for __, u in ipairs(msg.mentions or {}) do
@@ -511,7 +512,7 @@ function ChatView:buildText()
                 if reply_line then table.insert(out, reply_line) reply_idx = #out end
                 if content ~= "" then table.insert(out, content) end
             end
-            local reactions = self:renderReactions(msg)
+            local reactions = not msg.deleted and self:renderReactions(msg)
             if reactions then table.insert(out, reactions) end
             table.insert(spans, { first = first_idx, last = #out, reply = reply_idx, msg = msg })
             prev = msg
@@ -587,7 +588,16 @@ function ChatView:addMessages(list)
     for __, m in ipairs(list or {}) do
         if self.by_id[m.id] then
             for i, old in ipairs(self.messages) do
-                if old.id == m.id then self.messages[i] = m break end
+                if old.id == m.id then
+                    m.edit_history = old.edit_history
+                    if m.content and old.content and m.content ~= old.content and not old.deleted then
+                        m.edit_history = m.edit_history or {}
+                        table.insert(m.edit_history, { content = old.content, time = old.edited_timestamp or old.timestamp })
+                    end
+                    m.deleted = old.deleted
+                    self.messages[i] = m
+                    break
+                end
             end
         else
             table.insert(self.messages, m)
@@ -597,6 +607,14 @@ function ChatView:addMessages(list)
     end
     table.sort(self.messages, function(a, b) return idLess(a.id, b.id) end)
     return added
+end
+
+--- A message deleted by someone else stays in the chat as a placeholder.
+function ChatView:markDeleted(id)
+    local m = self.by_id[id]
+    if not m or m.deleted then return false end
+    m.deleted = true
+    return true
 end
 
 function ChatView:removeMessage(id)
@@ -854,11 +872,24 @@ function ChatView:subscribe()
             if not mine(d) then return end
             local m = self.by_id[d.id]
             if not m then return end
+            if d.content ~= nil and d.content ~= m.content and not m.deleted then
+                -- Keep the text we had: Discord does not offer the history
+                m.edit_history = m.edit_history or {}
+                table.insert(m.edit_history, { content = m.content or "", time = m.edited_timestamp or m.timestamp })
+            end
             for k, val in pairs(d) do m[k] = val end
             self:redraw()
         end,
         MESSAGE_DELETE = function(d)
-            if mine(d) and self:removeMessage(d.id) then self:redraw() end
+            if mine(d) and self:markDeleted(d.id) then self:redraw() end
+        end,
+        MESSAGE_DELETE_BULK = function(d)
+            if not mine(d) then return end
+            local any
+            for __, id in ipairs(d.ids or {}) do
+                if self:markDeleted(id) then any = true end
+            end
+            if any then self:redraw() end
         end,
         MESSAGE_REACTION_ADD = function(d)
             if not mine(d) then return end
@@ -1715,7 +1746,43 @@ function ChatView:showLinks(links)
     UIManager:show(dialog)
 end
 
+--- Shows the text of a deleted message, or the earlier versions of an edited one.
+function ChatView:showVersions(msg)
+    local TextViewer = require("ui/widget/textviewer")
+    local parts = {}
+    if msg.deleted then
+        table.insert(parts, _("Deleted message:") .. "\n" .. cleanEmoji(msg.content or ""))
+    else
+        table.insert(parts, _("Current:") .. "\n" .. cleanEmoji(msg.content or ""))
+    end
+    for i = #(msg.edit_history or {}), 1, -1 do
+        local v = msg.edit_history[i]
+        local ts = v.time and parseTimestamp(v.time)
+        table.insert(parts, (ts and os.date("%Y-%m-%d %H:%M", ts) or _("Earlier")) .. ":\n" .. cleanEmoji(v.content))
+    end
+    UIManager:show(TextViewer:new{
+        title = msg.deleted and _("Deleted message") or _("Earlier versions"),
+        text = table.concat(parts, "\n\n────────\n\n"),
+    })
+end
+
 function ChatView:messageActions(msg)
+    if msg.deleted then
+        local ddialog
+        ddialog = ButtonDialog:new{
+            title = self:authorName(msg.author) .. ": " .. _("(deleted message)"),
+            buttons = {
+                {{ text = _("Show deleted text"), callback = function() UIManager:close(ddialog) self:showVersions(msg) end }},
+                {{ text = _("Remove from view"), callback = function()
+                    UIManager:close(ddialog)
+                    self:removeMessage(msg.id)
+                    self:redraw()
+                end }},
+            },
+        }
+        UIManager:show(ddialog)
+        return
+    end
     local me = Gateway.me and Gateway.me.id or (self.api.user and self.api.user.id)
     local mine = msg.author and msg.author.id == me
     local images = self:imagesOf(msg)
@@ -1812,6 +1879,16 @@ function ChatView:messageActions(msg)
             },
         },
     }
+    local versions = msg.edit_history and #msg.edit_history or 0
+    if versions > 0 then
+        table.insert(buttons, {{
+            text = T(_("Earlier versions (%1)"), versions),
+            callback = function()
+                UIManager:close(dialog)
+                self:showVersions(msg)
+            end,
+        }})
+    end
     if self.offline then
         -- Only reading actions make sense without network
         buttons = { buttons[2], { buttons[3][1] }, { buttons[4][1] } }

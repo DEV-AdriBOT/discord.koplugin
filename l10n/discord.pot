@@ -93,6 +93,10 @@ msgid "Write"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "(deleted message)"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "forwarded:"
 msgstr ""
 
@@ -142,10 +146,6 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Only messages for you · %1 hidden"
-msgstr ""
-
-#: discord_chatview.lua
-msgid "(deleted message)"
 msgstr ""
 
 #: discord_chatview.lua
@@ -369,6 +369,34 @@ msgid "Show link as QR code"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "Deleted message:"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Current:"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Earlier"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Deleted message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Earlier versions"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Show deleted text"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Remove from view"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Reply"
 msgstr ""
 
@@ -410,6 +438,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Note about user"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Earlier versions (%1)"
 msgstr ""
 
 #: discord_chatview.lua

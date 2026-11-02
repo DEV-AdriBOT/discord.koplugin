@@ -93,6 +93,10 @@ msgid "Write"
 msgstr "Escribir"
 
 #: discord_chatview.lua
+msgid "(deleted message)"
+msgstr "(mensaje eliminado)"
+
+#: discord_chatview.lua
 msgid "forwarded:"
 msgstr "reenviado:"
 
@@ -143,10 +147,6 @@ msgstr "Encuesta"
 #: discord_chatview.lua
 msgid "Only messages for you · %1 hidden"
 msgstr "Solo mensajes para ti · %1 ocultos"
-
-#: discord_chatview.lua
-msgid "(deleted message)"
-msgstr "(mensaje eliminado)"
 
 #: discord_chatview.lua
 msgid "No messages yet."
@@ -369,6 +369,34 @@ msgid "Show link as QR code"
 msgstr "Mostrar enlace como código QR"
 
 #: discord_chatview.lua
+msgid "Deleted message:"
+msgstr "Mensaje eliminado:"
+
+#: discord_chatview.lua
+msgid "Current:"
+msgstr "Actual:"
+
+#: discord_chatview.lua
+msgid "Earlier"
+msgstr "Anterior"
+
+#: discord_chatview.lua
+msgid "Deleted message"
+msgstr "Mensaje eliminado"
+
+#: discord_chatview.lua
+msgid "Earlier versions"
+msgstr "Versiones anteriores"
+
+#: discord_chatview.lua
+msgid "Show deleted text"
+msgstr "Ver el texto eliminado"
+
+#: discord_chatview.lua
+msgid "Remove from view"
+msgstr "Quitar de la vista"
+
+#: discord_chatview.lua
 msgid "Reply"
 msgstr "Responder"
 
@@ -411,6 +439,10 @@ msgstr "Reenviar"
 #: discord_chatview.lua
 msgid "Note about user"
 msgstr "Nota sobre el usuario"
+
+#: discord_chatview.lua
+msgid "Earlier versions (%1)"
+msgstr "Versiones anteriores (%1)"
 
 #: discord_chatview.lua
 msgid "Edit"
