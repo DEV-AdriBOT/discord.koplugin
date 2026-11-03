@@ -32,6 +32,26 @@ msgstr "Código incorrecto"
 msgid "The search index is not ready yet, try again in a few seconds."
 msgstr "El índice de búsqueda aún no está listo, inténtalo en unos segundos."
 
+#: discord_api.lua
+msgid "Could not read the file"
+msgstr "No se pudo leer el archivo"
+
+#: discord_bookclub.lua main.lua
+msgid "a book"
+msgstr "un libro"
+
+#: discord_bookclub.lua
+msgid "I finished **%s**!"
+msgstr "¡He terminado **%s**!"
+
+#: discord_bookclub.lua
+msgid "Reading **%s**: %d%%"
+msgstr "Leyendo **%s**: %d%%"
+
+#: discord_bookclub.lua
+msgid "Finished chapter «%s» of **%s**"
+msgstr "He terminado el capítulo «%s» de **%s**"
+
 #: discord_chatview.lua
 msgid "added someone to the group"
 msgstr "añadió a alguien al grupo"
@@ -244,7 +264,7 @@ msgstr "Enviar"
 msgid "No connection: the message will be sent later."
 msgstr "Sin conexión: el mensaje se enviará más tarde."
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_share.lua main.lua
 msgid "Could not send: "
 msgstr "No se pudo enviar: "
 
@@ -740,6 +760,22 @@ msgstr "Escanea el código para abrir un issue ya rellenado en GitHub. Se guard�
 msgid "Scan the code to open a pre-filled issue on GitHub."
 msgstr "Escanea el código para abrir un issue ya rellenado en GitHub."
 
+#: discord_share.lua
+msgid "Could not take the screenshot."
+msgstr "No se pudo hacer la captura."
+
+#: discord_share.lua
+msgid "Send the page to…"
+msgstr "Enviar la página a…"
+
+#: discord_share.lua main.lua
+msgid "Sending…"
+msgstr "Enviando…"
+
+#: discord_share.lua main.lua
+msgid "Sent to %1"
+msgstr "Enviado a %1"
+
 #: main.lua
 msgid "Open Discord"
 msgstr "Abrir Discord"
@@ -751,10 +787,6 @@ msgstr "Discord: mensajes directos"
 #: main.lua
 msgid "Discord: open last chat"
 msgstr "Discord: abrir último chat"
-
-#: main.lua
-msgid "a book"
-msgstr "un libro"
 
 #: main.lua
 msgid "Discord: low battery, real-time connection paused"
@@ -985,6 +1017,14 @@ msgid "Offline chats"
 msgstr "Chats sin conexión"
 
 #: main.lua
+msgid "Share this page"
+msgstr "Compartir esta página"
+
+#: main.lua
+msgid "Book club (this book)"
+msgstr "Club de lectura (este libro)"
+
+#: main.lua
 msgid "Status: %1"
 msgstr "Estado: %1"
 
@@ -1095,6 +1135,46 @@ msgstr "%1 — «%2»"
 #: main.lua
 msgid "Switched to %1"
 msgstr "Cambiado a %1"
+
+#: main.lua
+msgid "Channel: %1"
+msgstr "Canal: %1"
+
+#: main.lua
+msgid "none"
+msgstr "ninguno"
+
+#: main.lua
+msgid "Book club channel"
+msgstr "Canal del club de lectura"
+
+#: main.lua
+msgid "Share my reading in this book's club"
+msgstr "Compartir mi lectura en el club de este libro"
+
+#: main.lua
+msgid "Send progress"
+msgstr "Enviar el progreso"
+
+#: main.lua
+msgid "Every %1 %"
+msgstr "Cada %1 %"
+
+#: main.lua
+msgid "Send when a chapter is finished"
+msgstr "Enviar al terminar un capítulo"
+
+#: main.lua
+msgid "Send my highlights"
+msgstr "Enviar mis subrayados"
+
+#: main.lua
+msgid "Send my progress now"
+msgstr "Enviar mi progreso ahora"
+
+#: main.lua
+msgid "Progress sent"
+msgstr "Progreso enviado"
 
 #: main.lua
 msgid "active"
@@ -1423,14 +1503,6 @@ msgstr "Enviar a Discord"
 #: main.lua
 msgid "Send highlight to…"
 msgstr "Enviar subrayado a…"
-
-#: main.lua
-msgid "Sending…"
-msgstr "Enviando…"
-
-#: main.lua
-msgid "Sent to %1"
-msgstr "Enviado a %1"
 
 #: main.lua
 msgid "Open a chat or add a favorite first, then you can send to it."

@@ -32,6 +32,26 @@ msgstr ""
 msgid "The search index is not ready yet, try again in a few seconds."
 msgstr ""
 
+#: discord_api.lua
+msgid "Could not read the file"
+msgstr ""
+
+#: discord_bookclub.lua main.lua
+msgid "a book"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "I finished **%s**!"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "Reading **%s**: %d%%"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "Finished chapter «%s» of **%s**"
+msgstr ""
+
 #: discord_chatview.lua
 msgid "added someone to the group"
 msgstr ""
@@ -244,7 +264,7 @@ msgstr ""
 msgid "No connection: the message will be sent later."
 msgstr ""
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_share.lua main.lua
 msgid "Could not send: "
 msgstr ""
 
@@ -740,6 +760,22 @@ msgstr ""
 msgid "Scan the code to open a pre-filled issue on GitHub."
 msgstr ""
 
+#: discord_share.lua
+msgid "Could not take the screenshot."
+msgstr ""
+
+#: discord_share.lua
+msgid "Send the page to…"
+msgstr ""
+
+#: discord_share.lua main.lua
+msgid "Sending…"
+msgstr ""
+
+#: discord_share.lua main.lua
+msgid "Sent to %1"
+msgstr ""
+
 #: main.lua
 msgid "Open Discord"
 msgstr ""
@@ -750,10 +786,6 @@ msgstr ""
 
 #: main.lua
 msgid "Discord: open last chat"
-msgstr ""
-
-#: main.lua
-msgid "a book"
 msgstr ""
 
 #: main.lua
@@ -985,6 +1017,14 @@ msgid "Offline chats"
 msgstr ""
 
 #: main.lua
+msgid "Share this page"
+msgstr ""
+
+#: main.lua
+msgid "Book club (this book)"
+msgstr ""
+
+#: main.lua
 msgid "Status: %1"
 msgstr ""
 
@@ -1094,6 +1134,46 @@ msgstr ""
 
 #: main.lua
 msgid "Switched to %1"
+msgstr ""
+
+#: main.lua
+msgid "Channel: %1"
+msgstr ""
+
+#: main.lua
+msgid "none"
+msgstr ""
+
+#: main.lua
+msgid "Book club channel"
+msgstr ""
+
+#: main.lua
+msgid "Share my reading in this book's club"
+msgstr ""
+
+#: main.lua
+msgid "Send progress"
+msgstr ""
+
+#: main.lua
+msgid "Every %1 %"
+msgstr ""
+
+#: main.lua
+msgid "Send when a chapter is finished"
+msgstr ""
+
+#: main.lua
+msgid "Send my highlights"
+msgstr ""
+
+#: main.lua
+msgid "Send my progress now"
+msgstr ""
+
+#: main.lua
+msgid "Progress sent"
 msgstr ""
 
 #: main.lua
@@ -1422,14 +1502,6 @@ msgstr ""
 
 #: main.lua
 msgid "Send highlight to…"
-msgstr ""
-
-#: main.lua
-msgid "Sending…"
-msgstr ""
-
-#: main.lua
-msgid "Sent to %1"
 msgstr ""
 
 #: main.lua

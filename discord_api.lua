@@ -55,7 +55,12 @@ function DiscordAPI:request(method, path, body, no_auth, retried)
         headers["Authorization"] = self.token
     end
     local source
-    if body ~= nil then
+    if type(body) == "table" and body.raw_body then
+        -- Already encoded (multipart uploads)
+        headers["Content-Type"] = body.content_type
+        headers["Content-Length"] = tostring(#body.raw_body)
+        source = ltn12.source.string(body.raw_body)
+    elseif body ~= nil then
         local payload = rapidjson.encode(body)
         headers["Content-Type"] = "application/json"
         headers["Content-Length"] = tostring(#payload)
@@ -396,6 +401,31 @@ function DiscordAPI:sendMessage(channel_id, content, reply_to, nonce)
         }
     end
     return self:post("/channels/" .. channel_id .. "/messages", body)
+end
+
+--- Sends a message with one file attached (multipart/form-data).
+function DiscordAPI:uploadFile(channel_id, path, filename, content, mime)
+    local f = io.open(path, "rb")
+    if not f then return false, _("Could not read the file") end
+    local data = f:read("*a")
+    f:close()
+    local boundary = "----koplugin" .. os.time() .. math.random(100000, 999999)
+    local payload = rapidjson.encode({
+        content = content or "",
+        nonce = makeNonce(),
+        attachments = { { id = 0, filename = filename } },
+    })
+    local body = table.concat({
+        "--", boundary, "\r\nContent-Disposition: form-data; name=\"payload_json\"\r\n",
+        "Content-Type: application/json\r\n\r\n", payload, "\r\n",
+        "--", boundary, "\r\nContent-Disposition: form-data; name=\"files[0]\"; filename=\"", filename, "\"\r\n",
+        "Content-Type: ", mime or "application/octet-stream", "\r\n\r\n", data, "\r\n",
+        "--", boundary, "--\r\n",
+    })
+    return self:post("/channels/" .. channel_id .. "/messages", {
+        raw_body = body,
+        content_type = "multipart/form-data; boundary=" .. boundary,
+    })
 end
 
 --- Forwards a message (Discord's native forwarding) to another channel.

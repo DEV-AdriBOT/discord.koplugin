@@ -246,6 +246,17 @@ end
 function Discord:onPageUpdate(pageno)
     self.current_page = pageno
     if self.settings.share_reading then self:updateActivity() end
+    if shared.reading then
+        local ok, err = pcall(require("discord_bookclub").onPage, self, pageno)
+        if not ok then logger.warn("Discord: book club progress failed", err) end
+    end
+end
+
+function Discord:onAnnotationsModified(items)
+    if shared.reading then
+        local ok, err = pcall(require("discord_bookclub").onAnnotation, self, items)
+        if not ok then logger.warn("Discord: book club highlight failed", err) end
+    end
 end
 
 function Discord:onCloseDocument()
@@ -706,6 +717,16 @@ function Discord:getLoggedInMenu()
             callback = function() self:showOfflineChats() end,
         },
         {
+            text = _("Share this page"),
+            enabled_func = function() return shared.reading == true end,
+            callback = function() require("discord_share").page(self) end,
+        },
+        {
+            text = _("Book club (this book)"),
+            enabled_func = function() return shared.reading == true end,
+            sub_item_table_func = function() return self:getBookClubMenu() end,
+        },
+        {
             text_func = function() return T(_("Status: %1"), self:statusLabel(self.settings.status)) end,
             sub_item_table = {
                 self:statusItem("online"),
@@ -1080,6 +1101,77 @@ function Discord:removeAccount(id, touchmenu_instance)
         touchmenu_instance:updateItems()
     end
     if active then self:updateConnection() end
+end
+
+--- Book club settings of the open book.
+function Discord:getBookClubMenu()
+    local Club = require("discord_bookclub")
+    local function club() return Club.get(self.ui) end
+    local function toggle(label, key)
+        return {
+            text = label,
+            checked_func = function() return club()[key] end,
+            callback = function()
+                local c = club()
+                c[key] = not c[key]
+                Club.save(self.ui, c)
+            end,
+        }
+    end
+    local items = {
+        {
+            text_func = function()
+                local c = club()
+                return T(_("Channel: %1"), c.channel and c.channel.title or _("none"))
+            end,
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                self:pickDestination(_("Book club channel"), function(entry)
+                    local c = club()
+                    c.channel = { id = entry.id, guild_id = entry.guild_id, title = entry.title, subtitle = entry.subtitle }
+                    Club.save(self.ui, c)
+                    if touchmenu_instance then touchmenu_instance:updateItems() end
+                end)
+            end,
+        },
+        {
+            text = _("Share my reading in this book's club"),
+            checked_func = function() return club().enabled end,
+            enabled_func = function() return club().channel ~= nil end,
+            callback = function()
+                local c = club()
+                c.enabled = not c.enabled
+                if c.enabled then c.last_pct = 0 end
+                Club.save(self.ui, c)
+            end,
+            separator = true,
+        },
+        toggle(_("Send progress"), "progress"),
+    }
+    for __, step in ipairs({ 5, 10, 20, 25, 50 }) do
+        table.insert(items, {
+            text = T(_("Every %1 %"), step),
+            radio = true,
+            checked_func = function() return club().step == step end,
+            callback = function()
+                local c = club()
+                c.step = step
+                Club.save(self.ui, c)
+            end,
+        })
+    end
+    table.insert(items, toggle(_("Send when a chapter is finished"), "chapters"))
+    table.insert(items, toggle(_("Send my highlights"), "highlights"))
+    table.insert(items, {
+        text = _("Send my progress now"),
+        enabled_func = function() return club().channel ~= nil end,
+        callback = function()
+            if Club.sendNow(self) then
+                UIManager:show(Notification:new{ text = _("Progress sent") })
+            end
+        end,
+    })
+    return items
 end
 
 function Discord:getAccountsMenu()
