@@ -15,6 +15,7 @@ local ChatView = require("discord_chatview")
 local Dispatcher = require("dispatcher")
 local Gateway = require("discord_gateway")
 local Outbox = require("discord_outbox")
+local StatusBar = require("discord_statusbar")
 local InfoMessage = require("ui/widget/infomessage")
 local InputDialog = require("ui/widget/inputdialog")
 local LuaSettings = require("luasettings")
@@ -233,6 +234,7 @@ end
 function Discord:onReaderReady()
     shared.reading = true
     shared.reading_since = os.time()
+    if self.settings.statusbar_counter then StatusBar.attach(self.ui) end
     local ok, page = pcall(function() return self.ui:getCurrentPage() end)
     if ok then self.current_page = page end
     if self.settings.share_reading then
@@ -248,6 +250,7 @@ end
 
 function Discord:onCloseDocument()
     shared.reading = false
+    StatusBar.detach()
     if Gateway.activity then Gateway:setActivity(nil) end
 end
 
@@ -320,6 +323,9 @@ function Discord:setupGatewayListeners()
     for __, ev in ipairs({ "ready", "MESSAGE_CREATE", "MESSAGE_ACK", "CHANNEL_UNREAD_UPDATE",
             "RELATIONSHIP_ADD", "RELATIONSHIP_REMOVE", "USER_GUILD_SETTINGS_UPDATE" }) do
         Gateway:on(ev, refresh)
+    end
+    for __, ev in ipairs({ "ready", "MESSAGE_CREATE", "MESSAGE_ACK", "CHANNEL_UNREAD_UPDATE" }) do
+        Gateway:on(ev, function() StatusBar.refresh() end)
     end
     -- Battery check once a minute
     local function battery_tick()
@@ -516,6 +522,10 @@ function Discord:getSettingsMenu()
             elseif Gateway.activity then
                 Gateway:setActivity(nil)
             end
+        end),
+        toggleItem(self, _("Show unread mentions and DMs in the status bar"), "statusbar_counter", false, function()
+            if not shared.reading then return end
+            if self.settings.statusbar_counter then StatusBar.attach(self.ui) else StatusBar.detach() end
         end),
         toggleItem(self, _("Notify mentions"), "notify_mentions", true),
         toggleItem(self, _("Show unread DMs and mentions on the sleep screen"), "sleep_summary", false),

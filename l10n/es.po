@@ -821,6 +821,10 @@ msgid "Show the book I'm reading as my Discord activity"
 msgstr "Mostrar el libro que leo como mi actividad en Discord"
 
 #: main.lua
+msgid "Show unread mentions and DMs in the status bar"
+msgstr "Mostrar menciones y MD sin leer en la barra de estado"
+
+#: main.lua
 msgid "Notify mentions"
 msgstr "Avisar de menciones"
 
