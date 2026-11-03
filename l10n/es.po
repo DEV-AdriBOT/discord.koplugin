@@ -724,6 +724,22 @@ msgstr "No se pudo cargar el perfil completo: "
 msgid "Close"
 msgstr "Cerrar"
 
+#: discord_report.lua
+msgid "What happened?"
+msgstr "¿Qué ha pasado?"
+
+#: discord_report.lua
+msgid "full report in the file saved on the device"
+msgstr "informe completo en el archivo guardado en el dispositivo"
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub. A full copy was saved to %1"
+msgstr "Escanea el código para abrir un issue ya rellenado en GitHub. Se guardó una copia completa en %1"
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub."
+msgstr "Escanea el código para abrir un issue ya rellenado en GitHub."
+
 #: main.lua
 msgid "Open Discord"
 msgstr "Abrir Discord"
@@ -771,6 +787,10 @@ msgstr "Iniciar sesión con token"
 #: main.lua
 msgid "Load token from %1"
 msgstr "Cargar token desde %1"
+
+#: main.lua
+msgid "Report a problem"
+msgstr "Informar de un problema"
 
 #: main.lua
 msgid "off"

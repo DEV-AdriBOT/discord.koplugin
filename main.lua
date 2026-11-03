@@ -418,6 +418,10 @@ function Discord:getLoginMenu()
             end,
             separator = true,
         },
+        {
+            text = _("Report a problem"),
+            callback = function() require("discord_report").show() end,
+        },
         self:updateMenuItem(),
     }
 end
@@ -717,6 +721,10 @@ function Discord:getLoggedInMenu()
         {
             text = _("Settings"),
             sub_item_table_func = function() return self:getSettingsMenu() end,
+        },
+        {
+            text = _("Report a problem"),
+            callback = function() require("discord_report").show() end,
         },
         (function() local item = self:updateMenuItem() item.separator = true return item end)(),
         {

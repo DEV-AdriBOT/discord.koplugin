@@ -724,6 +724,22 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: discord_report.lua
+msgid "What happened?"
+msgstr ""
+
+#: discord_report.lua
+msgid "full report in the file saved on the device"
+msgstr ""
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub. A full copy was saved to %1"
+msgstr ""
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub."
+msgstr ""
+
 #: main.lua
 msgid "Open Discord"
 msgstr ""
@@ -770,6 +786,10 @@ msgstr ""
 
 #: main.lua
 msgid "Load token from %1"
+msgstr ""
+
+#: main.lua
+msgid "Report a problem"
 msgstr ""
 
 #: main.lua
