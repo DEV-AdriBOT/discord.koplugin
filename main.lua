@@ -1552,6 +1552,7 @@ function Discord:friendItems()
                 search = name .. " " .. (rel.user.username or ""),
                 mandatory = rel.user.username,
                 callback = function() self:openDMWith(rel.user) end,
+                hold_callback = function() require("discord_profile").show(self, rel.user) end,
             })
         end
     end

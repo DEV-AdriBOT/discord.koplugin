@@ -329,6 +329,13 @@ function DiscordAPI:removeRelationship(user_id)
 end
 
 --- Our private note about a user ("" when there is none).
+--- Profile of a user: bio, mutual servers and, with guild_id, their roles there.
+function DiscordAPI:getProfile(user_id, guild_id)
+    local path = "/users/" .. user_id .. "/profile?with_mutual_guilds=true&with_mutual_friends_count=false"
+    if guild_id then path = path .. "&guild_id=" .. guild_id end
+    return self:get(path)
+end
+
 function DiscordAPI:getNote(user_id)
     local ok, data, code = self:get("/users/@me/notes/" .. user_id)
     if ok then return true, data and data.note or "" end

@@ -1877,6 +1877,15 @@ function ChatView:messageActions(msg)
             },
         },
     }
+    local profile_row = {{
+        text = _("Profile"),
+        enabled = msg.author ~= nil,
+        callback = function()
+            UIManager:close(dialog)
+            require("discord_profile").show(self.plugin, msg.author, self.guild and self.guild.id)
+        end,
+    }}
+    table.insert(buttons, profile_row)
     local saved = self.plugin:isSaved(msg.id)
     local save_row = {{
         text = saved and _("Remove from saved") or _("Save for later"),
@@ -2055,6 +2064,13 @@ function ChatView:showMenu()
                         self:scrollToNew()
                         UIManager:setDirty(self, "ui")
                     end,
+                },
+            },
+            {
+                {
+                    text = _("Members"),
+                    enabled = not self.offline,
+                    callback = function() close() require("discord_members").show(self.plugin, self) end,
                 },
             },
             {

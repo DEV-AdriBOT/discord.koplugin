@@ -416,7 +416,7 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_profile.lua main.lua
 msgid "Direct message"
 msgstr ""
 
@@ -438,6 +438,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Note about user"
+msgstr ""
+
+#: discord_chatview.lua discord_profile.lua
+msgid "Profile"
 msgstr ""
 
 #: discord_chatview.lua main.lua
@@ -514,6 +518,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Jump to new messages"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Members"
 msgstr ""
 
 #: discord_chatview.lua
@@ -626,6 +634,94 @@ msgstr ""
 
 #: discord_emoji.lua
 msgid "Part of the name, for example: fire"
+msgstr ""
+
+#: discord_members.lua
+msgid "online"
+msgstr ""
+
+#: discord_members.lua
+msgid "idle"
+msgstr ""
+
+#: discord_members.lua
+msgid "do not disturb"
+msgstr ""
+
+#: discord_members.lua main.lua
+msgid "offline"
+msgstr ""
+
+#: discord_members.lua main.lua
+msgid "Online"
+msgstr ""
+
+#: discord_members.lua
+msgid "Offline"
+msgstr ""
+
+#: discord_members.lua
+msgid "No members to show."
+msgstr ""
+
+#: discord_members.lua
+msgid "Members of %1"
+msgstr ""
+
+#: discord_members.lua
+msgid "The member list needs a live connection."
+msgstr ""
+
+#: discord_members.lua
+msgid "Loading members…"
+msgstr ""
+
+#: discord_members.lua
+msgid "The server did not send its member list."
+msgstr ""
+
+#: discord_members.lua
+msgid "%1 online"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Account created: %1"
+msgstr ""
+
+#: discord_profile.lua
+msgid "About me"
+msgstr ""
+
+#: discord_profile.lua
+msgid "In %1"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Nickname: %1"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Joined: %1"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Roles: %1"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Servers in common (%1)"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Loading profile…"
+msgstr ""
+
+#: discord_profile.lua
+msgid "Could not load the full profile: "
+msgstr ""
+
+#: discord_profile.lua
+msgid "Close"
 msgstr ""
 
 #: main.lua
@@ -933,10 +1029,6 @@ msgid "Checking for updates…"
 msgstr ""
 
 #: main.lua
-msgid "Online"
-msgstr ""
-
-#: main.lua
 msgid "Idle"
 msgstr ""
 
@@ -1178,10 +1270,6 @@ msgstr ""
 
 #: main.lua
 msgid "No recent mentions."
-msgstr ""
-
-#: main.lua
-msgid "offline"
 msgstr ""
 
 #: main.lua

@@ -52,6 +52,7 @@ local Gateway = {
     muted_guilds = {},
     muted_channels = {},
     suppress_everyone = {}, -- guild id -> true
+    member_lists = {},  -- guild id -> { items = { {group=...} | {member=...} }, online, total, stamp }
     users = {},         -- id -> user
     relationships = {}, -- user id -> { type = 1 friend / 3 incoming / 4 outgoing, user }
     status = nil,       -- presence to announce ("online", "idle", "dnd", "invisible"), nil = unchanged
@@ -705,6 +706,8 @@ function Gateway:dispatch(t, d)
             nicks[uid] = false
             pending[uid] = nil
         end
+    elseif t == "GUILD_MEMBER_LIST_UPDATE" then
+        self:applyMemberListUpdate(d)
     elseif t == "RELATIONSHIP_ADD" or t == "RELATIONSHIP_UPDATE" then
         local uid = d.user_id or d.id
         local user = d.user or (self.relationships[uid] and self.relationships[uid].user) or self.users[uid]
@@ -824,6 +827,56 @@ function Gateway:subscribeGuild(guild_id)
     if self.subscribed[guild_id] or not self:isReady() then return end
     self.subscribed[guild_id] = true
     self:sendOp(14, { guild_id = guild_id, typing = true, threads = true, activities = false })
+end
+
+--- Subscribes to the first 100 entries of a channel's member list.
+function Gateway:requestMemberList(guild_id, channel_id)
+    if not self:isReady() then return false end
+    self.member_lists[guild_id] = { items = {}, stamp = 0 }
+    self.subscribed = self.subscribed or {}
+    self.subscribed[guild_id] = true
+    return self:sendOp(14, {
+        guild_id = guild_id, typing = true, threads = true, activities = false,
+        channels = { [channel_id] = { { 0, 99 } } },
+    })
+end
+
+--- Highest integer key of a table that may have holes.
+function Gateway.maxIndex(t)
+    local max = 0
+    for k in pairs(t) do
+        if type(k) == "number" and k > max then max = k end
+    end
+    return max
+end
+
+--- Keeps the member list of a guild up to date from GUILD_MEMBER_LIST_UPDATE ops.
+function Gateway:applyMemberListUpdate(d)
+    local list = self.member_lists[d.guild_id]
+    if not list then return end
+    stripNulls(d)
+    list.online, list.total = d.online_count, d.member_count
+    local items = list.items
+    for _, op in ipairs(d.ops or {}) do
+        local name = op.op
+        if name == "SYNC" then
+            local first = (op.range and op.range[1] or 0) + 1
+            for i, item in ipairs(op.items or {}) do items[first + i - 1] = item end
+        elseif name == "INSERT" then
+            table.insert(items, (op.index or 0) + 1, op.item)
+        elseif name == "UPDATE" then
+            items[(op.index or 0) + 1] = op.item
+        elseif name == "DELETE" then
+            table.remove(items, (op.index or 0) + 1)
+        elseif name == "INVALIDATE" then
+            for i = (op.range and op.range[1] or 0) + 1, (op.range and op.range[2] or 0) + 1 do items[i] = nil end
+        end
+    end
+    for i = 1, Gateway.maxIndex(items) do
+        local m = items[i] and items[i].member
+        if m and m.user then self.users[m.user.id] = self.users[m.user.id] or m.user end
+    end
+    list.stamp = list.stamp + 1
 end
 
 --- Asks for the nicknames of users we have not seen yet in this guild.

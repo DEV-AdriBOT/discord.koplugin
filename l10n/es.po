@@ -416,7 +416,7 @@ msgstr "Copiar"
 msgid "Copied"
 msgstr "Copiado"
 
-#: discord_chatview.lua main.lua
+#: discord_chatview.lua discord_profile.lua main.lua
 msgid "Direct message"
 msgstr "Mensaje directo"
 
@@ -439,6 +439,10 @@ msgstr "Reenviar"
 #: discord_chatview.lua
 msgid "Note about user"
 msgstr "Nota sobre el usuario"
+
+#: discord_chatview.lua discord_profile.lua
+msgid "Profile"
+msgstr "Perfil"
 
 #: discord_chatview.lua main.lua
 msgid "Remove from saved"
@@ -515,6 +519,10 @@ msgstr "Silenciar canal"
 #: discord_chatview.lua
 msgid "Jump to new messages"
 msgstr "Ir a los mensajes nuevos"
+
+#: discord_chatview.lua
+msgid "Members"
+msgstr "Miembros"
 
 #: discord_chatview.lua
 msgid "Pending messages (%1)"
@@ -627,6 +635,94 @@ msgstr "Emoji"
 #: discord_emoji.lua
 msgid "Part of the name, for example: fire"
 msgstr "Parte del nombre, por ejemplo: fire"
+
+#: discord_members.lua
+msgid "online"
+msgstr "en línea"
+
+#: discord_members.lua
+msgid "idle"
+msgstr "ausente"
+
+#: discord_members.lua
+msgid "do not disturb"
+msgstr "no molestar"
+
+#: discord_members.lua main.lua
+msgid "offline"
+msgstr "sin conexión"
+
+#: discord_members.lua main.lua
+msgid "Online"
+msgstr "En línea"
+
+#: discord_members.lua
+msgid "Offline"
+msgstr "Desconectados"
+
+#: discord_members.lua
+msgid "No members to show."
+msgstr "No hay miembros que mostrar."
+
+#: discord_members.lua
+msgid "Members of %1"
+msgstr "Miembros de %1"
+
+#: discord_members.lua
+msgid "The member list needs a live connection."
+msgstr "La lista de miembros necesita conexión en tiempo real."
+
+#: discord_members.lua
+msgid "Loading members…"
+msgstr "Cargando miembros…"
+
+#: discord_members.lua
+msgid "The server did not send its member list."
+msgstr "El servidor no envió su lista de miembros."
+
+#: discord_members.lua
+msgid "%1 online"
+msgstr "%1 en línea"
+
+#: discord_profile.lua
+msgid "Account created: %1"
+msgstr "Cuenta creada: %1"
+
+#: discord_profile.lua
+msgid "About me"
+msgstr "Sobre mí"
+
+#: discord_profile.lua
+msgid "In %1"
+msgstr "En %1"
+
+#: discord_profile.lua
+msgid "Nickname: %1"
+msgstr "Apodo: %1"
+
+#: discord_profile.lua
+msgid "Joined: %1"
+msgstr "Se unió: %1"
+
+#: discord_profile.lua
+msgid "Roles: %1"
+msgstr "Roles: %1"
+
+#: discord_profile.lua
+msgid "Servers in common (%1)"
+msgstr "Servidores en común (%1)"
+
+#: discord_profile.lua
+msgid "Loading profile…"
+msgstr "Cargando perfil…"
+
+#: discord_profile.lua
+msgid "Could not load the full profile: "
+msgstr "No se pudo cargar el perfil completo: "
+
+#: discord_profile.lua
+msgid "Close"
+msgstr "Cerrar"
 
 #: main.lua
 msgid "Open Discord"
@@ -933,10 +1029,6 @@ msgid "Checking for updates…"
 msgstr "Buscando actualizaciones…"
 
 #: main.lua
-msgid "Online"
-msgstr "En línea"
-
-#: main.lua
 msgid "Idle"
 msgstr "Ausente"
 
@@ -1179,10 +1271,6 @@ msgstr "No se pudieron cargar las menciones: "
 #: main.lua
 msgid "No recent mentions."
 msgstr "No hay menciones recientes."
-
-#: main.lua
-msgid "offline"
-msgstr "sin conexión"
 
 #: main.lua
 msgid "No chats saved yet. Open a chat while online first."
