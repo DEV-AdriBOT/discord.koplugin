@@ -440,6 +440,14 @@ msgstr ""
 msgid "Note about user"
 msgstr ""
 
+#: discord_chatview.lua main.lua
+msgid "Remove from saved"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Save for later"
+msgstr ""
+
 #: discord_chatview.lua
 msgid "Earlier versions (%1)"
 msgstr ""
@@ -849,6 +857,10 @@ msgid "Friends"
 msgstr ""
 
 #: main.lua
+msgid "Saved messages (%1)"
+msgstr ""
+
+#: main.lua
 msgid "Offline chats"
 msgstr ""
 
@@ -1030,6 +1042,30 @@ msgstr ""
 
 #: main.lua
 msgid "Added to favorites"
+msgstr ""
+
+#: main.lua
+msgid "Removed from saved messages"
+msgstr ""
+
+#: main.lua
+msgid "Message saved"
+msgstr ""
+
+#: main.lua
+msgid "Open in chat"
+msgstr ""
+
+#: main.lua
+msgid "Read here"
+msgstr ""
+
+#: main.lua
+msgid "Saved messages"
+msgstr ""
+
+#: main.lua
+msgid "No saved messages. Use Save in a message's actions."
 msgstr ""
 
 #: main.lua

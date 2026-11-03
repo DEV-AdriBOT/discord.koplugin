@@ -678,6 +678,10 @@ function Discord:getLoggedInMenu()
             callback = function() self:showFriends() end,
         },
         {
+            text_func = function() return T(_("Saved messages (%1)"), #(self.settings.saved or {})) end,
+            callback = function() self:showSaved() end,
+        },
+        {
             text = _("Offline chats"),
             callback = function() self:showOfflineChats() end,
         },
@@ -1196,6 +1200,88 @@ function Discord:toggleFavorite(entry)
     self:refreshLists()
 end
 
+-- Saved messages: a snapshot is kept so they can be read offline
+
+function Discord:isSaved(message_id)
+    for __, m in ipairs(self.settings.saved or {}) do
+        if m.id == message_id then return true end
+    end
+    return false
+end
+
+--- Saves a message, or removes it if it was already saved. `snap`: { id, channel_id, guild_id,
+-- title, subtitle, author, content, time }.
+function Discord:toggleSaved(snap)
+    self.settings.saved = self.settings.saved or {}
+    for i, m in ipairs(self.settings.saved) do
+        if m.id == snap.id then
+            table.remove(self.settings.saved, i)
+            self:saveSettings()
+            UIManager:show(Notification:new{ text = _("Removed from saved messages") })
+            return
+        end
+    end
+    snap.saved_at = os.time()
+    table.insert(self.settings.saved, 1, snap)
+    self:saveSettings()
+    UIManager:show(Notification:new{ text = _("Message saved") })
+end
+
+function Discord:savedActions(m, menu)
+    local TextViewer = require("ui/widget/textviewer")
+    local dialog
+    dialog = ButtonDialog:new{
+        title = (m.author or "?") .. " · " .. (m.title or ""),
+        buttons = {
+            {{
+                text = _("Open in chat"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:openEntry({ id = m.channel_id, guild_id = m.guild_id, title = m.title, subtitle = m.subtitle }, m.id)
+                end,
+            }},
+            {{
+                text = _("Read here"),
+                callback = function()
+                    UIManager:close(dialog)
+                    local ts = m.time and ChatView.parseTimestamp(m.time)
+                    UIManager:show(TextViewer:new{
+                        title = (m.author or "?") .. (ts and (" · " .. os.date("%Y-%m-%d %H:%M", ts)) or ""),
+                        text = m.content or "",
+                    })
+                end,
+            }},
+            {{
+                text = _("Remove from saved"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:toggleSaved(m)
+                    if menu then self:rebuildList(menu, true) end
+                end,
+            }},
+        },
+    }
+    UIManager:show(dialog)
+end
+
+function Discord:showSaved()
+    self:showList(_("Saved messages"), function()
+        local items = {}
+        for __, m in ipairs(self.settings.saved or {}) do
+            local first = (m.content or ""):gsub("%s+", " ")
+            table.insert(items, {
+                text = (m.author or "?") .. ": " .. first,
+                mandatory = m.title,
+                callback = function() self:savedActions(m) end,
+            })
+        end
+        if #items == 0 then
+            table.insert(items, { text = _("No saved messages. Use Save in a message's actions."), select_enabled = false })
+        end
+        return items
+    end)
+end
+
 function Discord:addRecent(entry)
     local recents = self.settings.recents or {}
     for i = #recents, 1, -1 do
@@ -1564,6 +1650,12 @@ function Discord:homeItems(guilds)
         text = _("Mentions"),
         callback = function() self:showMentions() end,
     })
+    if #(self.settings.saved or {}) > 0 then
+        table.insert(items, {
+            text = T(_("Saved messages (%1)"), #self.settings.saved),
+            callback = function() self:showSaved() end,
+        })
+    end
     if #shared.notifications > 0 then
         table.insert(items, {
             text = T(_("Recent notifications (%1)"), #shared.notifications),

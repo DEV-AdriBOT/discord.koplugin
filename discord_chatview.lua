@@ -1879,6 +1879,24 @@ function ChatView:messageActions(msg)
             },
         },
     }
+    local saved = self.plugin:isSaved(msg.id)
+    local save_row = {{
+        text = saved and _("Remove from saved") or _("Save for later"),
+        callback = function()
+            UIManager:close(dialog)
+            self.plugin:toggleSaved({
+                id = msg.id,
+                channel_id = self.channel.id,
+                guild_id = self.guild and self.guild.id,
+                title = self.title,
+                subtitle = self.subtitle,
+                author = self:authorName(msg.author),
+                content = self:renderContent(msg),
+                time = msg.timestamp,
+            })
+        end,
+    }}
+    table.insert(buttons, save_row)
     local versions = msg.edit_history and #msg.edit_history or 0
     if versions > 0 then
         table.insert(buttons, {{
@@ -1891,7 +1909,7 @@ function ChatView:messageActions(msg)
     end
     if self.offline then
         -- Only reading actions make sense without network
-        buttons = { buttons[2], { buttons[3][1] }, { buttons[4][1] } }
+        buttons = { buttons[2], { buttons[3][1] }, { buttons[4][1] }, save_row }
     end
     if mine and not self.offline then
         table.insert(buttons, {

@@ -440,6 +440,14 @@ msgstr "Reenviar"
 msgid "Note about user"
 msgstr "Nota sobre el usuario"
 
+#: discord_chatview.lua main.lua
+msgid "Remove from saved"
+msgstr "Quitar de guardados"
+
+#: discord_chatview.lua
+msgid "Save for later"
+msgstr "Guardar para después"
+
 #: discord_chatview.lua
 msgid "Earlier versions (%1)"
 msgstr "Versiones anteriores (%1)"
@@ -849,6 +857,10 @@ msgid "Friends"
 msgstr "Amigos"
 
 #: main.lua
+msgid "Saved messages (%1)"
+msgstr "Mensajes guardados (%1)"
+
+#: main.lua
 msgid "Offline chats"
 msgstr "Chats sin conexión"
 
@@ -1031,6 +1043,30 @@ msgstr "Quitado de favoritos"
 #: main.lua
 msgid "Added to favorites"
 msgstr "Añadido a favoritos"
+
+#: main.lua
+msgid "Removed from saved messages"
+msgstr "Quitado de los mensajes guardados"
+
+#: main.lua
+msgid "Message saved"
+msgstr "Mensaje guardado"
+
+#: main.lua
+msgid "Open in chat"
+msgstr "Abrir en el chat"
+
+#: main.lua
+msgid "Read here"
+msgstr "Leer aquí"
+
+#: main.lua
+msgid "Saved messages"
+msgstr "Mensajes guardados"
+
+#: main.lua
+msgid "No saved messages. Use Save in a message's actions."
+msgstr "No hay mensajes guardados. Usa «Guardar para después» en las acciones de un mensaje."
 
 #: main.lua
 msgid "Hidden servers"
