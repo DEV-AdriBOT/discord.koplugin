@@ -228,6 +228,7 @@ function Discord:updateActivity(force)
     if not force and now - (self.last_activity_time or 0) < 60 then return end
     self.last_activity_state = activity.state
     self.last_activity_time = now
+    logger.info("Discord: reading activity set", Gateway:isReady() and "(sent)" or "(waiting for connection)", activity.state)
     Gateway:setActivity(activity)
 end
 
@@ -540,7 +541,15 @@ function Discord:getSettingsMenu()
         end),
         toggleItem(self, _("Show unread mentions and DMs in the status bar"), "statusbar_counter", false, function()
             if not shared.reading then return end
-            if self.settings.statusbar_counter then StatusBar.attach(self.ui) else StatusBar.detach() end
+            if self.settings.statusbar_counter then
+                StatusBar.attach(self.ui)
+                UIManager:show(Notification:new{
+                    text = _("The counter is a status bar item: tap the status bar to switch to it, or show all items at once."),
+                    timeout = 4,
+                })
+            else
+                StatusBar.detach()
+            end
         end),
         toggleItem(self, _("Notify mentions"), "notify_mentions", true),
         toggleItem(self, _("Show unread DMs and mentions on the sleep screen"), "sleep_summary", false),
@@ -1180,7 +1189,7 @@ function Discord:getAccountsMenu()
         local id = acc.id
         table.insert(items, {
             text = Account.name(acc),
-            mandatory = id == self.settings.active and _("active") or nil,
+            checked_func = function() return id == self.settings.active end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
                 self:switchAccount(id, touchmenu_instance)

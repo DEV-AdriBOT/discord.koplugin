@@ -36,7 +36,12 @@ function StatusBar.attach(ui)
     if not footer or not footer.addAdditionalFooterContent then return false end
     StatusBar.footer = footer
     StatusBar.fn = function() return StatusBar.text() end
+    -- Adding content renumbers the footer's modes: keep showing the one the reader had
+    local mode_name = footer.mode_index and footer.mode_index[footer.mode]
     footer:addAdditionalFooterContent(StatusBar.fn)
+    if mode_name and footer.mode_list and footer.mode_list[mode_name] and footer.applyFooterMode then
+        pcall(footer.applyFooterMode, footer, footer.mode_list[mode_name])
+    end
     StatusBar.refresh()
     return true
 end

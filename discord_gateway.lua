@@ -588,7 +588,10 @@ function Gateway:dispatch(t, d)
         self.state = "ready"
         self.retries = 0
         self:emit("state", self.state)
-        if self.activity then self:sendOp(3, self:presence()) end
+        if self.activity then
+            logger.info("Discord: activity sent again after resuming")
+            self:sendOp(3, self:presence())
+        end
         self:emit("resumed")
         self:scheduleSave(30)
         return
@@ -856,6 +859,7 @@ function Gateway:applyMemberListUpdate(d)
     if not list then return end
     stripNulls(d)
     list.online, list.total = d.online_count, d.member_count
+    if d.groups then list.groups = d.groups end
     local items = list.items
     for _, op in ipairs(d.ops or {}) do
         local name = op.op

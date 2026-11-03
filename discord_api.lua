@@ -558,6 +558,8 @@ end
 
 --- Compares two snowflake ids given as strings.
 function DiscordAPI.idLess(a, b)
+    -- ids are strings, but be tolerant with numbers (a decoder may turn them into numbers)
+    a, b = tostring(a or "0"), tostring(b or "0")
     if #a ~= #b then return #a < #b end
     return a < b
 end

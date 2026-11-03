@@ -30,7 +30,11 @@ function Members.buildItems(guild, list, on_pick)
             local g = item.group
             local label = g.id == "online" and _("Online") or g.id == "offline" and _("Offline")
                 or cleanEmoji(roles[g.id] or g.id)
-            table.insert(items, { text = "— " .. label .. " (" .. tostring(g.count or "?") .. ") —", bold = true, select_enabled = false })
+            local count = g.count
+            for __, group in ipairs(list.groups or {}) do
+                if group.id == g.id then count = group.count end
+            end
+            table.insert(items, { text = "— " .. label .. " (" .. tostring(count or "?") .. ") —", bold = true, select_enabled = false })
         elseif item and item.member and item.member.user then
             local m = item.member
             local status = m.presence and m.presence.status or "offline"

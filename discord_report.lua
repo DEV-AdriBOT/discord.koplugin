@@ -104,7 +104,7 @@ function Report.save(body)
     if not f then return nil end
     f:write(body, "\n")
     f:close()
-    return path
+    return require("ffi/util").realpath(path) or path
 end
 
 function Report.show()

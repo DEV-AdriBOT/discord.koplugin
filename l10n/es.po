@@ -877,6 +877,10 @@ msgid "Show unread mentions and DMs in the status bar"
 msgstr "Mostrar menciones y MD sin leer en la barra de estado"
 
 #: main.lua
+msgid "The counter is a status bar item: tap the status bar to switch to it, or show all items at once."
+msgstr "El contador es un elemento de la barra de estado: toca la barra para cambiar a él, o muestra todos los elementos a la vez."
+
+#: main.lua
 msgid "Notify mentions"
 msgstr "Avisar de menciones"
 
@@ -1175,10 +1179,6 @@ msgstr "Enviar mi progreso ahora"
 #: main.lua
 msgid "Progress sent"
 msgstr "Progreso enviado"
-
-#: main.lua
-msgid "active"
-msgstr "activa"
 
 #: main.lua
 msgid "Log out of %1?"
