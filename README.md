@@ -19,6 +19,9 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Mentions inbox** with every recent message that mentions you, opened in context
 - **Friends** list and incoming friend requests (accept / ignore)
 - **Status**: online, idle, do not disturb or invisible
+- **Multiple accounts**: log in with several accounts and switch between them from *Accounts*; each keeps its own cache, offline chats, favorites, recents, saved messages and drafts
+- **Saved messages**: save a message to read later; the list is in the Discord menu and the home screen, and works offline
+- **User profiles** (name, bio, roles, servers in common) from a message's actions or by holding a friend, and a **member list** with online / idle / do not disturb / offline status
 
 **Chat**
 - **Real-time updates** through the Discord gateway (WebSocket), with polling as a fallback
@@ -26,6 +29,10 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Server nicknames**
 - **Typing indicator** ("X is typing…") and your own typing is sent while you write
 - **Send, reply, edit, delete**, copy, and open a DM with any author
+- **Offline send queue**: if there is no network, messages wait as *pending* (cancellable) and are sent automatically when the connection returns
+- **Emoji by name**: search `:fire:`-style emojis, including each server's custom emojis, when writing and reacting; `:name:` typed by hand is converted when sending
+- **Hold a message** to open its actions directly (an option makes a tap do it too); **tap a reply line** to jump to the original message
+- **Live edits and deletions**: a deleted message stays as *(deleted message)* (its text can still be read) and the previous text of an edited one can be viewed
 - **Reactions**: shown under each message, add or remove them
 - **Quick replies** (configurable) and a **mention picker** with member search
 - **Pinned messages** and **search** within a channel, with "jump to message"
@@ -45,6 +52,10 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Offline chats**: the latest messages of recent chats are saved and readable without Wi-Fi
 - **Links as QR codes**, to open them on your phone
 - **Sleep screen summary** (optional): unread DMs and mentions shown on the sleep screen
+- **Share the current page** of the book you are reading, as a grayscale image, in a chat
+- **Book club** (per book, optional): send your reading progress (every X % or per chapter) and your highlights to a channel
+- **Status bar counter** (optional): unread mentions and DMs in KOReader's status bar while you read
+- **Report a problem**: prepares a report (versions, device, recent Discord log lines, no token or private data) as a QR code with a pre-filled GitHub issue, and saves a copy to `discord-report.txt`
 - **Reading activity** (optional): your profile shows "Playing KOReader" with the book title, author and progress while a book is open
 - **Battery saver**: pauses the background connection and slows polling below a battery level
 - **Fast start**: the connection state is cached on disk, lists open at once and sessions are resumed after restarts
