@@ -96,7 +96,7 @@ end
 -- Disk cache: lets lists open at once and the session be resumed after a restart
 
 local function stateFile()
-    return DataStorage:getDataDir() .. "/cache/discord/gateway.json"
+    return require("discord_account").cacheDir() .. "/gateway.json"
 end
 
 function Gateway:saveState()
@@ -130,8 +130,6 @@ function Gateway:saveState()
         return
     end
     local lfs = require("libs/libkoreader-lfs")
-    lfs.mkdir(DataStorage:getDataDir() .. "/cache")
-    lfs.mkdir(DataStorage:getDataDir() .. "/cache/discord")
     local f = io.open(stateFile() .. ".tmp", "w")
     if not f then return end
     f:write(json)
@@ -198,6 +196,17 @@ function Gateway:start(api)
     if self.api.user then self:loadState(self.api.user.id) end
     if not NetworkMgr:isOnline() then return end
     self:connect()
+end
+
+--- Forgets everything about the current account (used when switching accounts).
+-- Call stop() first.
+function Gateway:reset()
+    self.session_id, self.seq, self.resume_url = nil, nil, nil
+    self.cached = false
+    self.me = nil
+    self.guilds, self.guild_order, self.channels, self.private_channels = {}, {}, {}, {}
+    self.read_states, self.muted_guilds, self.muted_channels, self.suppress_everyone = {}, {}, {}, {}
+    self.users, self.relationships, self.nicks, self.pending_members = {}, {}, {}, {}
 end
 
 function Gateway:stop(keep_session)

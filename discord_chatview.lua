@@ -110,10 +110,8 @@ local ChatView = InputContainer:extend{
 local CACHE_KEEP = 30 -- channels kept in the offline cache
 
 local function cacheDir()
-    local dir = DataStorage:getDataDir() .. "/cache/discord/messages"
+    local dir = require("discord_account").cacheDir() .. "/messages"
     if lfs.attributes(dir, "mode") ~= "directory" then
-        lfs.mkdir(DataStorage:getDataDir() .. "/cache")
-        lfs.mkdir(DataStorage:getDataDir() .. "/cache/discord")
         lfs.mkdir(dir)
     end
     return dir

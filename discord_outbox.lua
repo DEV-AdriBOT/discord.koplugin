@@ -14,12 +14,7 @@ local Outbox = {
 }
 
 local function path()
-    local dir = DataStorage:getDataDir() .. "/cache/discord"
-    if lfs.attributes(dir, "mode") ~= "directory" then
-        lfs.mkdir(DataStorage:getDataDir() .. "/cache")
-        lfs.mkdir(dir)
-    end
-    return dir .. "/outbox.json"
+    return require("discord_account").cacheDir() .. "/outbox.json"
 end
 
 local function load()
@@ -72,6 +67,11 @@ function Outbox.list(channel_id)
         if not channel_id or e.channel_id == channel_id then table.insert(out, e) end
     end
     return out
+end
+
+--- Forgets the loaded queue (after switching accounts).
+function Outbox.reset()
+    Outbox.entries = nil
 end
 
 function Outbox.count()

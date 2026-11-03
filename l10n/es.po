@@ -869,6 +869,10 @@ msgid "Status: %1"
 msgstr "Estado: %1"
 
 #: main.lua
+msgid "Accounts (%1)"
+msgstr "Cuentas (%1)"
+
+#: main.lua
 msgid "Settings"
 msgstr "Ajustes"
 
@@ -971,6 +975,26 @@ msgstr "Ver todo"
 #: main.lua
 msgid "%1 — «%2»"
 msgstr "%1 — «%2»"
+
+#: main.lua
+msgid "Switched to %1"
+msgstr "Cambiado a %1"
+
+#: main.lua
+msgid "active"
+msgstr "activa"
+
+#: main.lua
+msgid "Log out of %1?"
+msgstr "¿Cerrar la sesión de %1?"
+
+#: main.lua
+msgid "Add account"
+msgstr "Añadir cuenta"
+
+#: main.lua
+msgid "Hold an account to log out of it."
+msgstr "Mantén pulsada una cuenta para cerrar su sesión."
 
 #: main.lua
 msgid "Login failed: "

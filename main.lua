@@ -9,10 +9,12 @@ local ButtonDialog = require("ui/widget/buttondialog")
 local ConfirmBox = require("ui/widget/confirmbox")
 local DataStorage = require("datastorage")
 local Device = require("device")
+local Account = require("discord_account")
 local DiscordAPI = require("discord_api")
 local ChatView = require("discord_chatview")
 local Dispatcher = require("dispatcher")
 local Gateway = require("discord_gateway")
+local Outbox = require("discord_outbox")
 local InfoMessage = require("ui/widget/infomessage")
 local InputDialog = require("ui/widget/inputdialog")
 local LuaSettings = require("luasettings")
@@ -97,6 +99,10 @@ function Discord:init()
         }
     end
     self.settings = shared.settings_file.data
+    if not shared.accounts_ready then
+        shared.accounts_ready = true
+        Account.init(self.settings)
+    end
     self.api = shared.api
     Gateway.status = self.settings.status
     self:onDispatcherRegisterActions()
@@ -695,6 +701,10 @@ function Discord:getLoggedInMenu()
             },
         },
         {
+            text_func = function() return T(_("Accounts (%1)"), #Account.list(self.settings)) end,
+            sub_item_table_func = function() return self:getAccountsMenu() end,
+        },
+        {
             text = _("Settings"),
             sub_item_table_func = function() return self:getSettingsMenu() end,
         },
@@ -708,13 +718,7 @@ function Discord:getLoggedInMenu()
                     ok_text = _("Log out"),
                     ok_callback = function()
                         Gateway:stop()
-                        self.settings.token = nil
-                        self.settings.user = nil
-                        self.api.token = nil
-                        self.api.user = nil
-                        self:saveSettings()
-                        touchmenu_instance.item_table = self:getLoginMenu()
-                        touchmenu_instance:updateItems()
+                        self:removeAccount(self.settings.active, touchmenu_instance)
                     end,
                 })
             end,
@@ -1014,6 +1018,88 @@ local function unreadMarks(unread, mentions)
     return false, nil
 end
 
+-- Accounts
+
+--- Closes the Discord screens and disconnects, keeping the session for a later resume.
+function Discord:leaveAccount()
+    for i = #shared.views, 1, -1 do UIManager:close(shared.views[i]) end
+    for i = #shared.lists, 1, -1 do UIManager:close(shared.lists[i]) end
+    Gateway:stop(true)
+    Gateway:reset()
+    Outbox.reset()
+    shared.notifications = {}
+end
+
+--- Switches to another logged-in account.
+function Discord:switchAccount(id, touchmenu_instance)
+    if id == self.settings.active then return end
+    self:leaveAccount()
+    local acc = Account.switch(self.settings, id)
+    if not acc then return end
+    self.api.token, self.api.user = acc.token, acc.user
+    self:saveSettings()
+    UIManager:show(Notification:new{ text = T(_("Switched to %1"), Account.name(acc)) })
+    if touchmenu_instance then
+        touchmenu_instance.item_table = self:getLoggedInMenu()
+        touchmenu_instance:updateItems()
+    end
+    self:updateConnection()
+end
+
+--- Logs out one account (without touching the others).
+function Discord:removeAccount(id, touchmenu_instance)
+    local was_active = id == self.settings.active
+    if was_active then self:leaveAccount() end
+    local active = Account.remove(self.settings, id)
+    Account.purgeCache(id)
+    if was_active then
+        self.api.token = self.settings.token
+        self.api.user = self.settings.user
+    end
+    self:saveSettings()
+    if touchmenu_instance then
+        touchmenu_instance.item_table = active and self:getLoggedInMenu() or self:getLoginMenu()
+        touchmenu_instance:updateItems()
+    end
+    if active then self:updateConnection() end
+end
+
+function Discord:getAccountsMenu()
+    local items = {}
+    for __, acc in ipairs(Account.list(self.settings)) do
+        local id = acc.id
+        table.insert(items, {
+            text = Account.name(acc),
+            mandatory = id == self.settings.active and _("active") or nil,
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                self:switchAccount(id, touchmenu_instance)
+            end,
+            hold_callback = function(touchmenu_instance)
+                UIManager:show(ConfirmBox:new{
+                    text = T(_("Log out of %1?"), Account.name(acc)),
+                    ok_text = _("Log out"),
+                    ok_callback = function() self:removeAccount(id, touchmenu_instance) end,
+                })
+            end,
+        })
+    end
+    items[#items].separator = true
+    table.insert(items, {
+        text = _("Add account"),
+        sub_item_table_func = function()
+            local login = self:getLoginMenu()
+            table.remove(login) -- the update entry is not needed here
+            return login
+        end,
+    })
+    table.insert(items, {
+        text = _("Hold an account to log out of it."),
+        enabled = false,
+    })
+    return items
+end
+
 -- Login
 
 function Discord:finishLogin(token, touchmenu_instance)
@@ -1024,8 +1110,12 @@ function Discord:finishLogin(token, touchmenu_instance)
         UIManager:show(InfoMessage:new{ text = errorText(_("Login failed: "), me, code) })
         return
     end
-    self.settings.token = token
-    self.settings.user = { id = me.id, username = me.username, global_name = me.global_name }
+    local user = { id = me.id, username = me.username, global_name = me.global_name }
+    if self.settings.active and self.settings.active ~= me.id then
+        -- Adding another account: leave the current one cleanly first
+        self:leaveAccount()
+    end
+    Account.add(self.settings, token, user)
     self.api.user = self.settings.user
     self:saveSettings()
     UIManager:show(InfoMessage:new{
