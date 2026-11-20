@@ -9,6 +9,10 @@ msgid "Discord"
 msgstr ""
 
 #: discord_api.lua
+msgid "Secure connection failed: the server certificate could not be verified. Check that the device date and time are correct. On a network you trust, you can turn off Settings → Network → Verify server certificates."
+msgstr ""
+
+#: discord_api.lua
 msgid "Network error"
 msgstr ""
 
@@ -249,10 +253,18 @@ msgid "Cancel"
 msgstr ""
 
 #: discord_chatview.lua
-msgid "Quick"
+msgid "@ off"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "@ on"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Quick"
+msgstr ""
+
+#: discord_chatview.lua main.lua
 msgid "Save"
 msgstr ""
 
@@ -744,6 +756,22 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: discord_qrlogin.lua
+msgid "Connecting to Discord…"
+msgstr ""
+
+#: discord_qrlogin.lua
+msgid "Log in with QR code"
+msgstr ""
+
+#: discord_qrlogin.lua
+msgid "1. Open Discord on your phone.\n2. Go to Settings → Scan QR Code.\n3. Scan this code and approve the login."
+msgstr ""
+
+#: discord_qrlogin.lua
+msgid "Waiting for you to scan the code…"
+msgstr ""
+
 #: discord_report.lua
 msgid "What happened?"
 msgstr ""
@@ -806,6 +834,10 @@ msgstr ""
 
 #: main.lua
 msgid "[file]"
+msgstr ""
+
+#: main.lua
+msgid "Log in with QR code (scan with your phone)"
 msgstr ""
 
 #: main.lua
@@ -981,6 +1013,46 @@ msgid "Hidden servers (%1)"
 msgstr ""
 
 #: main.lua
+msgid "Network"
+msgstr ""
+
+#: main.lua
+msgid "Verify server certificates"
+msgstr ""
+
+#: main.lua
+msgid "Checks that you are really talking to Discord, so nobody on the same network can read your login. Turn it off only if connections fail because the device clock is wrong."
+msgstr ""
+
+#: main.lua
+msgid "Without certificate checks, someone on the same network could read your Discord login. Only do this on a network you trust, and turn it back on when you can."
+msgstr ""
+
+#: main.lua
+msgid "Turn off"
+msgstr ""
+
+#: main.lua
+msgid "HTTP proxy: %1"
+msgstr ""
+
+#: main.lua
+msgid "none"
+msgstr ""
+
+#: main.lua
+msgid "HTTP proxy"
+msgstr ""
+
+#: main.lua
+msgid "host:port of an HTTP proxy that supports CONNECT. Leave empty to connect directly."
+msgstr ""
+
+#: main.lua
+msgid "Use the form host:port, e.g. 192.168.1.10:3128"
+msgstr ""
+
+#: main.lua
 msgid "Add quick reply…"
 msgstr ""
 
@@ -1145,10 +1217,6 @@ msgid "Channel: %1"
 msgstr ""
 
 #: main.lua
-msgid "none"
-msgstr ""
-
-#: main.lua
 msgid "Book club channel"
 msgstr ""
 
@@ -1201,6 +1269,30 @@ msgid "Logged in as %1"
 msgstr ""
 
 #: main.lua
+msgid "The QR code expired. Close this screen and try again."
+msgstr ""
+
+#: main.lua
+msgid "Discord refused the login (it may want a captcha). Log in with a token instead."
+msgstr ""
+
+#: main.lua
+msgid "QR login failed: %1"
+msgstr ""
+
+#: main.lua
+msgid "Hi %1! Now tap \"Log in\" on your phone."
+msgstr ""
+
+#: main.lua
+msgid "Checking token…"
+msgstr ""
+
+#: main.lua
+msgid "The login was cancelled on the phone."
+msgstr ""
+
+#: main.lua
 msgid "Discord token"
 msgstr ""
 
@@ -1210,10 +1302,6 @@ msgstr ""
 
 #: main.lua
 msgid "Log in"
-msgstr ""
-
-#: main.lua
-msgid "Checking token…"
 msgstr ""
 
 #: main.lua

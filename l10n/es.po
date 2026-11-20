@@ -9,6 +9,10 @@ msgid "Discord"
 msgstr "Discord"
 
 #: discord_api.lua
+msgid "Secure connection failed: the server certificate could not be verified. Check that the device date and time are correct. On a network you trust, you can turn off Settings → Network → Verify server certificates."
+msgstr "No se pudo establecer una conexión segura: no se pudo verificar el certificado del servidor. Comprueba que la fecha y la hora del dispositivo son correctas. En una red de confianza, puedes desactivar Ajustes → Red → Verificar certificados del servidor."
+
+#: discord_api.lua
 msgid "Network error"
 msgstr "Error de red"
 
@@ -249,10 +253,18 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: discord_chatview.lua
+msgid "@ off"
+msgstr "@ no"
+
+#: discord_chatview.lua
+msgid "@ on"
+msgstr "@ sí"
+
+#: discord_chatview.lua
 msgid "Quick"
 msgstr "Rápidas"
 
-#: discord_chatview.lua
+#: discord_chatview.lua main.lua
 msgid "Save"
 msgstr "Guardar"
 
@@ -744,6 +756,22 @@ msgstr "No se pudo cargar el perfil completo: "
 msgid "Close"
 msgstr "Cerrar"
 
+#: discord_qrlogin.lua
+msgid "Connecting to Discord…"
+msgstr "Conectando con Discord…"
+
+#: discord_qrlogin.lua
+msgid "Log in with QR code"
+msgstr "Iniciar sesión con código QR"
+
+#: discord_qrlogin.lua
+msgid "1. Open Discord on your phone.\n2. Go to Settings → Scan QR Code.\n3. Scan this code and approve the login."
+msgstr "1. Abre Discord en tu móvil.\n2. Ve a Ajustes → Escanear código QR.\n3. Escanea este código y aprueba el inicio de sesión."
+
+#: discord_qrlogin.lua
+msgid "Waiting for you to scan the code…"
+msgstr "Esperando a que escanees el código…"
+
 #: discord_report.lua
 msgid "What happened?"
 msgstr "¿Qué ha pasado?"
@@ -807,6 +835,10 @@ msgstr "Discord ha rechazado la sesión guardada. Vuelve a iniciar sesión."
 #: main.lua
 msgid "[file]"
 msgstr "[archivo]"
+
+#: main.lua
+msgid "Log in with QR code (scan with your phone)"
+msgstr "Iniciar sesión con código QR (escanéalo con el móvil)"
 
 #: main.lua
 msgid "Log in with email and password"
@@ -981,6 +1013,46 @@ msgid "Hidden servers (%1)"
 msgstr "Servidores ocultos (%1)"
 
 #: main.lua
+msgid "Network"
+msgstr "Red"
+
+#: main.lua
+msgid "Verify server certificates"
+msgstr "Verificar certificados del servidor"
+
+#: main.lua
+msgid "Checks that you are really talking to Discord, so nobody on the same network can read your login. Turn it off only if connections fail because the device clock is wrong."
+msgstr "Comprueba que de verdad te conectas a Discord, para que nadie en la misma red pueda leer tu sesión. Desactívalo solo si las conexiones fallan porque el reloj del dispositivo está mal."
+
+#: main.lua
+msgid "Without certificate checks, someone on the same network could read your Discord login. Only do this on a network you trust, and turn it back on when you can."
+msgstr "Sin verificar los certificados, alguien en la misma red podría leer tu sesión de Discord. Hazlo solo en una red de confianza y vuelve a activarlo cuando puedas."
+
+#: main.lua
+msgid "Turn off"
+msgstr "Desactivar"
+
+#: main.lua
+msgid "HTTP proxy: %1"
+msgstr "Proxy HTTP: %1"
+
+#: main.lua
+msgid "none"
+msgstr "ninguno"
+
+#: main.lua
+msgid "HTTP proxy"
+msgstr "Proxy HTTP"
+
+#: main.lua
+msgid "host:port of an HTTP proxy that supports CONNECT. Leave empty to connect directly."
+msgstr "host:puerto de un proxy HTTP que admita CONNECT. Déjalo vacío para conectar directamente."
+
+#: main.lua
+msgid "Use the form host:port, e.g. 192.168.1.10:3128"
+msgstr "Usa el formato host:puerto, p. ej. 192.168.1.10:3128"
+
+#: main.lua
 msgid "Add quick reply…"
 msgstr "Añadir respuesta rápida…"
 
@@ -1145,10 +1217,6 @@ msgid "Channel: %1"
 msgstr "Canal: %1"
 
 #: main.lua
-msgid "none"
-msgstr "ninguno"
-
-#: main.lua
 msgid "Book club channel"
 msgstr "Canal del club de lectura"
 
@@ -1201,6 +1269,30 @@ msgid "Logged in as %1"
 msgstr "Sesión iniciada como %1"
 
 #: main.lua
+msgid "The QR code expired. Close this screen and try again."
+msgstr "El código QR ha caducado. Cierra esta pantalla y vuelve a intentarlo."
+
+#: main.lua
+msgid "Discord refused the login (it may want a captcha). Log in with a token instead."
+msgstr "Discord ha rechazado el inicio de sesión (puede que pida un captcha). Inicia sesión con un token."
+
+#: main.lua
+msgid "QR login failed: %1"
+msgstr "Falló el inicio de sesión con QR: %1"
+
+#: main.lua
+msgid "Hi %1! Now tap \"Log in\" on your phone."
+msgstr "¡Hola, %1! Ahora pulsa \"Iniciar sesión\" en tu móvil."
+
+#: main.lua
+msgid "Checking token…"
+msgstr "Comprobando token…"
+
+#: main.lua
+msgid "The login was cancelled on the phone."
+msgstr "Se canceló el inicio de sesión en el móvil."
+
+#: main.lua
 msgid "Discord token"
 msgstr "Token de Discord"
 
@@ -1211,10 +1303,6 @@ msgstr "Pega o escribe tu token de usuario."
 #: main.lua
 msgid "Log in"
 msgstr "Entrar"
-
-#: main.lua
-msgid "Checking token…"
-msgstr "Comprobando token…"
 
 #: main.lua
 msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
