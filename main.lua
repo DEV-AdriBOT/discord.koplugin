@@ -411,6 +411,13 @@ end
 function Discord:getLoginMenu()
     return {
         {
+            text = _("Log in with QR code (scan with your phone)"),
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                self:loginWithQR(touchmenu_instance)
+            end,
+        },
+        {
             text = _("Log in with email and password"),
             keep_menu_open = true,
             callback = function(touchmenu_instance)
@@ -1323,6 +1330,63 @@ function Discord:finishLogin(token, touchmenu_instance)
         touchmenu_instance:updateItems()
     end
     self:updateConnection()
+end
+
+--- QR code login: scan with the Discord app (Settings → Scan QR Code) and approve.
+function Discord:loginWithQR(touchmenu_instance)
+    NetworkMgr:runWhenOnline(function()
+        local RemoteAuth = require("discord_remoteauth")
+        local QRLogin = require("discord_qrlogin")
+        local session, screen, tick
+        local function finish()
+            if tick then UIManager:unschedule(tick) tick = nil end
+            if session then session:stop() end
+        end
+        local function errorMessage(err)
+            err = tostring(err)
+            if err == "expired" then
+                return _("The QR code expired. Close this screen and try again.")
+            elseif err:match("^refused:") then
+                return _("Discord refused the login (it may want a captcha). Log in with a token instead.")
+            elseif Net.isCertError(err) then
+                return DiscordAPI.certErrorText()
+            end
+            return T(_("QR login failed: %1"), err)
+        end
+        session = RemoteAuth.new(DiscordAPI:new{}, {
+            on_qr = function(url) screen:setQR(url) end,
+            on_user = function(user)
+                screen:setStatus(T(_("Hi %1! Now tap \"Log in\" on your phone."), user.username or "?"))
+            end,
+            on_token = function(token)
+                finish()
+                screen:dismiss()
+                self:withLoading(_("Checking token…"), function()
+                    self:finishLogin(token, touchmenu_instance)
+                end)
+            end,
+            on_error = function(err)
+                finish()
+                screen:setStatus(errorMessage(err))
+            end,
+            on_cancel = function()
+                finish()
+                screen:setStatus(_("The login was cancelled on the phone."))
+            end,
+        })
+        screen = QRLogin:new{ cancel_callback = finish }
+        UIManager:show(screen)
+        UIManager:forceRePaint()
+        local ok, err = session:start()
+        if not ok then
+            screen:setStatus(errorMessage(err))
+            return
+        end
+        tick = function()
+            if session:poll() then UIManager:scheduleIn(0.5, tick) end
+        end
+        UIManager:scheduleIn(0.2, tick)
+    end)
 end
 
 function Discord:loginWithTokenDialog(touchmenu_instance)
