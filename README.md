@@ -2,7 +2,7 @@
 
 A lightweight Discord client for [KOReader](https://github.com/koreader/koreader), designed for e-ink devices (tested on a Kindle Paperwhite 11).
 
-Text only: no images, GIFs, voice or video. Just your servers, text channels and direct messages, readable on an e-reader.
+Text first: no voice or video, and images only when you ask for them. Just your servers, text channels and direct messages, readable on an e-reader.
 
 ## Features
 
@@ -29,6 +29,7 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Server nicknames**
 - **Typing indicator** ("X is typing…") and your own typing is sent while you write
 - **Send, reply, edit, delete**, copy, and open a DM with any author
+- **Reply without pinging**: an *@ on / @ off* switch when replying, like Discord's (remembered, also for queued messages)
 - **Offline send queue**: if there is no network, messages wait as *pending* (cancellable) and are sent automatically when the connection returns
 - **Emoji by name**: search `:fire:`-style emojis, including each server's custom emojis, when writing and reacting; `:name:` typed by hand is converted when sending
 - **Hold a message** to open its actions directly (an option makes a tap do it too); **tap a reply line** to jump to the original message
@@ -44,6 +45,7 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Images on demand**: download a screen-sized version and open it in KOReader's image viewer — never loaded automatically
 - **Reading theme**: any font (including the Kindle's own), line spacing, margins and text size; **compact layout**
 - **Page turning** like a book: swipe left/right or use page-turn keys, with a periodic full refresh for e-ink
+- **No flashing while you type**: new messages and typing indicators don't repaint the chat under the keyboard; it refreshes once when you close it
 
 **E-reader**
 - **Notifications** for DMs and mentions while you read (optional background connection)
@@ -59,7 +61,8 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Reading activity** (optional): your profile shows "Playing KOReader" with the book title, author and progress while a book is open
 - **Battery saver**: pauses the background connection and slows polling below a battery level
 - **Fast start**: the connection state is cached on disk, lists open at once and sessions are resumed after restarts
-- Common emoji rendered as text, since e-reader fonts lack emoji glyphs
+- Common emoji rendered as text, since e-reader fonts lack emoji glyphs (country flags as `:flag_pt:`)
+- **Secure connections**: server certificates and host names are verified on every connection (REST, real time and updates), so nobody on the same Wi-Fi can read your login or fake an update; optional **HTTP proxy** (*Settings → Network*)
 - Interface in English and Spanish (follows KOReader's language)
 
 ## Installation
@@ -84,6 +87,7 @@ Either from the App Store, or with the plugin's own *Tools → Discord → Check
 
 ## Logging in
 
+- **QR code** — the easiest option, nothing to type: open the Discord app on your phone, go to *Settings → Scan QR Code*, scan the code shown on the e-reader and approve.
 - **Email and password** — the simplest option. If Discord asks for a captcha (common on new devices/IPs), use a token instead.
 - **Token** — type or paste your user token.
 - **Token file** — put your token in `/mnt/us/discord_token.txt` (Kindle) and choose *Load token from…*. The file is deleted once the login succeeds.
@@ -105,8 +109,8 @@ The interface follows KOReader's language, or the one chosen in *Discord → Set
 <!-- translations:start -->
 | Language | Code | Translated | Progress |
 | --- | --- | --- | --- |
-| English (source) | `en` | 379 / 379 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
-| Español | `es` | 379 / 379 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| English (source) | `en` | 401 / 401 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| Español | `es` | 401 / 401 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 <!-- translations:end -->
 
 Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
