@@ -229,6 +229,9 @@ function ChatView:buildLayout(text, position)
         justified = false,
         auto_para_direction = true,
         top_line_num = top_line_num,
+        -- While covered (keyboard, dialog), build and position without asking for
+        -- screen refreshes; redraw() refreshes once the chat is visible again.
+        for_measurement_only = self.shown and self:isCovered() or nil,
     })
     TextBoxWidget.line_height = default_line_height
     if not ok then error(widget) end
@@ -278,6 +281,8 @@ function ChatView:buildLayout(text, position)
     elseif position == nil or position == "bottom" then
         self.scroll_widget:scrollToBottom()
     end
+    widget.for_measurement_only = nil
+    widget.text_widget.for_measurement_only = nil
 end
 
 function ChatView:isAtBottom()
@@ -553,7 +558,39 @@ function ChatView:redraw(position)
     end
     self:buildLayout(self:buildText(), position)
     if self.shown then
-        UIManager:setDirty(self, function() return "ui", self.frame.dimen end)
+        if self:isCovered() then
+            -- The keyboard or a dialog is on top: repainting underneath would
+            -- flash the e-ink screen while typing. Refresh once uncovered.
+            self.refresh_when_uncovered = true
+        else
+            UIManager:setDirty(self, function() return "ui", self.frame.dimen end)
+        end
+    end
+end
+
+--- True when another widget (keyboard, dialog, menu) is drawn over the chat.
+-- Toasts (notifications) don't count.
+function ChatView:isCovered()
+    local stack = UIManager._window_stack
+    for i = #stack, 1, -1 do
+        local w = stack[i].widget
+        if w == self then return false end
+        if not w.toast and not w.invisible then return true end
+    end
+    return false
+end
+
+function ChatView:paintTo(bb, x, y)
+    InputContainer.paintTo(self, bb, x, y)
+    -- Painted again after being covered (e.g. the compose dialog closed):
+    -- refresh the whole chat once, since only the dialog's area was refreshed.
+    if self.refresh_when_uncovered and not self:isCovered() then
+        self.refresh_when_uncovered = false
+        UIManager:nextTick(function()
+            if not self.closed then
+                UIManager:setDirty(self, function() return "ui", self.frame.dimen end)
+            end
+        end)
     end
 end
 
@@ -575,7 +612,9 @@ function ChatView:updateSubtitle()
     end
     if subtitle ~= self.shown_subtitle then
         self.shown_subtitle = subtitle
-        self.titlebar:setSubTitle(subtitle)
+        local covered = self:isCovered()
+        self.titlebar:setSubTitle(subtitle, covered) -- no refresh while covered
+        if covered then self.refresh_when_uncovered = true end
     end
 end
 
@@ -1187,6 +1226,22 @@ function ChatView:compose(prefill, edit_msg)
             end,
         },
     }
+    if self.reply_to and not edit_msg then
+        -- Like Discord's "@ ON / OFF" switch: notify the author of the replied message or not
+        local function pingLabel()
+            return self.settings.reply_ping == false and _("@ off") or _("@ on")
+        end
+        table.insert(row, {
+            id = "ping",
+            text = pingLabel(),
+            callback = function()
+                self.settings.reply_ping = self.settings.reply_ping == false
+                local button = dialog.button_table:getButtonById("ping")
+                button:setText(pingLabel(), button.width)
+                UIManager:setDirty(dialog, function() return "ui", button.dimen end)
+            end,
+        })
+    end
     if not edit_msg then
         table.insert(row, {
             text = _("Quick"),
@@ -1244,20 +1299,28 @@ function ChatView:applyMentions(text)
     return Emoji.resolve(text, self.guild and self.guild.id, self.emoji_map)
 end
 
+--- What the API needs to send the current reply, or nil.
+function ChatView:replyRef()
+    local msg = self.reply_to
+    if not msg then return nil end
+    return {
+        id = msg.id,
+        guild_id = self.guild and self.guild.id,
+        no_ping = self.settings.reply_ping == false,
+    }
+end
+
 function ChatView:send(text, edit_msg)
     local ok, data, code
     if edit_msg then
         ok, data, code = self.api:editMessage(self.channel.id, edit_msg.id, self:applyMentions(text))
     else
-        local reply = self.reply_to
-        if reply then reply.guild_id = self.guild and self.guild.id end
-        ok, data, code = self.api:sendMessage(self.channel.id, self:applyMentions(text), reply)
+        ok, data, code = self.api:sendMessage(self.channel.id, self:applyMentions(text), self:replyRef())
     end
     if not ok then
         if not edit_msg and (code == nil or code == 429 or code >= 500) then
             -- No network or server trouble: keep it in the queue
-            local reply = self.reply_to
-            if reply then reply.guild_id = self.guild and self.guild.id end
+            local reply = self:replyRef()
             Outbox.add(self.channel.id, self:applyMentions(text), reply)
             self:setDraft(nil)
             self.reply_to = nil
