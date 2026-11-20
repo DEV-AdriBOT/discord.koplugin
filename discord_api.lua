@@ -394,6 +394,7 @@ DiscordAPI.makeNonce = makeNonce
 
 --- Sends a message. A fixed nonce lets Discord drop duplicates when a retry
 -- follows a request that actually arrived.
+--- reply_to: { id, guild_id, no_ping } or nil.
 function DiscordAPI:sendMessage(channel_id, content, reply_to, nonce)
     local body = {
         content = content,
@@ -408,6 +409,10 @@ function DiscordAPI:sendMessage(channel_id, content, reply_to, nonce)
             channel_id = channel_id,
             guild_id = reply_to.guild_id,
         }
+        if reply_to.no_ping then
+            -- Reply without notifying the author (other mentions still work)
+            body.allowed_mentions = { parse = { "users", "roles", "everyone" }, replied_user = false }
+        end
     end
     return self:post("/channels/" .. channel_id .. "/messages", body)
 end
@@ -556,6 +561,10 @@ function DiscordAPI.cleanEmoji(text, strip)
     end
     -- Variation selectors, zero width joiners and skin tones
     text = text:gsub("\239\184\143", ""):gsub("\226\128\141", ""):gsub("\240\159\143[\187-\191]", "")
+    -- Country flags are pairs of regional indicator letters: 🇵🇹 -> :flag_pt:
+    text = text:gsub("\240\159\135([\166-\191])\240\159\135([\166-\191])", function(a, b)
+        return ":flag_" .. string.char(a:byte() - 166 + 97, b:byte() - 166 + 97) .. ":"
+    end)
     text = text:gsub("[\226\240][\128-\191]+", function(ch)
         local mapped = EMOJI_TEXT[ch]
         if mapped then return mapped end
