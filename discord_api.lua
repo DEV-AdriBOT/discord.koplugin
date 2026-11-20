@@ -4,6 +4,7 @@ Minimal Discord REST client (API v9) for KOReader.
 @module koplugin.discord.api
 ]]
 
+local Net = require("discord_net")
 local rapidjson = require("rapidjson")
 local http = require("socket.http")
 local logger = require("logger")
@@ -36,6 +37,11 @@ local DiscordAPI = {
     stripNulls = stripNulls,
 }
 
+--- Shown when a server certificate could not be verified.
+function DiscordAPI.certErrorText()
+    return _("Secure connection failed: the server certificate could not be verified. Check that the device date and time are correct. On a network you trust, you can turn off Settings → Network → Verify server certificates.")
+end
+
 function DiscordAPI:new(o)
     o = o or {}
     setmetatable(o, self)
@@ -67,17 +73,20 @@ function DiscordAPI:request(method, path, body, no_auth, retried)
         source = ltn12.source.string(payload)
     end
     socketutil:set_timeout(socketutil.LARGE_BLOCK_TIMEOUT, socketutil.LARGE_TOTAL_TIMEOUT)
-    local code, resp_headers, status = socket.skip(1, http.request{
+    local code, resp_headers, status = socket.skip(1, http.request(Net.prepare{
         url = API_BASE .. path,
         method = method,
         headers = headers,
         source = source,
         sink = ltn12.sink.table(sink),
-    })
+    }))
     socketutil:reset_timeout()
 
     if resp_headers == nil then
         logger.warn("Discord: network error", method, path, status or code)
+        if Net.isCertError(status or code) then
+            return false, DiscordAPI.certErrorText(), nil
+        end
         return false, _("Network error"), nil
     end
 
@@ -361,11 +370,11 @@ function DiscordAPI:download(url, path)
     local f = io.open(path, "wb")
     if not f then return false, "cannot write " .. path end
     socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
-    local code, _, status = socket.skip(1, http.request{
+    local code, _, status = socket.skip(1, http.request(Net.prepare{
         url = url,
         headers = { ["User-Agent"] = USER_AGENT },
         sink = ltn12.sink.file(f),
-    })
+    }))
     socketutil:reset_timeout()
     if code ~= 200 then
         os.remove(path)

@@ -14,6 +14,7 @@ local DiscordAPI = require("discord_api")
 local ChatView = require("discord_chatview")
 local Dispatcher = require("dispatcher")
 local Gateway = require("discord_gateway")
+local Net = require("discord_net")
 local Outbox = require("discord_outbox")
 local StatusBar = require("discord_statusbar")
 local InfoMessage = require("ui/widget/infomessage")
@@ -100,6 +101,7 @@ function Discord:init()
         }
     end
     self.settings = shared.settings_file.data
+    Net.configure(self.settings)
     if not shared.accounts_ready then
         shared.accounts_ready = true
         Account.init(self.settings)
@@ -627,6 +629,81 @@ function Discord:getSettingsMenu()
                 return T(_("Hidden servers (%1)"), util.tableSize(self.settings.hidden_guilds or {}))
             end,
             callback = function() self:showHiddenGuilds() end,
+        },
+        {
+            text = _("Network"),
+            sub_item_table_func = function() return self:getNetworkMenu() end,
+        },
+    }
+end
+
+function Discord:getNetworkMenu()
+    local function reconnect()
+        Net.configure(self.settings)
+        -- Drop the current connection so the new settings are used right away
+        if Gateway.state ~= "disconnected" then
+            Gateway:disconnect(true) -- keep the session: it is resumed on the new connection
+            self:updateConnection()
+        end
+    end
+    return {
+        {
+            text = _("Verify server certificates"),
+            help_text = _("Checks that you are really talking to Discord, so nobody on the same network can read your login. Turn it off only if connections fail because the device clock is wrong."),
+            checked_func = function() return self.settings.verify_tls ~= false end,
+            callback = function()
+                local turning_off = self.settings.verify_tls ~= false
+                local function apply()
+                    self.settings.verify_tls = not turning_off
+                    self:saveSettings()
+                    reconnect()
+                end
+                if turning_off then
+                    UIManager:show(ConfirmBox:new{
+                        text = _("Without certificate checks, someone on the same network could read your Discord login. Only do this on a network you trust, and turn it back on when you can."),
+                        ok_text = _("Turn off"),
+                        ok_callback = apply,
+                    })
+                else
+                    apply()
+                end
+            end,
+        },
+        {
+            text_func = function()
+                local proxy = self.settings.proxy
+                return T(_("HTTP proxy: %1"), (proxy and proxy ~= "") and proxy or _("none"))
+            end,
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                local dialog
+                dialog = InputDialog:new{
+                    title = _("HTTP proxy"),
+                    description = _("host:port of an HTTP proxy that supports CONNECT. Leave empty to connect directly."),
+                    input = self.settings.proxy or "",
+                    buttons = {{
+                        { text = _("Cancel"), id = "close", callback = function() UIManager:close(dialog) end },
+                        {
+                            text = _("Save"),
+                            is_enter_default = true,
+                            callback = function()
+                                local value = util.trim(dialog:getInputText())
+                                UIManager:close(dialog)
+                                if value ~= "" and not value:gsub("^%a+://", ""):match("^[^:/]+:%d+/?$") then
+                                    UIManager:show(InfoMessage:new{ text = _("Use the form host:port, e.g. 192.168.1.10:3128") })
+                                    return
+                                end
+                                self.settings.proxy = value ~= "" and value or nil
+                                self:saveSettings()
+                                reconnect()
+                                if touchmenu_instance then touchmenu_instance:updateItems() end
+                            end,
+                        },
+                    }},
+                }
+                UIManager:show(dialog)
+                dialog:onShowKeyboard()
+            end,
         },
     }
 end
