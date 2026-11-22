@@ -24,6 +24,7 @@ local NetworkMgr = require("ui/network/manager")
 local Emoji = require("discord_emoji")
 local Outbox = require("discord_outbox")
 local Shortcuts = require("discord_shortcuts")
+local Files = require("discord_files")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
@@ -357,8 +358,7 @@ function ChatView:renderContent(msg)
         end
     end
     for __, a in ipairs(msg.attachments or {}) do
-        local kind = (a.content_type or ""):match("^image/") and _("image") or _("file")
-        table.insert(extras, "[" .. kind .. ": " .. (a.filename or "?") .. "]")
+        table.insert(extras, "[" .. Files.kind(a) .. ": " .. Files.describe(a) .. "]")
     end
     for __, s in ipairs(msg.sticker_items or {}) do
         table.insert(extras, "[sticker: " .. (s.name or "?") .. "]")
@@ -1793,6 +1793,78 @@ function ChatView:viewFull(msg)
     })
 end
 
+-- Files
+
+--- Saves an attachment in the download folder, tags it and offers to open it.
+function ChatView:downloadFile(a, msg)
+    local function go()
+        local dir = Files.downloadDir(self.plugin.settings)
+        util.makePath(dir)
+        local path = Files.uniquePath(dir, Files.safeName(a))
+        self.plugin:withLoading(T(_("Downloading %1…"), a.filename or "file"), function()
+            local ok, err = self.api:download(a.url, path)
+            if not ok then
+                UIManager:show(InfoMessage:new{ text = _("Could not download the file: ") .. tostring(err) })
+                return
+            end
+            pcall(Files.tag, path, a, {
+                author = self:authorName(msg.author),
+                server = self.guild and cleanEmoji(self.guild.name or "") or nil,
+                channel = cleanEmoji(self.title or ""),
+                date = os.date("%Y-%m-%d %H:%M", parseTimestamp(msg.timestamp) or os.time()),
+                text = oneLine(msg.content or "", 300),
+            })
+            UIManager:broadcastEvent(require("ui/event"):new("InvalidateMetadataCache", path))
+            local dialog
+            local buttons = {{ { text = _("Close"), callback = function() UIManager:close(dialog) end } }}
+            if Files.isReadable(path) then
+                table.insert(buttons[1], 1, {
+                    text = _("Open"),
+                    callback = function()
+                        UIManager:close(dialog)
+                        self.plugin:openDocument(path)
+                    end,
+                })
+            end
+            dialog = ButtonDialog:new{
+                title = T(_("Saved to %1"), path),
+                buttons = buttons,
+            }
+            UIManager:show(dialog)
+        end)
+    end
+    if a.size and a.size > 25 * 1024 * 1024 then
+        UIManager:show(ConfirmBox:new{
+            text = T(_("This file is large (%1). Download it?"), util.getFriendlySize(a.size)),
+            ok_text = _("Download"),
+            ok_callback = go,
+        })
+    else
+        go()
+    end
+end
+
+--- Lists the files of a message to choose one to download.
+function ChatView:showFiles(files, msg)
+    if #files == 1 then
+        self:downloadFile(files[1], msg)
+        return
+    end
+    local dialog
+    local buttons = {}
+    for i, a in ipairs(files) do
+        table.insert(buttons, {{
+            text = i .. ". " .. Files.describe(a),
+            callback = function()
+                UIManager:close(dialog)
+                self:downloadFile(a, msg)
+            end,
+        }})
+    end
+    dialog = ButtonDialog:new{ title = _("Download a file"), buttons = buttons }
+    UIManager:show(dialog)
+end
+
 -- Images
 
 function ChatView:imagesOf(msg)
@@ -2171,6 +2243,16 @@ function ChatView:messageActions(msg)
             callback = function()
                 UIManager:close(dialog)
                 self:showVersions(msg)
+            end,
+        }})
+    end
+    local files = Files.of(msg)
+    if #files > 0 and not self.offline then
+        table.insert(buttons, {{
+            text = T(_("Download files (%1)"), #files),
+            callback = function()
+                UIManager:close(dialog)
+                self:showFiles(files, msg)
             end,
         }})
     end

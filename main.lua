@@ -551,6 +551,37 @@ function Discord:getSettingsMenu()
                 update()
             end,
         },
+        {
+            text_func = function()
+                return T(_("Download folder: %1"), require("discord_files").downloadDir(self.settings))
+            end,
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                local Files = require("discord_files")
+                local dialog
+                dialog = InputDialog:new{
+                    title = _("Download folder"),
+                    description = _("Where files from Discord are saved. Leave empty for the default."),
+                    input = self.settings.download_dir or Files.downloadDir(self.settings),
+                    buttons = {{
+                        { text = _("Cancel"), id = "close", callback = function() UIManager:close(dialog) end },
+                        {
+                            text = _("Save"),
+                            is_enter_default = true,
+                            callback = function()
+                                local dir = dialog:getInputText():gsub("%s+$", ""):gsub("/+$", "")
+                                self.settings.download_dir = dir ~= "" and dir or nil
+                                self:saveSettings()
+                                UIManager:close(dialog)
+                                if touchmenu_instance then touchmenu_instance:updateItems() end
+                            end,
+                        },
+                    }},
+                }
+                UIManager:show(dialog)
+                dialog:onShowKeyboard()
+            end,
+        },
         toggleItem(self, _("Stay connected in background (notifications)"), "background", true, update),
         toggleItem(self, _("Notify direct messages"), "notify_dms", true),
         toggleItem(self, _("Show the book I'm reading as my Discord activity"), "share_reading", false, function()
@@ -2511,6 +2542,15 @@ function Discord:openAsDocument(view)
         UIManager:nextTick(function()
             require("apps/reader/readerui"):showReader(path)
         end)
+    end)
+end
+
+--- Closes the Discord screens and opens a downloaded file in KOReader.
+function Discord:openDocument(path)
+    for i = #shared.views, 1, -1 do UIManager:close(shared.views[i]) end
+    for i = #shared.lists, 1, -1 do UIManager:close(shared.lists[i]) end
+    UIManager:nextTick(function()
+        require("apps/reader/readerui"):showReader(path)
     end)
 end
 
