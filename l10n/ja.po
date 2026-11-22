@@ -1,0 +1,2065 @@
+# Japanese translation for discord.koplugin
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ja\n"
+
+#: _meta.lua main.lua
+msgid "Discord"
+msgstr "Discord"
+
+#: discord_api.lua
+msgid "Secure connection failed: the server certificate could not be verified. Check that the device date and time are correct. On a network you trust, you can turn off Settings → Network → Verify server certificates."
+msgstr "安全な接続に失敗しました: サーバー証明書を検証できませんでした。デバイスの日付と時刻が正しいことを確認してください。信頼できるネットワークでは、「設定」→「ネットワーク」→「サーバー証明書の検証」をオフにできます。"
+
+#: discord_api.lua
+msgid "Network error"
+msgstr "ネットワークエラー"
+
+#: discord_api.lua
+msgid "Discord is asking for a captcha. Log in with a token instead."
+msgstr "Discord ではキャプチャを求めています。代わりにトークンを使用してログインしてください。"
+
+#: discord_api.lua
+msgid "This account is suspended."
+msgstr "このアカウントは停止されています。"
+
+#: discord_api.lua
+msgid "Unexpected server response."
+msgstr "予期しないサーバー応答。"
+
+#: discord_api.lua
+msgid "Invalid code"
+msgstr "無効なコード"
+
+#: discord_api.lua
+msgid "The search index is not ready yet, try again in a few seconds."
+msgstr "検索インデックスはまだ準備ができていません。数秒後にもう一度試してください。"
+
+#: discord_api.lua
+msgid "Could not read the file"
+msgstr "ファイルを読み取れませんでした"
+
+#: discord_bookclub.lua main.lua
+msgid "a book"
+msgstr "本"
+
+#: discord_bookclub.lua
+msgid "I finished **%s**!"
+msgstr "**%s**を読み終えました！"
+
+#: discord_bookclub.lua
+msgid "Reading **%s**: %d%%"
+msgstr "**%s**を読書中: %d%%"
+
+#: discord_bookclub.lua
+msgid "Finished chapter «%s» of **%s**"
+msgstr "第«%s»章（**%s**）を読み終えました"
+
+#: discord_bookclub.lua
+msgid "%d h %d min"
+msgstr "%d 時間 %d 分"
+
+#: discord_bookclub.lua
+msgid "%d min"
+msgstr "%d 分"
+
+#: discord_bookclub.lua
+msgid "Reading session of **%s**: %s"
+msgstr "**%s**の読書セッション: %s"
+
+#: discord_bookclub.lua
+msgid "%d pages"
+msgstr "%d ページ"
+
+#: discord_bookclub.lua
+msgid "%d highlights"
+msgstr "%d ハイライト"
+
+#: discord_chatview.lua
+msgid "added someone to the group"
+msgstr "誰かをグループに追加しました"
+
+#: discord_chatview.lua
+msgid "removed someone from the group"
+msgstr "グループから誰かを削除しました"
+
+#: discord_chatview.lua
+msgid "started a call"
+msgstr "通話を開始しました"
+
+#: discord_chatview.lua
+msgid "changed the channel name"
+msgstr "チャンネル名を変更しました"
+
+#: discord_chatview.lua
+msgid "changed the channel icon"
+msgstr "チャンネルアイコンを変更しました"
+
+#: discord_chatview.lua discord_moderation.lua
+msgid "pinned a message"
+msgstr "メッセージを固定しました"
+
+#: discord_chatview.lua
+msgid "joined the server"
+msgstr "サーバーに参加しました"
+
+#: discord_chatview.lua
+msgid "boosted the server"
+msgstr "サーバーをブーストしました"
+
+#: discord_chatview.lua
+msgid "started a thread"
+msgstr "スレッドを開始しました"
+
+#: discord_chatview.lua
+msgid "ended a poll"
+msgstr "投票を終了しました"
+
+#: discord_chatview.lua
+msgid "New"
+msgstr "新着"
+
+#: discord_chatview.lua
+msgid "Older"
+msgstr "過去のメッセージ"
+
+#: discord_chatview.lua
+msgid "Refresh"
+msgstr "更新"
+
+#: discord_chatview.lua
+msgid "Messages"
+msgstr "メッセージ"
+
+#: discord_chatview.lua
+msgid "Write"
+msgstr "入力"
+
+#: discord_chatview.lua
+msgid "(deleted message)"
+msgstr "(削除されたメッセージ)"
+
+#: discord_chatview.lua
+msgid "code"
+msgstr "コード"
+
+#: discord_chatview.lua
+msgid "forwarded:"
+msgstr "転送されました:"
+
+#: discord_chatview.lua
+msgid "(edited)"
+msgstr "(編集済み)"
+
+#: discord_chatview.lua
+msgid "poll"
+msgstr "投票"
+
+#: discord_chatview.lua
+msgid "1 vote"
+msgstr "1票"
+
+#: discord_chatview.lua
+msgid "%1 votes"
+msgstr "%1 票"
+
+#: discord_chatview.lua
+msgid "(closed)"
+msgstr "(終了)"
+
+#: discord_chatview.lua
+msgid "Could not vote: "
+msgstr "投票できませんでした: "
+
+#: discord_chatview.lua
+msgid "Vote sent"
+msgstr "投票が送信されました"
+
+#: discord_chatview.lua
+msgid "Remove my vote"
+msgstr "自分の票を取り消す"
+
+#: discord_chatview.lua
+msgid "Poll"
+msgstr "投票"
+
+#: discord_chatview.lua
+msgid "Only messages for you · %1 hidden"
+msgstr "自分宛てのメッセージのみ · %1 件を非表示"
+
+#: discord_chatview.lua
+msgid "No messages yet."
+msgstr "まだメッセージはありません。"
+
+#: discord_chatview.lua
+msgid "Pending"
+msgstr "保留中"
+
+#: discord_chatview.lua
+msgid "pending"
+msgstr "保留中"
+
+#: discord_chatview.lua
+msgid "scheduled for %1"
+msgstr "%1 に送信予定"
+
+#: discord_chatview.lua
+msgid "not sent"
+msgstr "送信されませんでした"
+
+#: discord_chatview.lua
+msgid "%1 is typing…"
+msgstr "%1 が入力中です…"
+
+#: discord_chatview.lua
+msgid "Several people are typing…"
+msgstr "何人かの人が入力しています…"
+
+#: discord_chatview.lua
+msgid "This chat is not available offline."
+msgstr "このチャットはオフラインでは利用できません。"
+
+#: discord_chatview.lua
+msgid "Could not load messages: "
+msgstr "メッセージを読み込めませんでした: "
+
+#: discord_chatview.lua
+msgid "The original message could not be found. It may have been deleted."
+msgstr "元のメッセージが見つかりませんでした。削除された可能性があります。"
+
+#: discord_chatview.lua
+msgid "Could not mark as unread: "
+msgstr "未読としてマークできませんでした: "
+
+#: discord_chatview.lua
+msgid "Marked as unread from here"
+msgstr "ここから未読にしました"
+
+#: discord_chatview.lua
+msgid "Refreshing…"
+msgstr "更新中…"
+
+#: discord_chatview.lua
+msgid "No older messages"
+msgstr "古いメッセージはありません"
+
+#: discord_chatview.lua
+msgid "The original message is not saved offline."
+msgstr "元のメッセージはオフラインに保存されていません。"
+
+#: discord_chatview.lua
+msgid "No pending messages"
+msgstr "保留中のメッセージはありません"
+
+#: discord_chatview.lua
+msgid "Pending messages"
+msgstr "保留中のメッセージ"
+
+#: discord_chatview.lua
+msgid "Cancel this pending message?"
+msgstr "この保留中のメッセージをキャンセルしますか?"
+
+#: discord_chatview.lua
+msgid "Cancel message"
+msgstr "メッセージをキャンセルする"
+
+#: discord_chatview.lua
+msgid "Keep"
+msgstr "残す"
+
+#: discord_chatview.lua
+msgid "Edit message"
+msgstr "メッセージを編集する"
+
+#: discord_chatview.lua
+msgid "Reply to "
+msgstr "返信先: "
+
+#: discord_chatview.lua discord_emoji.lua main.lua
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: discord_chatview.lua
+msgid "@ off"
+msgstr "@ オフ"
+
+#: discord_chatview.lua
+msgid "@ on"
+msgstr "@ オン"
+
+#: discord_chatview.lua
+msgid "Quick"
+msgstr "クイック返信"
+
+#: discord_chatview.lua main.lua
+msgid "Save"
+msgstr "保存"
+
+#: discord_chatview.lua
+msgid "Send"
+msgstr "送信"
+
+#: discord_chatview.lua
+msgid "Send later…"
+msgstr "後で送信…"
+
+#: discord_chatview.lua
+msgid "Send later"
+msgstr "後で送信する"
+
+#: discord_chatview.lua
+msgid "In 15 minutes"
+msgstr "15分後"
+
+#: discord_chatview.lua
+msgid "In 1 hour"
+msgstr "1時間後"
+
+#: discord_chatview.lua
+msgid "In 3 hours"
+msgstr "3時間後"
+
+#: discord_chatview.lua
+msgid "Tomorrow at 08:00"
+msgstr "明日の08:00"
+
+#: discord_chatview.lua
+msgid "At a given time…"
+msgstr "特定の時間に…"
+
+#: discord_chatview.lua
+msgid "Send at (HH:MM)"
+msgstr "(HH:MM) に送信"
+
+#: discord_chatview.lua
+msgid "The next time it is that hour: today, or tomorrow if it has passed."
+msgstr "次に指定時刻になるときに送信します。今日の時刻を過ぎていれば明日です。"
+
+#: discord_chatview.lua
+msgid "Schedule"
+msgstr "予約"
+
+#: discord_chatview.lua
+msgid "Write the time as HH:MM, for example 18:30."
+msgstr "時刻を HH:MM 形式で入力してください（例: 18:30）。"
+
+#: discord_chatview.lua
+msgid "Scheduled for %1"
+msgstr "%1 に送信予定"
+
+#: discord_chatview.lua
+msgid "No connection: the message will be sent later."
+msgstr "接続がありません: メッセージは後で送信されます。"
+
+#: discord_chatview.lua discord_share.lua main.lua
+msgid "Could not send: "
+msgstr "送信できませんでした: "
+
+#: discord_chatview.lua
+msgid "No quick replies. Add some in Settings."
+msgstr "クイック返信がありません。設定で追加してください。"
+
+#: discord_chatview.lua main.lua
+msgid "Quick replies"
+msgstr "クイック返信"
+
+#: discord_chatview.lua
+msgid "Search members…"
+msgstr "メンバーを検索…"
+
+#: discord_chatview.lua
+msgid "No one to mention yet."
+msgstr "メンションできるメンバーがまだいません。"
+
+#: discord_chatview.lua
+msgid "Mention"
+msgstr "メンション"
+
+#: discord_chatview.lua
+msgid "Search members"
+msgstr "メンバーを検索する"
+
+#: discord_chatview.lua discord_emoji.lua main.lua
+msgid "Search"
+msgstr "検索"
+
+#: discord_chatview.lua main.lua
+msgid "No results"
+msgstr "結果はありません"
+
+#: discord_chatview.lua
+msgid "Member search needs the real-time connection."
+msgstr "メンバー検索にはリアルタイム接続が必要です。"
+
+#: discord_chatview.lua
+msgid "No messages"
+msgstr "メッセージはありません"
+
+#: discord_chatview.lua
+msgid "Choose a message"
+msgstr "メッセージを選択してください"
+
+#: discord_chatview.lua
+msgid "Loading pinned messages…"
+msgstr "固定されたメッセージを読み込んでいます…"
+
+#: discord_chatview.lua
+msgid "Could not load pinned messages: "
+msgstr "固定されたメッセージを読み込めませんでした: "
+
+#: discord_chatview.lua
+msgid "Pinned messages"
+msgstr "固定メッセージ"
+
+#: discord_chatview.lua
+msgid "Search in this channel"
+msgstr "このチャンネル内を検索"
+
+#: discord_chatview.lua
+msgid "Searching…"
+msgstr "検索中…"
+
+#: discord_chatview.lua
+msgid "Results for «%1» (%2)"
+msgstr "«%1» (%2) の検索結果"
+
+#: discord_chatview.lua
+msgid "View full"
+msgstr "全文を見る"
+
+#: discord_chatview.lua
+msgid "Jump to message"
+msgstr "メッセージへジャンプ"
+
+#: discord_chatview.lua
+msgid "Jump to date or message"
+msgstr "日付またはメッセージにジャンプします"
+
+#: discord_chatview.lua
+msgid "A date (2026-11-05, 05/11/2026), with an optional time (14:30), \"today\", \"yesterday\", \"3d\" for days ago, a message id or a Discord message link."
+msgstr "日付（2026-11-05、05/11/2026）と任意の時刻（14:30）、\"today\"、\"yesterday\"、数日前を表す「3d」、メッセージID、またはDiscordのメッセージリンク。"
+
+#: discord_chatview.lua
+msgid "Go"
+msgstr "移動"
+
+#: discord_chatview.lua
+msgid "Could not understand that. Try 2026-11-05 or a message id."
+msgstr "入力を認識できませんでした。2026-11-05 またはメッセージIDを試してください。"
+
+#: discord_chatview.lua
+msgid "That date is in the future."
+msgstr "その日付は未来です。"
+
+#: discord_chatview.lua main.lua
+msgid "Loading messages…"
+msgstr "メッセージを読み込んでいます…"
+
+#: discord_chatview.lua
+msgid "Showing older messages. Use Refresh to go back to the latest."
+msgstr "過去のメッセージを表示中です。最新に戻るには「更新」を選んでください。"
+
+#: discord_chatview.lua
+msgid "Code"
+msgstr "コード"
+
+#: discord_chatview.lua
+msgid "There are no words to look up."
+msgstr "調べる単語がありません。"
+
+#: discord_chatview.lua
+msgid "Look up (tap: dictionary, hold: Wikipedia)"
+msgstr "調べる（タップ：辞書、長押し：Wikipedia）"
+
+#: discord_chatview.lua
+msgid "Downloading %1…"
+msgstr "%1をダウンロード中…"
+
+#: discord_chatview.lua
+msgid "Could not download the file: "
+msgstr "ファイルをダウンロードできませんでした: "
+
+#: discord_chatview.lua discord_moderation.lua discord_profile.lua
+msgid "Close"
+msgstr "閉じる"
+
+#: discord_chatview.lua
+msgid "Open"
+msgstr "開く"
+
+#: discord_chatview.lua
+msgid "Saved to %1"
+msgstr "%1に保存されました"
+
+#: discord_chatview.lua
+msgid "This file is large (%1). Download it?"
+msgstr "このファイルは大きいです (%1)。ダウンロードしますか？"
+
+#: discord_chatview.lua
+msgid "Download"
+msgstr "ダウンロード"
+
+#: discord_chatview.lua
+msgid "Download a file"
+msgstr "ファイルをダウンロードする"
+
+#: discord_chatview.lua
+msgid "Downloading image…"
+msgstr "画像をダウンロード中…"
+
+#: discord_chatview.lua
+msgid "Could not download the image: "
+msgstr "画像をダウンロードできませんでした: "
+
+#: discord_chatview.lua
+msgid "Images"
+msgstr "画像"
+
+#: discord_chatview.lua
+msgid "Could not react: "
+msgstr "反応できませんでした: "
+
+#: discord_chatview.lua main.lua
+msgid "Remove"
+msgstr "削除"
+
+#: discord_chatview.lua main.lua
+msgid "Add"
+msgstr "追加"
+
+#: discord_chatview.lua
+msgid "More emoji…"
+msgstr "さらに絵文字…"
+
+#: discord_chatview.lua
+msgid "React"
+msgstr "反応する"
+
+#: discord_chatview.lua
+msgid "Show link as QR code"
+msgstr "リンクを QR コードとして表示"
+
+#: discord_chatview.lua
+msgid "Deleted message:"
+msgstr "削除されたメッセージ: "
+
+#: discord_chatview.lua
+msgid "Current:"
+msgstr "現在："
+
+#: discord_chatview.lua
+msgid "Earlier"
+msgstr "以前"
+
+#: discord_chatview.lua
+msgid "Deleted message"
+msgstr "削除されたメッセージ"
+
+#: discord_chatview.lua
+msgid "Earlier versions"
+msgstr "以前のバージョン"
+
+#: discord_chatview.lua
+msgid "Show deleted text"
+msgstr "削除されたテキストを表示する"
+
+#: discord_chatview.lua
+msgid "Remove from view"
+msgstr "表示から削除"
+
+#: discord_chatview.lua
+msgid "Reply"
+msgstr "返信"
+
+#: discord_chatview.lua
+msgid "View images (%1)"
+msgstr "画像を見る (%1)"
+
+#: discord_chatview.lua
+msgid "No images"
+msgstr "画像がありません"
+
+#: discord_chatview.lua
+msgid "Copy"
+msgstr "コピー"
+
+#: discord_chatview.lua
+msgid "Copied"
+msgstr "コピーされました"
+
+#: discord_chatview.lua discord_profile.lua main.lua
+msgid "Direct message"
+msgstr "ダイレクトメッセージ"
+
+#: discord_chatview.lua
+msgid "Links as QR (%1)"
+msgstr "QR としてのリンク (%1)"
+
+#: discord_chatview.lua
+msgid "No links"
+msgstr "リンクはありません"
+
+#: discord_chatview.lua
+msgid "Vote"
+msgstr "投票する"
+
+#: discord_chatview.lua
+msgid "Forward"
+msgstr "転送"
+
+#: discord_chatview.lua
+msgid "Note about user"
+msgstr "ユーザーのメモ"
+
+#: discord_chatview.lua discord_profile.lua
+msgid "Profile"
+msgstr "プロフィール"
+
+#: discord_chatview.lua main.lua
+msgid "Remove from saved"
+msgstr "保存済みから削除"
+
+#: discord_chatview.lua
+msgid "Save for later"
+msgstr "後で読むために保存"
+
+#: discord_chatview.lua
+msgid "Mark unread from here"
+msgstr "ここから未読マークを付ける"
+
+#: discord_chatview.lua
+msgid "Earlier versions (%1)"
+msgstr "以前のバージョン (%1)"
+
+#: discord_chatview.lua
+msgid "Start a thread"
+msgstr "スレッドを開始する"
+
+#: discord_chatview.lua
+msgid "Moderation…"
+msgstr "モデレーション…"
+
+#: discord_chatview.lua
+msgid "Look up a word"
+msgstr "単語を調べる"
+
+#: discord_chatview.lua
+msgid "Download files (%1)"
+msgstr "ファイルのダウンロード (%1)"
+
+#: discord_chatview.lua
+msgid "Hide spoilers"
+msgstr "ネタバレを隠す"
+
+#: discord_chatview.lua
+msgid "Reveal spoilers"
+msgstr "ネタバレを表示"
+
+#: discord_chatview.lua
+msgid "Code (%1)"
+msgstr "コード (%1)"
+
+#: discord_chatview.lua
+msgid "Edit"
+msgstr "編集"
+
+#: discord_chatview.lua discord_moderation.lua
+msgid "Delete"
+msgstr "削除"
+
+#: discord_chatview.lua
+msgid "Delete this message?"
+msgstr "このメッセージを削除しますか?"
+
+#: discord_chatview.lua
+msgid "Thread"
+msgstr "スレッド"
+
+#: discord_chatview.lua
+msgid "Name of the thread"
+msgstr "スレッドの名前"
+
+#: discord_chatview.lua
+msgid "Start"
+msgstr "開始"
+
+#: discord_chatview.lua
+msgid "Could not start the thread: "
+msgstr "スレッドを開始できませんでした: "
+
+#: discord_chatview.lua
+msgid "Could not check the thread."
+msgstr "スレッドを確認できませんでした。"
+
+#: discord_chatview.lua
+msgid "You left the thread"
+msgstr "あなたはスレッドを離れました"
+
+#: discord_chatview.lua
+msgid "You are following the thread"
+msgstr "あなたはスレッドをフォローしています"
+
+#: discord_chatview.lua
+msgid "Could not load the note: "
+msgstr "メモを読み込めませんでした: "
+
+#: discord_chatview.lua
+msgid "Note about %1"
+msgstr "%1 のメモ"
+
+#: discord_chatview.lua
+msgid "Only you can see this note."
+msgstr "このメモはあなただけが見ることができます。"
+
+#: discord_chatview.lua
+msgid "Note saved"
+msgstr "メモが保存されました"
+
+#: discord_chatview.lua
+msgid "Could not save the note: "
+msgstr "メモを保存できませんでした: "
+
+#: discord_chatview.lua
+msgid "Go to bottom"
+msgstr "一番下に行く"
+
+#: discord_chatview.lua
+msgid "Go to top"
+msgstr "トップへ戻る"
+
+#: discord_chatview.lua
+msgid "Threads"
+msgstr "スレッド"
+
+#: discord_chatview.lua
+msgid "Remove favorite"
+msgstr "お気に入りを削除"
+
+#: discord_chatview.lua
+msgid "Add to favorites"
+msgstr "お気に入りに追加"
+
+#: discord_chatview.lua
+msgid "Unmute channel"
+msgstr "チャンネルのミュートを解除する"
+
+#: discord_chatview.lua
+msgid "Mute channel"
+msgstr "チャンネルをミュートする"
+
+#: discord_chatview.lua
+msgid "Jump to new messages"
+msgstr "新しいメッセージにジャンプします"
+
+#: discord_chatview.lua
+msgid "Shortcuts"
+msgstr "ショートカット"
+
+#: discord_chatview.lua discord_moderation.lua
+msgid "Audit log"
+msgstr "監査ログ"
+
+#: discord_chatview.lua
+msgid "Follow or leave this thread"
+msgstr "このスレッドをフォロー／退出"
+
+#: discord_chatview.lua
+msgid "Members"
+msgstr "メンバー"
+
+#: discord_chatview.lua
+msgid "Pending messages (%1)"
+msgstr "保留中のメッセージ (%1)"
+
+#: discord_chatview.lua
+msgid "Open as document"
+msgstr "ドキュメントとして開く"
+
+#: discord_chatview.lua
+msgid "Normal layout"
+msgstr "通常のレイアウト"
+
+#: discord_chatview.lua main.lua
+msgid "Compact layout"
+msgstr "コンパクトなレイアウト"
+
+#: discord_chatview.lua
+msgid "Show all messages"
+msgstr "すべてのメッセージを表示"
+
+#: discord_chatview.lua
+msgid "Only messages for me"
+msgstr "私へのメッセージだけ"
+
+#: discord_chatview.lua
+msgid "Reading theme"
+msgstr "読書テーマ"
+
+#: discord_chatview.lua
+msgid "Tap turns pages"
+msgstr "タップするとページがめくれます"
+
+#: discord_chatview.lua
+msgid "Tap opens message actions"
+msgstr "タップするとメッセージアクションが開きます"
+
+#: discord_chatview.lua
+msgid "Tap a message to open its actions. Swipe to turn pages."
+msgstr "メッセージをタップしてアクションを開きます。スワイプしてページをめくります。"
+
+#: discord_chatview.lua
+msgid "Tap turns pages. Hold a message to open its actions."
+msgstr "タップするとページがめくられます。メッセージを長押しすると、そのアクションが開きます。"
+
+#: discord_chatview.lua
+msgid "Write these at the start of a message:"
+msgstr "メッセージの冒頭に次のように書きます。"
+
+#: discord_chatview.lua
+msgid "Default"
+msgstr "デフォルト"
+
+#: discord_chatview.lua
+msgid "Chat font"
+msgstr "チャットフォント"
+
+#: discord_chatview.lua
+msgid "tight"
+msgstr "狭い"
+
+#: discord_chatview.lua
+msgid "normal"
+msgstr "標準"
+
+#: discord_chatview.lua
+msgid "relaxed"
+msgstr "やや広い"
+
+#: discord_chatview.lua
+msgid "loose"
+msgstr "広い"
+
+#: discord_chatview.lua
+msgid "small"
+msgstr "小さい"
+
+#: discord_chatview.lua
+msgid "large"
+msgstr "大きい"
+
+#: discord_chatview.lua
+msgid "Font: %1"
+msgstr "フォント: %1"
+
+#: discord_chatview.lua
+msgid "Line spacing: %1"
+msgstr "行間: %1"
+
+#: discord_chatview.lua
+msgid "Margins: %1"
+msgstr "余白: %1"
+
+#: discord_chatview.lua
+msgid "Smaller text"
+msgstr "小さい文字"
+
+#: discord_chatview.lua
+msgid "Larger text"
+msgstr "大きな文字"
+
+#: discord_emoji.lua
+msgid "Search emoji…"
+msgstr "絵文字を検索…"
+
+#: discord_emoji.lua
+msgid "No emoji found"
+msgstr "絵文字が見つかりませんでした"
+
+#: discord_emoji.lua
+msgid "Emoji"
+msgstr "絵文字"
+
+#: discord_emoji.lua
+msgid "Part of the name, for example: fire"
+msgstr "名前の一部（例: fire）"
+
+#: discord_files.lua
+msgid "image"
+msgstr "画像"
+
+#: discord_files.lua
+msgid "audio"
+msgstr "オーディオ"
+
+#: discord_files.lua
+msgid "video"
+msgstr "ビデオ"
+
+#: discord_files.lua
+msgid "document"
+msgstr "書類"
+
+#: discord_files.lua
+msgid "file"
+msgstr "ファイル"
+
+#: discord_files.lua
+msgid "From %1, %2"
+msgstr "%1、%2より"
+
+#: discord_files.lua
+msgid "From %1"
+msgstr "%1より"
+
+#: discord_files.lua
+msgid "Sent by %1"
+msgstr "送信者: %1"
+
+#: discord_members.lua
+msgid "online"
+msgstr "オンライン"
+
+#: discord_members.lua
+msgid "idle"
+msgstr "アイドル状態"
+
+#: discord_members.lua
+msgid "do not disturb"
+msgstr "取り込み中"
+
+#: discord_members.lua main.lua
+msgid "offline"
+msgstr "オフライン"
+
+#: discord_members.lua main.lua
+msgid "Online"
+msgstr "オンライン"
+
+#: discord_members.lua
+msgid "Offline"
+msgstr "オフライン"
+
+#: discord_members.lua
+msgid "No members to show."
+msgstr "表示するメンバーがいません。"
+
+#: discord_members.lua
+msgid "Members of %1"
+msgstr "%1のメンバー"
+
+#: discord_members.lua
+msgid "The member list needs a live connection."
+msgstr "メンバー リストにはライブ接続が必要です。"
+
+#: discord_members.lua
+msgid "Loading members…"
+msgstr "メンバーを読み込み中…"
+
+#: discord_members.lua
+msgid "The server did not send its member list."
+msgstr "サーバーはメンバーリストを送信しませんでした。"
+
+#: discord_members.lua
+msgid "%1 online"
+msgstr "%1 オンライン"
+
+#: discord_moderation.lua
+msgid "60 seconds"
+msgstr "60秒"
+
+#: discord_moderation.lua
+msgid "5 minutes"
+msgstr "5分"
+
+#: discord_moderation.lua
+msgid "1 hour"
+msgstr "1時間"
+
+#: discord_moderation.lua
+msgid "1 day"
+msgstr "1日"
+
+#: discord_moderation.lua
+msgid "1 week"
+msgstr "1週間"
+
+#: discord_moderation.lua
+msgid "%1 timed out for %2"
+msgstr "%1 を %2 の間タイムアウトしました"
+
+#: discord_moderation.lua
+msgid "Could not time out: "
+msgstr "タイムアウトできませんでした: "
+
+#: discord_moderation.lua
+msgid "Remove timeout"
+msgstr "タイムアウトの削除"
+
+#: discord_moderation.lua
+msgid "Timeout removed"
+msgstr "タイムアウトが削除されました"
+
+#: discord_moderation.lua
+msgid "Time out %1"
+msgstr "タイムアウト %1"
+
+#: discord_moderation.lua
+msgid "Delete this message"
+msgstr "このメッセージを削除"
+
+#: discord_moderation.lua
+msgid "Delete this message as a moderator?"
+msgstr "モデレータとしてこのメ​​ッセージを削除しますか?"
+
+#: discord_moderation.lua
+msgid "Time out %1…"
+msgstr "%1 をタイムアウト…"
+
+#: discord_moderation.lua
+msgid "Kick %1"
+msgstr "キック%1"
+
+#: discord_moderation.lua
+msgid "Kick %1 from the server?"
+msgstr "%1 をサーバーからキックしますか?"
+
+#: discord_moderation.lua
+msgid "Kick"
+msgstr "キック"
+
+#: discord_moderation.lua
+msgid "Member kicked"
+msgstr "メンバーがキックされました"
+
+#: discord_moderation.lua
+msgid "Could not kick: "
+msgstr "キックできませんでした: "
+
+#: discord_moderation.lua
+msgid "Moderation"
+msgstr "モデレーション"
+
+#: discord_moderation.lua
+msgid "updated the server"
+msgstr "サーバーを更新しました"
+
+#: discord_moderation.lua
+msgid "created a channel"
+msgstr "チャンネルを作成しました"
+
+#: discord_moderation.lua
+msgid "edited a channel"
+msgstr "チャンネルを編集しました"
+
+#: discord_moderation.lua
+msgid "deleted a channel"
+msgstr "チャンネルを削除しました"
+
+#: discord_moderation.lua
+msgid "kicked"
+msgstr "キックしました"
+
+#: discord_moderation.lua
+msgid "pruned members"
+msgstr "メンバーを整理しました"
+
+#: discord_moderation.lua
+msgid "banned"
+msgstr "BANしました"
+
+#: discord_moderation.lua
+msgid "unbanned"
+msgstr "BANを解除しました"
+
+#: discord_moderation.lua
+msgid "updated a member"
+msgstr "メンバーを更新しました"
+
+#: discord_moderation.lua
+msgid "changed roles of"
+msgstr "ロールを変更しました: "
+
+#: discord_moderation.lua
+msgid "created a role"
+msgstr "役割を作成しました"
+
+#: discord_moderation.lua
+msgid "edited a role"
+msgstr "役割を編集しました"
+
+#: discord_moderation.lua
+msgid "deleted a role"
+msgstr "役割を削除しました"
+
+#: discord_moderation.lua
+msgid "created an invite"
+msgstr "招待状を作成しました"
+
+#: discord_moderation.lua
+msgid "deleted an invite"
+msgstr "招待を削除しました"
+
+#: discord_moderation.lua
+msgid "deleted a message of"
+msgstr "次のユーザーのメッセージを削除しました: "
+
+#: discord_moderation.lua
+msgid "deleted messages of"
+msgstr "次のユーザーの複数のメッセージを削除しました: "
+
+#: discord_moderation.lua
+msgid "unpinned a message"
+msgstr "メッセージの固定を解除した"
+
+#: discord_moderation.lua
+msgid "Loading audit log…"
+msgstr "監査ログを読み込んでいます…"
+
+#: discord_moderation.lua
+msgid "Could not load the audit log: "
+msgstr "監査ログをロードできませんでした: "
+
+#: discord_moderation.lua
+msgid "action %1"
+msgstr "アクション%1"
+
+#: discord_moderation.lua
+msgid "The audit log is empty."
+msgstr "監査ログは空です。"
+
+#: discord_profile.lua
+msgid "Account created: %1"
+msgstr "アカウントが作成されました: %1"
+
+#: discord_profile.lua
+msgid "About me"
+msgstr "自己紹介"
+
+#: discord_profile.lua
+msgid "In %1"
+msgstr "%1 に所属"
+
+#: discord_profile.lua
+msgid "Nickname: %1"
+msgstr "ニックネーム: %1"
+
+#: discord_profile.lua
+msgid "Joined: %1"
+msgstr "参加しました: %1"
+
+#: discord_profile.lua
+msgid "Roles: %1"
+msgstr "役割: %1"
+
+#: discord_profile.lua
+msgid "Servers in common (%1)"
+msgstr "共通サーバー (%1)"
+
+#: discord_profile.lua
+msgid "Loading profile…"
+msgstr "プロファイルを読み込み中…"
+
+#: discord_profile.lua
+msgid "Could not load the full profile: "
+msgstr "プロフィール全体を読み込めませんでした: "
+
+#: discord_qrlogin.lua
+msgid "Connecting to Discord…"
+msgstr "Discord に接続中…"
+
+#: discord_qrlogin.lua
+msgid "Log in with QR code"
+msgstr "QRコードでログイン"
+
+#: discord_qrlogin.lua
+msgid "1. Open Discord on your phone.\n2. Go to Settings → Scan QR Code.\n3. Scan this code and approve the login."
+msgstr "1. スマートフォンでDiscordを開きます。\n2. 設定 → QRコードをスキャンに進みます。\n3. このコードをスキャンし、ログインを承認します。"
+
+#: discord_qrlogin.lua
+msgid "Waiting for you to scan the code…"
+msgstr "コードをスキャンするのを待っています…"
+
+#: discord_report.lua
+msgid "What happened?"
+msgstr "何が起きましたか？"
+
+#: discord_report.lua
+msgid "full report in the file saved on the device"
+msgstr "詳細なレポートは端末に保存されたファイルにあります"
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub. A full copy was saved to %1"
+msgstr "コードをスキャンすると、内容を入力済みのGitHub Issueが開きます。レポート全体は %1 に保存されました。"
+
+#: discord_report.lua
+msgid "Scan the code to open a pre-filled issue on GitHub."
+msgstr "コードをスキャンすると、内容を入力済みのGitHub Issueが開きます。"
+
+#: discord_share.lua
+msgid "Could not take the screenshot."
+msgstr "スクリーンショットを撮ることができませんでした。"
+
+#: discord_share.lua
+msgid "Send the page to…"
+msgstr "ページを送信する…"
+
+#: discord_share.lua main.lua
+msgid "Sending…"
+msgstr "送信中…"
+
+#: discord_share.lua main.lua
+msgid "Sent to %1"
+msgstr "%1 に送信"
+
+#: discord_shortcuts.lua
+msgid "adds ¯\\_(ツ)_/¯ after your text"
+msgstr "テキストの後に ¯\\_(ツ)_/¯ を追加します"
+
+#: discord_shortcuts.lua
+msgid "adds (╯°□°)╯︵ ┻━┻ after your text"
+msgstr "テキストの後に (╯°□°)╯︵ ┻━┻ を追加します"
+
+#: discord_shortcuts.lua
+msgid "adds ┬─┬ ノ( ゜-゜ノ) after your text"
+msgstr "テキストの後に ┬─┬ ノ( ゜-゜ノ) を追加します"
+
+#: discord_shortcuts.lua
+msgid "adds ( ͡° ͜ʖ ͡°) after your text"
+msgstr "テキストの後に ( ͡° ͜ʖ ͡°) を追加します"
+
+#: discord_shortcuts.lua
+msgid "italic text, as an action"
+msgstr "斜体のテキスト (アクションとして)"
+
+#: discord_shortcuts.lua
+msgid "hides the text behind a spoiler"
+msgstr "スポイラーの後ろにテキストを隠します"
+
+#: discord_shortcuts.lua
+msgid "bold text"
+msgstr "太字のテキスト"
+
+#: main.lua
+msgid "Open Discord"
+msgstr "Discordを開く"
+
+#: main.lua
+msgid "Discord: direct messages"
+msgstr "Discord：ダイレクトメッセージ"
+
+#: main.lua
+msgid "Discord: open last chat"
+msgstr "Discord: 最後のチャットを開く"
+
+#: main.lua
+msgid "Discord: low battery, real-time connection paused"
+msgstr "Discord: バッテリー残量が少ないため、リアルタイム接続が一時停止しています"
+
+#: main.lua
+msgid "%1 unread DMs"
+msgstr "%1 未読DM"
+
+#: main.lua
+msgid "%1 mentions"
+msgstr "%1 件のメンション"
+
+#: main.lua
+msgid "Discord rejected the saved session. Please log in again."
+msgstr "Discord は保存されたセッションを拒否しました。再度ログインしてください。"
+
+#: main.lua
+msgid "[file]"
+msgstr "[ファイル]"
+
+#: main.lua
+msgid "Log in with QR code (scan with your phone)"
+msgstr "QRコードでログイン（スマホで読み取ってください）"
+
+#: main.lua
+msgid "Log in with email and password"
+msgstr "メールアドレスとパスワードでログインします"
+
+#: main.lua
+msgid "Log in with token"
+msgstr "トークンを使用してログインする"
+
+#: main.lua
+msgid "Load token from %1"
+msgstr "%1 からトークンを読み込む"
+
+#: main.lua
+msgid "Report a problem"
+msgstr "問題を報告する"
+
+#: main.lua
+msgid "off"
+msgstr "オフ"
+
+#: main.lua
+msgid "connected"
+msgstr "接続中"
+
+#: main.lua
+msgid "connecting…"
+msgstr "接続中…"
+
+#: main.lua
+msgid "disconnected"
+msgstr "切断"
+
+#: main.lua
+msgid "The language changes after restarting KOReader. Restart now?"
+msgstr "KOReader を再起動すると言語が変わります。今すぐ再起動しますか?"
+
+#: main.lua
+msgid "Automatic (KOReader's language)"
+msgstr "自動 (KOReader の言語)"
+
+#: main.lua
+msgid "Language: %1"
+msgstr "言語: %1"
+
+#: main.lua
+msgid "automatic"
+msgstr "自動"
+
+#: main.lua
+msgid "Real-time connection: %1"
+msgstr "リアルタイム接続: %1"
+
+#: main.lua
+msgid "Download folder: %1"
+msgstr "ダウンロードフォルダ：%1"
+
+#: main.lua
+msgid "Download folder"
+msgstr "ダウンロードフォルダー"
+
+#: main.lua
+msgid "Where files from Discord are saved. Leave empty for the default."
+msgstr "Discordからダウンロードしたファイルの保存先です。空欄なら既定のフォルダーを使用します。"
+
+#: main.lua
+msgid "Stay connected in background (notifications)"
+msgstr "バックグラウンドで接続を維持 (通知)"
+
+#: main.lua
+msgid "Notify direct messages"
+msgstr "ダイレクトメッセージで通知する"
+
+#: main.lua
+msgid "Show the book I'm reading as my Discord activity"
+msgstr "読んでいる本を Discord アクティビティとして表示する"
+
+#: main.lua
+msgid "Show unread mentions and DMs in the status bar"
+msgstr "未読のメンションと DM をステータスバーに表示する"
+
+#: main.lua
+msgid "The counter is a status bar item: tap the status bar to switch to it, or show all items at once."
+msgstr "カウンタはステータス バーの項目です。ステータス バーをタップして切り替えるか、すべての項目を一度に表示します。"
+
+#: main.lua
+msgid "Notify mentions"
+msgstr "メンションを通知する"
+
+#: main.lua
+msgid "Show unread DMs and mentions on the sleep screen"
+msgstr "未読のDMとメンションをスリープ画面に表示する"
+
+#: main.lua
+msgid "Preview sleep screen text"
+msgstr "スリープ画面のテキストをプレビュー"
+
+#: main.lua
+msgid "Nothing unread right now: the normal sleep screen will be shown."
+msgstr "現在未読のものはありません。通常のスリープ画面が表示されます。"
+
+#: main.lua
+msgid "Battery saver"
+msgstr "バッテリーセーバー"
+
+#: main.lua
+msgid "Below this battery level the background connection is paused and polling slows down."
+msgstr "このバッテリー レベルを下回ると、バックグラウンド接続が一時停止され、ポーリングが遅くなります。"
+
+#: main.lua
+msgid "Off"
+msgstr "オフ"
+
+#: main.lua
+msgid "Check for new messages without real-time connection"
+msgstr "リアルタイム接続なしで新しいメッセージを確認する"
+
+#: main.lua
+msgid "Every 10 seconds"
+msgstr "10秒ごと"
+
+#: main.lua
+msgid "Every 15 seconds"
+msgstr "15秒ごと"
+
+#: main.lua
+msgid "Every 30 seconds"
+msgstr "30秒ごと"
+
+#: main.lua
+msgid "Every minute"
+msgstr "毎分"
+
+#: main.lua
+msgid "Messages per load"
+msgstr "一度に読み込むメッセージ数"
+
+#: main.lua
+msgid "Messages in \"Open as document\""
+msgstr "「文書として開く」のメッセージ数"
+
+#: main.lua
+msgid "Group servers by folders"
+msgstr "フォルダーごとにサーバーをグループ化する"
+
+#: main.lua
+msgid "Check for plugin updates once a day"
+msgstr "プラグインの更新を 1 日に 1 回確認する"
+
+#: main.lua
+msgid "Full screen refresh in chats"
+msgstr "チャット画面の全面更新"
+
+#: main.lua
+msgid "Flash the screen every few page turns to remove e-ink ghosting."
+msgstr "電子ペーパーの残像を消すため、数ページめくるごとに画面を全面更新します。"
+
+#: main.lua
+msgid "Never"
+msgstr "しない"
+
+#: main.lua
+msgid "Every 3 pages"
+msgstr "3ページごと"
+
+#: main.lua
+msgid "Every 6 pages"
+msgstr "6ページごと"
+
+#: main.lua
+msgid "Every 12 pages"
+msgstr "12ページごと"
+
+#: main.lua
+msgid "Mark channels as read when opened"
+msgstr "チャンネルを開いたら既読にする"
+
+#: main.lua
+msgid "Show channels without access"
+msgstr "アクセス権のないチャンネルを表示する"
+
+#: main.lua
+msgid "Hidden servers (%1)"
+msgstr "隠しサーバー (%1)"
+
+#: main.lua
+msgid "Network"
+msgstr "ネットワーク"
+
+#: main.lua
+msgid "Verify server certificates"
+msgstr "サーバー証明書を検証する"
+
+#: main.lua
+msgid "Checks that you are really talking to Discord, so nobody on the same network can read your login. Turn it off only if connections fail because the device clock is wrong."
+msgstr "Discordとの接続先を確認し、同じネットワーク上の第三者によるログイン情報の盗み見を防ぎます。端末の時刻が誤っていて接続に失敗する場合にのみオフにしてください。"
+
+#: main.lua
+msgid "Without certificate checks, someone on the same network could read your Discord login. Only do this on a network you trust, and turn it back on when you can."
+msgstr "証明書の確認を無効にすると、同じネットワーク上の第三者にDiscordのログイン情報を読み取られるおそれがあります。信頼できるネットワークでのみ使用し、可能になったら再び有効にしてください。"
+
+#: main.lua
+msgid "Turn off"
+msgstr "オフにする"
+
+#: main.lua
+msgid "HTTP proxy: %1"
+msgstr "HTTP プロキシ: %1"
+
+#: main.lua
+msgid "none"
+msgstr "なし"
+
+#: main.lua
+msgid "HTTP proxy"
+msgstr "HTTPプロキシ"
+
+#: main.lua
+msgid "host:port of an HTTP proxy that supports CONNECT. Leave empty to connect directly."
+msgstr "CONNECT をサポートする HTTP プロキシの host:port。直接接続するには空のままにしてください。"
+
+#: main.lua
+msgid "Use the form host:port, e.g. 192.168.1.10:3128"
+msgstr "host:port 形式で入力してください（例: 192.168.1.10:3128）。"
+
+#: main.lua
+msgid "Add quick reply…"
+msgstr "クイック返信を追加…"
+
+#: main.lua
+msgid "New quick reply"
+msgstr "新しいクイック返信"
+
+#: main.lua
+msgid "Remove quick reply \"%1\"?"
+msgstr "クイック返信「%1」を削除しますか?"
+
+#: main.lua
+msgid "Direct messages"
+msgstr "ダイレクトメッセージ"
+
+#: main.lua
+msgid "Open last chat"
+msgstr "最後のチャットを開く"
+
+#: main.lua
+msgid "Recent notifications (%1)"
+msgstr "最近の通知 (%1)"
+
+#: main.lua
+msgid "Mentions"
+msgstr "メンション"
+
+#: main.lua
+msgid "Friends"
+msgstr "友達"
+
+#: main.lua
+msgid "Saved messages (%1)"
+msgstr "保存されたメッセージ (%1)"
+
+#: main.lua
+msgid "Offline chats"
+msgstr "オフラインチャット"
+
+#: main.lua
+msgid "Share this page"
+msgstr "このページを共有する"
+
+#: main.lua
+msgid "Book club (this book)"
+msgstr "読書会（この本）"
+
+#: main.lua
+msgid "Status: %1"
+msgstr "ステータス: %1"
+
+#: main.lua
+msgid "Accounts (%1)"
+msgstr "アカウント (%1)"
+
+#: main.lua
+msgid "Settings"
+msgstr "設定"
+
+#: main.lua
+msgid "Log out (%1)"
+msgstr "ログアウト (%1)"
+
+#: main.lua
+msgid "Log out of Discord on this device?"
+msgstr "このデバイスで Discord からログアウトしますか?"
+
+#: main.lua
+msgid "Log out"
+msgstr "ログアウト"
+
+#: main.lua
+msgid "Check for updates (version %1)"
+msgstr "アップデートの確認 (バージョン %1)"
+
+#: main.lua
+msgid "Could not check for updates: "
+msgstr "更新を確認できませんでした: "
+
+#: main.lua
+msgid "You have the latest version (%1)."
+msgstr "最新バージョン (%1) を使用しています。"
+
+#: main.lua
+msgid "Discord plugin %1 is available: Tools → Discord → Check for updates"
+msgstr "Discordプラグイン %1 を利用できます: ツール → Discord → 更新を確認"
+
+#: main.lua
+msgid "Version %1 is available (you have %2)."
+msgstr "バージョン %1 を利用できます（現在のバージョン: %2）。"
+
+#: main.lua
+msgid "Update now?"
+msgstr "今すぐ更新しますか?"
+
+#: main.lua
+msgid "Update"
+msgstr "アップデート"
+
+#: main.lua
+msgid "Downloading update…"
+msgstr "アップデートをダウンロード中…"
+
+#: main.lua
+msgid "The update failed: "
+msgstr "更新に失敗しました: "
+
+#: main.lua
+msgid "Discord plugin updated to %1. Restart KOReader now?"
+msgstr "Discord プラグインが %1 に更新されました。今すぐ KOReader を再起動しますか?"
+
+#: main.lua
+msgid "Checking for updates…"
+msgstr "アップデートをチェック中…"
+
+#: main.lua
+msgid "Idle"
+msgstr "アイドル状態"
+
+#: main.lua
+msgid "Do not disturb"
+msgstr "取り込み中"
+
+#: main.lua
+msgid "Invisible"
+msgstr "オフライン表示"
+
+#: main.lua
+msgid "unchanged"
+msgstr "変わらない"
+
+#: main.lua
+msgid "Could not change the status: "
+msgstr "ステータスを変更できませんでした: "
+
+#: main.lua
+msgid "Loading…"
+msgstr "読み込み中…"
+
+#: main.lua
+msgid "Error: "
+msgstr "エラー： "
+
+#: main.lua
+msgid "session expired or invalid token. Please log in again."
+msgstr "セッションの有効期限が切れているか、トークンが無効です。再度ログインしてください。"
+
+#: main.lua
+msgid "Show all"
+msgstr "すべて表示"
+
+#: main.lua
+msgid "%1 — «%2»"
+msgstr "%1 — «%2»"
+
+#: main.lua
+msgid "Switched to %1"
+msgstr "%1に切り替えました"
+
+#: main.lua
+msgid "Channel: %1"
+msgstr "チャンネル: %1"
+
+#: main.lua
+msgid "Book club channel"
+msgstr "ブッククラブチャンネル"
+
+#: main.lua
+msgid "Share my reading in this book's club"
+msgstr "この本の読書クラブに読書状況を共有する"
+
+#: main.lua
+msgid "Send progress"
+msgstr "進捗状況の送信"
+
+#: main.lua
+msgid "Every %1 %"
+msgstr "%1 %ごと"
+
+#: main.lua
+msgid "Send when a chapter is finished"
+msgstr "章が終了したら送信する"
+
+#: main.lua
+msgid "Send my highlights"
+msgstr "ハイライトを送信する"
+
+#: main.lua
+msgid "Send a summary when I close the book"
+msgstr "本を閉じるときに概要を送信する"
+
+#: main.lua
+msgid "Send my progress now"
+msgstr "今すぐ進捗を送信する"
+
+#: main.lua
+msgid "Progress sent"
+msgstr "進捗状況が送信されました"
+
+#: main.lua
+msgid "Log out of %1?"
+msgstr "%1 からログアウトしますか?"
+
+#: main.lua
+msgid "Add account"
+msgstr "アカウントを追加"
+
+#: main.lua
+msgid "Hold an account to log out of it."
+msgstr "アカウントを長押しするとログアウトできます。"
+
+#: main.lua
+msgid "Login failed: "
+msgstr "ログインに失敗しました： "
+
+#: main.lua
+msgid "Logged in as %1"
+msgstr "%1としてログインしています"
+
+#: main.lua
+msgid "The QR code expired. Close this screen and try again."
+msgstr "QRコードの有効期限が切れてしまいました。この画面を閉じて、もう一度お試しください。"
+
+#: main.lua
+msgid "Discord refused the login (it may want a captcha). Log in with a token instead."
+msgstr "Discord はログインを拒否しました (キャプチャが必要な場合があります)。代わりにトークンを使用してログインしてください。"
+
+#: main.lua
+msgid "QR login failed: %1"
+msgstr "QR ログインに失敗しました: %1"
+
+#: main.lua
+msgid "Hi %1! Now tap \"Log in\" on your phone."
+msgstr "こんにちは、%1！ 次にスマートフォンで「ログイン」をタップしてください。"
+
+#: main.lua
+msgid "Checking token…"
+msgstr "トークンを確認中…"
+
+#: main.lua
+msgid "The login was cancelled on the phone."
+msgstr "スマートフォンでログインがキャンセルされました。"
+
+#: main.lua
+msgid "Discord token"
+msgstr "Discordトークン"
+
+#: main.lua
+msgid "Paste or type your user token."
+msgstr "ユーザー トークンを貼り付けるか入力します。"
+
+#: main.lua
+msgid "Log in"
+msgstr "ログイン"
+
+#: main.lua
+msgid "%1 not found.\n\nCreate that file containing your token (over USB or SSH) and try again."
+msgstr "%1 が見つかりません。\n\nトークンを記載したファイルをUSBまたはSSH経由で作成し、もう一度試してください。"
+
+#: main.lua
+msgid "The token file is empty."
+msgstr "トークン ファイルが空です。"
+
+#: main.lua
+msgid "Two-factor authentication"
+msgstr "二要素認証"
+
+#: main.lua
+msgid "Enter the 6-digit code from your authenticator app."
+msgstr "認証アプリから 6 桁のコードを入力します。"
+
+#: main.lua
+msgid "Verify"
+msgstr "確認する"
+
+#: main.lua
+msgid "Verifying…"
+msgstr "確認中…"
+
+#: main.lua
+msgid "Log in to Discord"
+msgstr "Discordにログインする"
+
+#: main.lua
+msgid "Email or phone"
+msgstr "メールまたは電話"
+
+#: main.lua
+msgid "Password"
+msgstr "パスワード"
+
+#: main.lua
+msgid "Logging in…"
+msgstr "ログイン中…"
+
+#: main.lua
+msgid "Removed from favorites"
+msgstr "お気に入りから削除されました"
+
+#: main.lua
+msgid "Added to favorites"
+msgstr "お気に入りに追加されました"
+
+#: main.lua
+msgid "Removed from saved messages"
+msgstr "保存されたメッセージから削除されました"
+
+#: main.lua
+msgid "Message saved"
+msgstr "メッセージが保存されました"
+
+#: main.lua
+msgid "Open in chat"
+msgstr "チャットで開く"
+
+#: main.lua
+msgid "Read here"
+msgstr "ここで読む"
+
+#: main.lua
+msgid "Saved messages"
+msgstr "保存されたメッセージ"
+
+#: main.lua
+msgid "No saved messages. Use Save in a message's actions."
+msgstr "保存されたメッセージはありません。メッセージのアクションで「保存」を使用します。"
+
+#: main.lua
+msgid "Hidden servers"
+msgstr "隠しサーバー"
+
+#: main.lua
+msgid "tap to show"
+msgstr "タップして表示"
+
+#: main.lua
+msgid "No hidden servers."
+msgstr "隠しサーバーはありません。"
+
+#: main.lua
+msgid "Recent notifications"
+msgstr "最近のお知らせ"
+
+#: main.lua
+msgid "No notifications."
+msgstr "通知はありません。"
+
+#: main.lua
+msgid "Could not change mute: "
+msgstr "ミュートを変更できませんでした: "
+
+#: main.lua
+msgid "Muted"
+msgstr "ミュート"
+
+#: main.lua
+msgid "Unmuted"
+msgstr "ミュート解除"
+
+#: main.lua
+msgid "Nothing to mark as read"
+msgstr "既読にするメッセージはありません"
+
+#: main.lua
+msgid "Marking as read…"
+msgstr "既読としてマークしています…"
+
+#: main.lua
+msgid "Could not mark as read: "
+msgstr "既読としてマークできませんでした: "
+
+#: main.lua
+msgid "Marked %1 channels as read"
+msgstr "%1 チャンネルを既読としてマークしました"
+
+#: main.lua
+msgid "Friend request from %1"
+msgstr "%1からの友達申請"
+
+#: main.lua
+msgid "Ignore"
+msgstr "無視する"
+
+#: main.lua
+msgid "Accept"
+msgstr "受け入れる"
+
+#: main.lua
+msgid "Friend request accepted"
+msgstr "フレンド申請を承認しました"
+
+#: main.lua
+msgid "request"
+msgstr "申請"
+
+#: main.lua
+msgid "No friends yet."
+msgstr "まだ友達がいません。"
+
+#: main.lua
+msgid "Loading friends…"
+msgstr "友達を読み込んでいます…"
+
+#: main.lua
+msgid "Loading mentions…"
+msgstr "メンションを読み込んでいます…"
+
+#: main.lua
+msgid "Could not load mentions: "
+msgstr "メンションを読み込めませんでした: "
+
+#: main.lua
+msgid "No recent mentions."
+msgstr "最近のメンションはありません。"
+
+#: main.lua
+msgid "No chats saved yet. Open a chat while online first."
+msgstr "保存されたチャットはまだありません。オンラインでチャットを開いてください。"
+
+#: main.lua
+msgid "Log in first from Tools → Discord."
+msgstr "まずはツール→Discordからログインしてください。"
+
+#: main.lua
+msgid "(unnamed)"
+msgstr "(名前なし)"
+
+#: main.lua
+msgid "%1 requests"
+msgstr "%1 リクエスト"
+
+#: main.lua
+msgid "Mark as read"
+msgstr "既読としてマークする"
+
+#: main.lua
+msgid "Unmute server"
+msgstr "サーバーのミュートを解除する"
+
+#: main.lua
+msgid "Mute server"
+msgstr "サーバーをミュート"
+
+#: main.lua
+msgid "Hide server"
+msgstr "サーバーを非表示にする"
+
+#: main.lua
+msgid "Loading servers…"
+msgstr "サーバーをロード中…"
+
+#: main.lua
+msgid "Could not load servers: "
+msgstr "サーバーをロードできませんでした: "
+
+#: main.lua
+msgid "No recent chats yet."
+msgstr "最近のチャットはまだありません。"
+
+#: main.lua
+msgid "Could not open the chat: "
+msgstr "チャットを開けませんでした: "
+
+#: main.lua
+msgid "Group"
+msgstr "グループ"
+
+#: main.lua
+msgid "group"
+msgstr "グループ"
+
+#: main.lua
+msgid "You have no direct messages."
+msgstr "ダイレクトメッセージはありません。"
+
+#: main.lua
+msgid "Loading direct messages…"
+msgstr "ダイレクトメッセージを読み込んでいます…"
+
+#: main.lua
+msgid "Could not load direct messages: "
+msgstr "ダイレクト メッセージを読み込めませんでした: "
+
+#: main.lua
+msgid "no access"
+msgstr "アクセスできません"
+
+#: main.lua
+msgid "forum"
+msgstr "フォーラム"
+
+#: main.lua
+msgid "read-only"
+msgstr "読み取り専用"
+
+#: main.lua
+msgid "announcements"
+msgstr "お知らせ"
+
+#: main.lua
+msgid "No visible text channels."
+msgstr "表示できるテキストチャンネルはありません。"
+
+#: main.lua
+msgid "Loading channels…"
+msgstr "チャンネルを読み込み中…"
+
+#: main.lua
+msgid "Could not load channels: "
+msgstr "チャンネルを読み込めませんでした: "
+
+#: main.lua
+msgid "Loading threads…"
+msgstr "スレッドを読み込み中…"
+
+#: main.lua
+msgid "Threads in #%1"
+msgstr "#%1 のスレッド"
+
+#: main.lua
+msgid "archived"
+msgstr "アーカイブ済み"
+
+#: main.lua
+msgid "No threads."
+msgstr "スレッドはありません。"
+
+#: main.lua
+msgid "Preparing document…"
+msgstr "書類を準備中…"
+
+#: main.lua
+msgid "Could not write the document."
+msgstr "文書を書き込めませんでした。"
+
+#: main.lua
+msgid "Send to Discord"
+msgstr "Discordに送信する"
+
+#: main.lua
+msgid "Send highlight to…"
+msgstr "ハイライトを送信…"
+
+#: main.lua
+msgid "Send definition to…"
+msgstr "定義を送信…"
+
+#: main.lua
+msgid "Open a chat or add a favorite first, then you can send to it."
+msgstr "まずチャットを開くかお気に入りを追加してから、チャットに送信できます。"
+
+#: main.lua
+msgid "Forward to…"
+msgstr "転送先…"
+
+#: main.lua
+msgid "Forwarded to %1"
+msgstr "%1 に転送"
+
+#: main.lua
+msgid "Could not forward: "
+msgstr "転送できませんでした: "
