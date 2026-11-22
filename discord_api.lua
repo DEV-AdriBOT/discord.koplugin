@@ -487,6 +487,30 @@ function DiscordAPI.idFromTime(ts)
     return string.format("%.0f", ms * 4194304)
 end
 
+--- Starts a thread from a message. Returns the new channel.
+function DiscordAPI:startThread(channel_id, message_id, name)
+    return self:post("/channels/" .. channel_id .. "/messages/" .. message_id .. "/threads", {
+        name = name,
+        auto_archive_duration = 1440,
+    })
+end
+
+--- Are we a member (following) of this thread?
+function DiscordAPI:isThreadMember(thread_id)
+    local ok, __, code = self:get("/channels/" .. thread_id .. "/thread-members/@me")
+    if ok then return true end
+    if code == 404 then return false end
+    return nil
+end
+
+function DiscordAPI:joinThread(thread_id)
+    return self:request("PUT", "/channels/" .. thread_id .. "/thread-members/@me")
+end
+
+function DiscordAPI:leaveThread(thread_id)
+    return self:request("DELETE", "/channels/" .. thread_id .. "/thread-members/@me")
+end
+
 function DiscordAPI:openDM(user_id)
     return self:post("/users/@me/channels", { recipients = { user_id } })
 end

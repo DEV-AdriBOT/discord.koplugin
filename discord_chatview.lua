@@ -2246,6 +2246,16 @@ function ChatView:messageActions(msg)
             end,
         }})
     end
+    if self.guild and not self.offline and not self:inThread() and self.can_send
+            and (self.channel.type == 0 or self.channel.type == 5 or self.channel.type == nil) then
+        table.insert(buttons, {{
+            text = _("Start a thread"),
+            callback = function()
+                UIManager:close(dialog)
+                self:startThread(msg)
+            end,
+        }})
+    end
     local files = Files.of(msg)
     if #files > 0 and not self.offline then
         table.insert(buttons, {{
@@ -2320,6 +2330,71 @@ function ChatView:messageActions(msg)
         buttons = buttons,
     }
     UIManager:show(dialog)
+end
+
+local THREAD_TYPES = { [10] = true, [11] = true, [12] = true }
+
+function ChatView:inThread()
+    return THREAD_TYPES[self.channel.type or -1] == true
+end
+
+--- Starts a thread from a message and opens it.
+function ChatView:startThread(msg)
+    local dialog
+    local suggestion = oneLine(self:renderContent(msg), 50):gsub("^%s+", "")
+    if suggestion == "" then suggestion = _("Thread") end
+    dialog = InputDialog:new{
+        title = _("Start a thread"),
+        description = _("Name of the thread"),
+        input = suggestion,
+        buttons = {{
+            { text = _("Cancel"), id = "close", callback = function() UIManager:close(dialog) end },
+            {
+                text = _("Start"),
+                is_enter_default = true,
+                callback = function()
+                    local name = dialog:getInputText():gsub("^%s+", ""):gsub("%s+$", "")
+                    if name == "" then return end
+                    UIManager:close(dialog)
+                    local ok, th = self.api:startThread(self.channel.id, msg.id, name:sub(1, 100))
+                    if not ok then
+                        UIManager:show(InfoMessage:new{ text = _("Could not start the thread: ") .. tostring(th) })
+                        return
+                    end
+                    local names = self.channel_names or {}
+                    names[th.id] = th.name
+                    self.plugin:openChannel(th, self.guild, cleanEmoji(th.name or name),
+                        (self.subtitle or "") .. " › " .. cleanEmoji(self.title or ""), names, true)
+                end,
+            },
+        }},
+    }
+    UIManager:show(dialog)
+    dialog:onShowKeyboard()
+end
+
+--- Follows the thread if we are not in it, leaves it if we are.
+function ChatView:toggleFollowThread()
+    self.plugin:withLoading(nil, function()
+        local member = self.api:isThreadMember(self.channel.id)
+        if member == nil then
+            UIManager:show(InfoMessage:new{ text = _("Could not check the thread.") })
+            return
+        end
+        local ok, err
+        if member then
+            ok, err = self.api:leaveThread(self.channel.id)
+        else
+            ok, err = self.api:joinThread(self.channel.id)
+        end
+        if not ok then
+            UIManager:show(InfoMessage:new{ text = tostring(err) })
+            return
+        end
+        UIManager:show(Notification:new{
+            text = member and _("You left the thread") or _("You are following the thread"),
+        })
+    end)
 end
 
 function ChatView:editNote(user)
@@ -2441,6 +2516,13 @@ function ChatView:showMenu()
                 {
                     text = _("Shortcuts"),
                     callback = function() close() self:showShortcuts() end,
+                },
+            },
+            {
+                {
+                    text = _("Follow or leave this thread"),
+                    enabled = not self.offline and self:inThread(),
+                    callback = function() close() self:toggleFollowThread() end,
                 },
             },
             {
