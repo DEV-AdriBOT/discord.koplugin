@@ -544,7 +544,11 @@ function ChatView:buildText()
         if not compact then table.insert(out, "") end
         table.insert(out, "───── " .. _("Pending") .. " ─────")
         for __, e in ipairs(pending) do
-            local head = os.date("%H:%M", e.time) .. " " .. (e.error and ("⚠ " .. _("not sent") .. ": " .. e.error) or ("⏳ " .. _("pending")))
+            local state = "⏳ " .. _("pending")
+            if Outbox.isScheduled(e) then
+                state = "⏰ " .. T(_("scheduled for %1"), os.date("%d/%m %H:%M", e.due))
+            end
+            local head = os.date("%H:%M", e.time) .. " " .. (e.error and ("⚠ " .. _("not sent") .. ": " .. e.error) or state)
             table.insert(out, head)
             table.insert(out, e.content)
         end
@@ -1168,7 +1172,8 @@ function ChatView:showPending()
         for __, e in ipairs(Outbox.list(self.channel.id)) do
             table.insert(items, {
                 text = oneLine(e.content, 120),
-                mandatory = e.error and _("not sent") or os.date("%H:%M", e.time),
+                mandatory = e.error and _("not sent")
+                    or (Outbox.isScheduled(e) and os.date("%d/%m %H:%M", e.due) or os.date("%H:%M", e.time)),
                 entry = e,
             })
         end
@@ -1258,17 +1263,111 @@ function ChatView:compose(prefill, edit_msg)
             self:send(text, edit_msg)
         end,
     })
+    local buttons = { row }
+    if not edit_msg then
+        table.insert(buttons, {{
+            text = _("Send later…"),
+            callback = function()
+                local text = dialog:getInputText()
+                if text:match("^%s*$") then return end
+                self:scheduleDialog(text, dialog)
+            end,
+        }})
+    end
     dialog = InputDialog:new{
         title = title,
         description = self.reply_to and not edit_msg and oneLine(self:renderContent(self.reply_to), 80) or nil,
         input = prefill or self:getDraft() or "",
         allow_newline = true,
         text_height = Screen:scaleBySize(120),
-        buttons = { row },
+        buttons = buttons,
         edited_callback = not edit_msg and function() self:sendTyping() end or nil,
     }
     UIManager:show(dialog)
     dialog:onShowKeyboard()
+end
+
+--- Time (Unix) of the next HH:MM, today or tomorrow if it has passed.
+local function nextClockTime(hour, min)
+    local now = os.time()
+    local t = os.date("*t", now)
+    local ts = os.time{ year = t.year, month = t.month, day = t.day, hour = hour, min = min }
+    if ts <= now then ts = ts + 86400 end
+    return ts
+end
+
+--- Asks when to send the text, then queues it as a scheduled message.
+function ChatView:scheduleDialog(text, compose_dialog)
+    local dialog
+    local function choose(due)
+        UIManager:close(dialog)
+        UIManager:close(compose_dialog)
+        self:sendLater(text, due)
+    end
+    local function opt(label, seconds)
+        return {{ text = label, callback = function() choose(os.time() + seconds) end }}
+    end
+    dialog = ButtonDialog:new{
+        title = _("Send later"),
+        buttons = {
+            opt(_("In 15 minutes"), 15 * 60),
+            opt(_("In 1 hour"), 3600),
+            opt(_("In 3 hours"), 3 * 3600),
+            {{
+                text = _("Tomorrow at 08:00"),
+                callback = function()
+                    local t = os.date("*t")
+                    choose(os.time{ year = t.year, month = t.month, day = t.day + 1, hour = 8, min = 0 })
+                end,
+            }},
+            {{
+                text = _("At a given time…"),
+                callback = function()
+                    UIManager:close(dialog)
+                    local input
+                    input = InputDialog:new{
+                        title = _("Send at (HH:MM)"),
+                        description = _("The next time it is that hour: today, or tomorrow if it has passed."),
+                        input = "",
+                        buttons = {{
+                            { text = _("Cancel"), id = "close", callback = function() UIManager:close(input) end },
+                            {
+                                text = _("Schedule"),
+                                is_enter_default = true,
+                                callback = function()
+                                    local h, m = input:getInputText():match("^%s*(%d%d?)[:.h](%d%d)%s*$")
+                                    h, m = tonumber(h), tonumber(m)
+                                    if not h or h > 23 or m > 59 then
+                                        UIManager:show(InfoMessage:new{ text = _("Write the time as HH:MM, for example 18:30.") })
+                                        return
+                                    end
+                                    UIManager:close(input)
+                                    UIManager:close(compose_dialog)
+                                    self:sendLater(text, nextClockTime(h, m))
+                                end,
+                            },
+                        }},
+                    }
+                    UIManager:show(input)
+                    input:onShowKeyboard()
+                end,
+            }},
+            {{ text = _("Cancel"), callback = function() UIManager:close(dialog) end }},
+        },
+    }
+    UIManager:show(dialog)
+end
+
+--- Queues a message to be sent at `due` (Unix time).
+function ChatView:sendLater(text, due)
+    local reply = self.reply_to
+    if reply then reply.guild_id = self.guild and self.guild.id end
+    Outbox.add(self.channel.id, self:applyMentions(text), reply, due)
+    self:setDraft(nil)
+    self.reply_to = nil
+    self.plugin:armOutbox()
+    self:redraw("bottom")
+    UIManager:show(Notification:new{ text = T(_("Scheduled for %1"), os.date("%d/%m %H:%M", due)) })
 end
 
 function ChatView:getDraft()

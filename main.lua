@@ -112,6 +112,7 @@ function Discord:init()
         self:addToHighlightDialog()
     end
     self:setupGatewayListeners()
+    UIManager:scheduleIn(20, function() self:armOutbox() end)
     if self:wantsBackgroundConnection() and Gateway.state == "disconnected" then
         -- Not during startup: connecting and loading READY takes a few seconds
         UIManager:scheduleIn(15, function() self:updateConnection() end)
@@ -183,7 +184,29 @@ function Discord:updateConnection()
     end
 end
 
+--- Sends scheduled messages when they are due, even with no chat open.
+function Discord:armOutbox()
+    local Outbox = require("discord_outbox")
+    if shared.outbox_tick then
+        UIManager:unschedule(shared.outbox_tick)
+        shared.outbox_tick = nil
+    end
+    local due = Outbox.nextDue()
+    if not due then return end
+    shared.outbox_tick = function()
+        shared.outbox_tick = nil
+        if self:isLoggedIn() and NetworkMgr:isOnline() then
+            pcall(Outbox.flush, self.api)
+        end
+        self:armOutbox()
+    end
+    -- A due time already in the past (there was no network then) is retried every minute
+    local wait = due > os.time() and (due - os.time() + 1) or 60
+    UIManager:scheduleIn(wait, shared.outbox_tick)
+end
+
 function Discord:onNetworkConnected()
+    UIManager:scheduleIn(6, function() self:armOutbox() end)
     if require("discord_outbox").count() > 0 then
         UIManager:scheduleIn(4, function()
             if #shared.views == 0 then require("discord_outbox").flush(self.api) end
@@ -278,6 +301,7 @@ end
 
 function Discord:onResume()
     shared.battery_warned = false
+    UIManager:scheduleIn(8, function() self:armOutbox() end)
     -- Wi-Fi takes a moment to come back; NetworkConnected is not sent on every device
     for __, delay in ipairs({ 5, 20, 60 }) do
         UIManager:scheduleIn(delay, function()

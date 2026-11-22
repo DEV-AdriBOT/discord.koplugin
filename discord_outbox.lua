@@ -44,8 +44,9 @@ local function save()
     os.rename(path() .. ".tmp", path())
 end
 
---- Queues a message. reply: { id, guild_id } or nil. Returns the entry.
-function Outbox.add(channel_id, content, reply)
+--- Queues a message. reply: { id, guild_id } or nil. due: Unix time before which it
+-- must not be sent (scheduled messages). Returns the entry.
+function Outbox.add(channel_id, content, reply, due)
     local entries = load()
     local entry = {
         id = string.format("%d-%d", os.time(), #entries + math.random(1000)),
@@ -54,6 +55,7 @@ function Outbox.add(channel_id, content, reply)
         reply = reply and { id = reply.id, guild_id = reply.guild_id } or nil,
         nonce = DiscordAPI.makeNonce(),
         time = os.time(),
+        due = due,
     }
     table.insert(entries, entry)
     save()
@@ -67,6 +69,20 @@ function Outbox.list(channel_id)
         if not channel_id or e.channel_id == channel_id then table.insert(out, e) end
     end
     return out
+end
+
+--- True if the entry is scheduled for later.
+function Outbox.isScheduled(e)
+    return e.due ~= nil and e.due > os.time()
+end
+
+--- Earliest scheduled time among the entries still waiting, or nil.
+function Outbox.nextDue()
+    local best
+    for __, e in ipairs(load()) do
+        if e.due and not e.error and (not best or e.due < best) then best = e.due end
+    end
+    return best
 end
 
 --- Forgets the loaded queue (after switching accounts).
@@ -117,8 +133,8 @@ function Outbox.flush(api)
     local i = 1
     while i <= #entries do
         local e = entries[i]
-        if e.error then
-            i = i + 1 -- failed for good: waits for the user to cancel or retry it
+        if e.error or Outbox.isScheduled(e) then
+            i = i + 1 -- failed for good (waits for the user) or not due yet
         else
             local reply = e.reply and { id = e.reply.id, guild_id = e.reply.guild_id } or nil
             local ok, data, code = api:sendMessage(e.channel_id, e.content, reply, e.nonce)
