@@ -128,6 +128,8 @@ Want the plugin in your language, or spotted a wrong translation? No programming
 
 Bug reports, ideas and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+**Contribution note:** The contributions by [@rcdri in PR #79](https://github.com/DEV-AdriBOT/discord.koplugin/pull/79) and the [v5 roadmap PR #3 in their fork](https://github.com/rcdri/discord.koplugin/pull/3) were generated with Claude Code. This disclosure applies to those contributions only, not to the rest of this codebase.
+
 ## Disclaimer
 
 This is an unofficial client that uses your user account through Discord's API and gateway. Using third-party clients is against Discord's Terms of Service and could, in theory, lead to your account being flagged. Use it at your own risk.
