@@ -52,6 +52,26 @@ msgstr ""
 msgid "Finished chapter «%s» of **%s**"
 msgstr ""
 
+#: discord_bookclub.lua
+msgid "%d h %d min"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "%d min"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "Reading session of **%s**: %s"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "%d pages"
+msgstr ""
+
+#: discord_bookclub.lua
+msgid "%d highlights"
+msgstr ""
+
 #: discord_chatview.lua
 msgid "added someone to the group"
 msgstr ""
@@ -72,7 +92,7 @@ msgstr ""
 msgid "changed the channel icon"
 msgstr ""
 
-#: discord_chatview.lua
+#: discord_chatview.lua discord_moderation.lua
 msgid "pinned a message"
 msgstr ""
 
@@ -117,15 +137,11 @@ msgid "(deleted message)"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "code"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "forwarded:"
-msgstr ""
-
-#: discord_chatview.lua
-msgid "image"
-msgstr ""
-
-#: discord_chatview.lua
-msgid "file"
 msgstr ""
 
 #: discord_chatview.lua
@@ -177,11 +193,15 @@ msgid "Pending"
 msgstr ""
 
 #: discord_chatview.lua
-msgid "not sent"
+msgid "pending"
 msgstr ""
 
 #: discord_chatview.lua
-msgid "pending"
+msgid "scheduled for %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "not sent"
 msgstr ""
 
 #: discord_chatview.lua
@@ -202,6 +222,14 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "The original message could not be found. It may have been deleted."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not mark as unread: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Marked as unread from here"
 msgstr ""
 
 #: discord_chatview.lua
@@ -252,12 +280,60 @@ msgstr ""
 msgid "Quick"
 msgstr ""
 
-#: discord_chatview.lua
+#: discord_chatview.lua main.lua
 msgid "Save"
 msgstr ""
 
 #: discord_chatview.lua
 msgid "Send"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Send later…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Send later"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "In 15 minutes"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "In 1 hour"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "In 3 hours"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Tomorrow at 08:00"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "At a given time…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Send at (HH:MM)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "The next time it is that hour: today, or tomorrow if it has passed."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Schedule"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Write the time as HH:MM, for example 18:30."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Scheduled for %1"
 msgstr ""
 
 #: discord_chatview.lua
@@ -344,12 +420,76 @@ msgstr ""
 msgid "Jump to message"
 msgstr ""
 
+#: discord_chatview.lua
+msgid "Jump to date or message"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "A date (2026-11-05, 05/11/2026), with an optional time (14:30), \"today\", \"yesterday\", \"3d\" for days ago, a message id or a Discord message link."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Go"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not understand that. Try 2026-11-05 or a message id."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "That date is in the future."
+msgstr ""
+
 #: discord_chatview.lua main.lua
 msgid "Loading messages…"
 msgstr ""
 
 #: discord_chatview.lua
 msgid "Showing older messages. Use Refresh to go back to the latest."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Code"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "There are no words to look up."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Look up (tap: dictionary, hold: Wikipedia)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Downloading %1…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not download the file: "
+msgstr ""
+
+#: discord_chatview.lua discord_moderation.lua discord_profile.lua
+msgid "Close"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Open"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Saved to %1"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "This file is large (%1). Download it?"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Download"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Download a file"
 msgstr ""
 
 #: discord_chatview.lua
@@ -473,19 +613,79 @@ msgid "Save for later"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "Mark unread from here"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Earlier versions (%1)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Start a thread"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Moderation…"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Look up a word"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Download files (%1)"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Hide spoilers"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Reveal spoilers"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Code (%1)"
 msgstr ""
 
 #: discord_chatview.lua
 msgid "Edit"
 msgstr ""
 
-#: discord_chatview.lua
+#: discord_chatview.lua discord_moderation.lua
 msgid "Delete"
 msgstr ""
 
 #: discord_chatview.lua
 msgid "Delete this message?"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Thread"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Name of the thread"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Start"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not start the thread: "
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Could not check the thread."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "You left the thread"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "You are following the thread"
 msgstr ""
 
 #: discord_chatview.lua
@@ -541,6 +741,18 @@ msgid "Jump to new messages"
 msgstr ""
 
 #: discord_chatview.lua
+msgid "Shortcuts"
+msgstr ""
+
+#: discord_chatview.lua discord_moderation.lua
+msgid "Audit log"
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Follow or leave this thread"
+msgstr ""
+
+#: discord_chatview.lua
 msgid "Members"
 msgstr ""
 
@@ -586,6 +798,10 @@ msgstr ""
 
 #: discord_chatview.lua
 msgid "Tap turns pages. Hold a message to open its actions."
+msgstr ""
+
+#: discord_chatview.lua
+msgid "Write these at the start of a message:"
 msgstr ""
 
 #: discord_chatview.lua
@@ -656,6 +872,38 @@ msgstr ""
 msgid "Part of the name, for example: fire"
 msgstr ""
 
+#: discord_files.lua
+msgid "image"
+msgstr ""
+
+#: discord_files.lua
+msgid "audio"
+msgstr ""
+
+#: discord_files.lua
+msgid "video"
+msgstr ""
+
+#: discord_files.lua
+msgid "document"
+msgstr ""
+
+#: discord_files.lua
+msgid "file"
+msgstr ""
+
+#: discord_files.lua
+msgid "From %1, %2"
+msgstr ""
+
+#: discord_files.lua
+msgid "From %1"
+msgstr ""
+
+#: discord_files.lua
+msgid "Sent by %1"
+msgstr ""
+
 #: discord_members.lua
 msgid "online"
 msgstr ""
@@ -704,6 +952,170 @@ msgstr ""
 msgid "%1 online"
 msgstr ""
 
+#: discord_moderation.lua
+msgid "60 seconds"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "5 minutes"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "1 hour"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "1 day"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "1 week"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "%1 timed out for %2"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Could not time out: "
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Remove timeout"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Timeout removed"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Time out %1"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Delete this message"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Delete this message as a moderator?"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Time out %1…"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Kick %1"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Kick %1 from the server?"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Kick"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Member kicked"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Could not kick: "
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Moderation"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "updated the server"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "created a channel"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "edited a channel"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "deleted a channel"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "kicked"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "pruned members"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "banned"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "unbanned"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "updated a member"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "changed roles of"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "created a role"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "edited a role"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "deleted a role"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "created an invite"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "deleted an invite"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "deleted a message of"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "deleted messages of"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "unpinned a message"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Loading audit log…"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "Could not load the audit log: "
+msgstr ""
+
+#: discord_moderation.lua
+msgid "action %1"
+msgstr ""
+
+#: discord_moderation.lua
+msgid "The audit log is empty."
+msgstr ""
+
 #: discord_profile.lua
 msgid "Account created: %1"
 msgstr ""
@@ -740,10 +1152,6 @@ msgstr ""
 msgid "Could not load the full profile: "
 msgstr ""
 
-#: discord_profile.lua
-msgid "Close"
-msgstr ""
-
 #: discord_report.lua
 msgid "What happened?"
 msgstr ""
@@ -774,6 +1182,34 @@ msgstr ""
 
 #: discord_share.lua main.lua
 msgid "Sent to %1"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "adds ¯\\_(ツ)_/¯ after your text"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "adds (╯°□°)╯︵ ┻━┻ after your text"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "adds ┬─┬ ノ( ゜-゜ノ) after your text"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "adds ( ͡° ͜ʖ ͡°) after your text"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "italic text, as an action"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "hides the text behind a spoiler"
+msgstr ""
+
+#: discord_shortcuts.lua
+msgid "bold text"
 msgstr ""
 
 #: main.lua
@@ -858,6 +1294,18 @@ msgstr ""
 
 #: main.lua
 msgid "Real-time connection: %1"
+msgstr ""
+
+#: main.lua
+msgid "Download folder: %1"
+msgstr ""
+
+#: main.lua
+msgid "Download folder"
+msgstr ""
+
+#: main.lua
+msgid "Where files from Discord are saved. Leave empty for the default."
 msgstr ""
 
 #: main.lua
@@ -1170,6 +1618,10 @@ msgstr ""
 
 #: main.lua
 msgid "Send my highlights"
+msgstr ""
+
+#: main.lua
+msgid "Send a summary when I close the book"
 msgstr ""
 
 #: main.lua
@@ -1502,6 +1954,10 @@ msgstr ""
 
 #: main.lua
 msgid "Send highlight to…"
+msgstr ""
+
+#: main.lua
+msgid "Send definition to…"
 msgstr ""
 
 #: main.lua

@@ -52,6 +52,26 @@ msgstr "Leyendo **%s**: %d%%"
 msgid "Finished chapter «%s» of **%s**"
 msgstr "He terminado el capítulo «%s» de **%s**"
 
+#: discord_bookclub.lua
+msgid "%d h %d min"
+msgstr "%d h %d min"
+
+#: discord_bookclub.lua
+msgid "%d min"
+msgstr "%d min"
+
+#: discord_bookclub.lua
+msgid "Reading session of **%s**: %s"
+msgstr "Sesión de lectura de **%s**: %s"
+
+#: discord_bookclub.lua
+msgid "%d pages"
+msgstr "%d páginas"
+
+#: discord_bookclub.lua
+msgid "%d highlights"
+msgstr "%d subrayados"
+
 #: discord_chatview.lua
 msgid "added someone to the group"
 msgstr "añadió a alguien al grupo"
@@ -72,7 +92,7 @@ msgstr "cambió el nombre del canal"
 msgid "changed the channel icon"
 msgstr "cambió el icono del canal"
 
-#: discord_chatview.lua
+#: discord_chatview.lua discord_moderation.lua
 msgid "pinned a message"
 msgstr "fijó un mensaje"
 
@@ -117,16 +137,12 @@ msgid "(deleted message)"
 msgstr "(mensaje eliminado)"
 
 #: discord_chatview.lua
+msgid "code"
+msgstr "código"
+
+#: discord_chatview.lua
 msgid "forwarded:"
 msgstr "reenviado:"
-
-#: discord_chatview.lua
-msgid "image"
-msgstr "imagen"
-
-#: discord_chatview.lua
-msgid "file"
-msgstr "archivo"
 
 #: discord_chatview.lua
 msgid "(edited)"
@@ -177,12 +193,16 @@ msgid "Pending"
 msgstr "Pendiente"
 
 #: discord_chatview.lua
-msgid "not sent"
-msgstr "no enviado"
-
-#: discord_chatview.lua
 msgid "pending"
 msgstr "pendiente"
+
+#: discord_chatview.lua
+msgid "scheduled for %1"
+msgstr "programado para %1"
+
+#: discord_chatview.lua
+msgid "not sent"
+msgstr "no enviado"
 
 #: discord_chatview.lua
 msgid "%1 is typing…"
@@ -203,6 +223,14 @@ msgstr "No se pudieron cargar los mensajes: "
 #: discord_chatview.lua
 msgid "The original message could not be found. It may have been deleted."
 msgstr "No se encontró el mensaje original. Puede que se haya eliminado."
+
+#: discord_chatview.lua
+msgid "Could not mark as unread: "
+msgstr "No se pudo marcar como no leído: "
+
+#: discord_chatview.lua
+msgid "Marked as unread from here"
+msgstr "Marcado como no leído desde aquí"
 
 #: discord_chatview.lua
 msgid "Refreshing…"
@@ -252,13 +280,61 @@ msgstr "Cancelar"
 msgid "Quick"
 msgstr "Rápidas"
 
-#: discord_chatview.lua
+#: discord_chatview.lua main.lua
 msgid "Save"
 msgstr "Guardar"
 
 #: discord_chatview.lua
 msgid "Send"
 msgstr "Enviar"
+
+#: discord_chatview.lua
+msgid "Send later…"
+msgstr "Enviar más tarde…"
+
+#: discord_chatview.lua
+msgid "Send later"
+msgstr "Enviar más tarde"
+
+#: discord_chatview.lua
+msgid "In 15 minutes"
+msgstr "En 15 minutos"
+
+#: discord_chatview.lua
+msgid "In 1 hour"
+msgstr "En 1 hora"
+
+#: discord_chatview.lua
+msgid "In 3 hours"
+msgstr "En 3 horas"
+
+#: discord_chatview.lua
+msgid "Tomorrow at 08:00"
+msgstr "Mañana a las 08:00"
+
+#: discord_chatview.lua
+msgid "At a given time…"
+msgstr "A una hora concreta…"
+
+#: discord_chatview.lua
+msgid "Send at (HH:MM)"
+msgstr "Enviar a las (HH:MM)"
+
+#: discord_chatview.lua
+msgid "The next time it is that hour: today, or tomorrow if it has passed."
+msgstr "La próxima vez que sea esa hora: hoy, o mañana si ya pasó."
+
+#: discord_chatview.lua
+msgid "Schedule"
+msgstr "Programar"
+
+#: discord_chatview.lua
+msgid "Write the time as HH:MM, for example 18:30."
+msgstr "Escribe la hora como HH:MM, por ejemplo 18:30."
+
+#: discord_chatview.lua
+msgid "Scheduled for %1"
+msgstr "Programado para %1"
 
 #: discord_chatview.lua
 msgid "No connection: the message will be sent later."
@@ -344,6 +420,26 @@ msgstr "Ver completo"
 msgid "Jump to message"
 msgstr "Ir al mensaje"
 
+#: discord_chatview.lua
+msgid "Jump to date or message"
+msgstr "Saltar a fecha o mensaje"
+
+#: discord_chatview.lua
+msgid "A date (2026-11-05, 05/11/2026), with an optional time (14:30), \"today\", \"yesterday\", \"3d\" for days ago, a message id or a Discord message link."
+msgstr "Una fecha (2026-11-05, 05/11/2026), con hora opcional (14:30), \"today\", \"yesterday\", \"3d\" para hace 3 días, un id de mensaje o un enlace de mensaje de Discord."
+
+#: discord_chatview.lua
+msgid "Go"
+msgstr "Ir"
+
+#: discord_chatview.lua
+msgid "Could not understand that. Try 2026-11-05 or a message id."
+msgstr "No se entendió. Prueba 2026-11-05 o un id de mensaje."
+
+#: discord_chatview.lua
+msgid "That date is in the future."
+msgstr "Esa fecha está en el futuro."
+
 #: discord_chatview.lua main.lua
 msgid "Loading messages…"
 msgstr "Cargando mensajes…"
@@ -351,6 +447,50 @@ msgstr "Cargando mensajes…"
 #: discord_chatview.lua
 msgid "Showing older messages. Use Refresh to go back to the latest."
 msgstr "Mostrando mensajes antiguos. Usa Actualizar para volver a los últimos."
+
+#: discord_chatview.lua
+msgid "Code"
+msgstr "Código"
+
+#: discord_chatview.lua
+msgid "There are no words to look up."
+msgstr "No hay palabras que buscar."
+
+#: discord_chatview.lua
+msgid "Look up (tap: dictionary, hold: Wikipedia)"
+msgstr "Buscar (toque: diccionario, mantener: Wikipedia)"
+
+#: discord_chatview.lua
+msgid "Downloading %1…"
+msgstr "Descargando %1…"
+
+#: discord_chatview.lua
+msgid "Could not download the file: "
+msgstr "No se pudo descargar el archivo: "
+
+#: discord_chatview.lua discord_moderation.lua discord_profile.lua
+msgid "Close"
+msgstr "Cerrar"
+
+#: discord_chatview.lua
+msgid "Open"
+msgstr "Abrir"
+
+#: discord_chatview.lua
+msgid "Saved to %1"
+msgstr "Guardado en %1"
+
+#: discord_chatview.lua
+msgid "This file is large (%1). Download it?"
+msgstr "Este archivo es grande (%1). ¿Descargarlo?"
+
+#: discord_chatview.lua
+msgid "Download"
+msgstr "Descargar"
+
+#: discord_chatview.lua
+msgid "Download a file"
+msgstr "Descargar un archivo"
 
 #: discord_chatview.lua
 msgid "Downloading image…"
@@ -473,20 +613,80 @@ msgid "Save for later"
 msgstr "Guardar para después"
 
 #: discord_chatview.lua
+msgid "Mark unread from here"
+msgstr "Marcar como no leído desde aquí"
+
+#: discord_chatview.lua
 msgid "Earlier versions (%1)"
 msgstr "Versiones anteriores (%1)"
+
+#: discord_chatview.lua
+msgid "Start a thread"
+msgstr "Crear un hilo"
+
+#: discord_chatview.lua
+msgid "Moderation…"
+msgstr "Moderación…"
+
+#: discord_chatview.lua
+msgid "Look up a word"
+msgstr "Buscar una palabra"
+
+#: discord_chatview.lua
+msgid "Download files (%1)"
+msgstr "Descargar archivos (%1)"
+
+#: discord_chatview.lua
+msgid "Hide spoilers"
+msgstr "Ocultar spoilers"
+
+#: discord_chatview.lua
+msgid "Reveal spoilers"
+msgstr "Mostrar spoilers"
+
+#: discord_chatview.lua
+msgid "Code (%1)"
+msgstr "Código (%1)"
 
 #: discord_chatview.lua
 msgid "Edit"
 msgstr "Editar"
 
-#: discord_chatview.lua
+#: discord_chatview.lua discord_moderation.lua
 msgid "Delete"
 msgstr "Eliminar"
 
 #: discord_chatview.lua
 msgid "Delete this message?"
 msgstr "¿Eliminar este mensaje?"
+
+#: discord_chatview.lua
+msgid "Thread"
+msgstr "Hilo"
+
+#: discord_chatview.lua
+msgid "Name of the thread"
+msgstr "Nombre del hilo"
+
+#: discord_chatview.lua
+msgid "Start"
+msgstr "Crear"
+
+#: discord_chatview.lua
+msgid "Could not start the thread: "
+msgstr "No se pudo crear el hilo: "
+
+#: discord_chatview.lua
+msgid "Could not check the thread."
+msgstr "No se pudo comprobar el hilo."
+
+#: discord_chatview.lua
+msgid "You left the thread"
+msgstr "Has salido del hilo"
+
+#: discord_chatview.lua
+msgid "You are following the thread"
+msgstr "Sigues el hilo"
 
 #: discord_chatview.lua
 msgid "Could not load the note: "
@@ -541,6 +741,18 @@ msgid "Jump to new messages"
 msgstr "Ir a los mensajes nuevos"
 
 #: discord_chatview.lua
+msgid "Shortcuts"
+msgstr "Atajos"
+
+#: discord_chatview.lua discord_moderation.lua
+msgid "Audit log"
+msgstr "Registro de auditoría"
+
+#: discord_chatview.lua
+msgid "Follow or leave this thread"
+msgstr "Seguir o dejar este hilo"
+
+#: discord_chatview.lua
 msgid "Members"
 msgstr "Miembros"
 
@@ -587,6 +799,10 @@ msgstr "Toca un mensaje para abrir sus acciones. Desliza para pasar de página."
 #: discord_chatview.lua
 msgid "Tap turns pages. Hold a message to open its actions."
 msgstr "El toque pasa de página. Mantén pulsado un mensaje para abrir sus acciones."
+
+#: discord_chatview.lua
+msgid "Write these at the start of a message:"
+msgstr "Escribe esto al principio de un mensaje:"
 
 #: discord_chatview.lua
 msgid "Default"
@@ -656,6 +872,38 @@ msgstr "Emoji"
 msgid "Part of the name, for example: fire"
 msgstr "Parte del nombre, por ejemplo: fire"
 
+#: discord_files.lua
+msgid "image"
+msgstr "imagen"
+
+#: discord_files.lua
+msgid "audio"
+msgstr "audio"
+
+#: discord_files.lua
+msgid "video"
+msgstr "vídeo"
+
+#: discord_files.lua
+msgid "document"
+msgstr "documento"
+
+#: discord_files.lua
+msgid "file"
+msgstr "archivo"
+
+#: discord_files.lua
+msgid "From %1, %2"
+msgstr "De %1, %2"
+
+#: discord_files.lua
+msgid "From %1"
+msgstr "De %1"
+
+#: discord_files.lua
+msgid "Sent by %1"
+msgstr "Enviado por %1"
+
 #: discord_members.lua
 msgid "online"
 msgstr "en línea"
@@ -704,6 +952,170 @@ msgstr "El servidor no envió su lista de miembros."
 msgid "%1 online"
 msgstr "%1 en línea"
 
+#: discord_moderation.lua
+msgid "60 seconds"
+msgstr "60 segundos"
+
+#: discord_moderation.lua
+msgid "5 minutes"
+msgstr "5 minutos"
+
+#: discord_moderation.lua
+msgid "1 hour"
+msgstr "1 hora"
+
+#: discord_moderation.lua
+msgid "1 day"
+msgstr "1 día"
+
+#: discord_moderation.lua
+msgid "1 week"
+msgstr "1 semana"
+
+#: discord_moderation.lua
+msgid "%1 timed out for %2"
+msgstr "%1 aislado durante %2"
+
+#: discord_moderation.lua
+msgid "Could not time out: "
+msgstr "No se pudo aislar: "
+
+#: discord_moderation.lua
+msgid "Remove timeout"
+msgstr "Quitar aislamiento"
+
+#: discord_moderation.lua
+msgid "Timeout removed"
+msgstr "Aislamiento quitado"
+
+#: discord_moderation.lua
+msgid "Time out %1"
+msgstr "Aislar a %1"
+
+#: discord_moderation.lua
+msgid "Delete this message"
+msgstr "Borrar este mensaje"
+
+#: discord_moderation.lua
+msgid "Delete this message as a moderator?"
+msgstr "¿Borrar este mensaje como moderador?"
+
+#: discord_moderation.lua
+msgid "Time out %1…"
+msgstr "Aislar a %1…"
+
+#: discord_moderation.lua
+msgid "Kick %1"
+msgstr "Expulsar a %1"
+
+#: discord_moderation.lua
+msgid "Kick %1 from the server?"
+msgstr "¿Expulsar a %1 del servidor?"
+
+#: discord_moderation.lua
+msgid "Kick"
+msgstr "Expulsar"
+
+#: discord_moderation.lua
+msgid "Member kicked"
+msgstr "Miembro expulsado"
+
+#: discord_moderation.lua
+msgid "Could not kick: "
+msgstr "No se pudo expulsar: "
+
+#: discord_moderation.lua
+msgid "Moderation"
+msgstr "Moderación"
+
+#: discord_moderation.lua
+msgid "updated the server"
+msgstr "actualizó el servidor"
+
+#: discord_moderation.lua
+msgid "created a channel"
+msgstr "creó un canal"
+
+#: discord_moderation.lua
+msgid "edited a channel"
+msgstr "editó un canal"
+
+#: discord_moderation.lua
+msgid "deleted a channel"
+msgstr "borró un canal"
+
+#: discord_moderation.lua
+msgid "kicked"
+msgstr "expulsó a"
+
+#: discord_moderation.lua
+msgid "pruned members"
+msgstr "purgó miembros"
+
+#: discord_moderation.lua
+msgid "banned"
+msgstr "vetó a"
+
+#: discord_moderation.lua
+msgid "unbanned"
+msgstr "quitó el veto a"
+
+#: discord_moderation.lua
+msgid "updated a member"
+msgstr "actualizó a"
+
+#: discord_moderation.lua
+msgid "changed roles of"
+msgstr "cambió los roles de"
+
+#: discord_moderation.lua
+msgid "created a role"
+msgstr "creó un rol"
+
+#: discord_moderation.lua
+msgid "edited a role"
+msgstr "editó un rol"
+
+#: discord_moderation.lua
+msgid "deleted a role"
+msgstr "borró un rol"
+
+#: discord_moderation.lua
+msgid "created an invite"
+msgstr "creó una invitación"
+
+#: discord_moderation.lua
+msgid "deleted an invite"
+msgstr "borró una invitación"
+
+#: discord_moderation.lua
+msgid "deleted a message of"
+msgstr "borró un mensaje de"
+
+#: discord_moderation.lua
+msgid "deleted messages of"
+msgstr "borró mensajes de"
+
+#: discord_moderation.lua
+msgid "unpinned a message"
+msgstr "desfijó un mensaje"
+
+#: discord_moderation.lua
+msgid "Loading audit log…"
+msgstr "Cargando registro de auditoría…"
+
+#: discord_moderation.lua
+msgid "Could not load the audit log: "
+msgstr "No se pudo cargar el registro de auditoría: "
+
+#: discord_moderation.lua
+msgid "action %1"
+msgstr "acción %1"
+
+#: discord_moderation.lua
+msgid "The audit log is empty."
+msgstr "El registro de auditoría está vacío."
+
 #: discord_profile.lua
 msgid "Account created: %1"
 msgstr "Cuenta creada: %1"
@@ -740,10 +1152,6 @@ msgstr "Cargando perfil…"
 msgid "Could not load the full profile: "
 msgstr "No se pudo cargar el perfil completo: "
 
-#: discord_profile.lua
-msgid "Close"
-msgstr "Cerrar"
-
 #: discord_report.lua
 msgid "What happened?"
 msgstr "¿Qué ha pasado?"
@@ -775,6 +1183,34 @@ msgstr "Enviando…"
 #: discord_share.lua main.lua
 msgid "Sent to %1"
 msgstr "Enviado a %1"
+
+#: discord_shortcuts.lua
+msgid "adds ¯\\_(ツ)_/¯ after your text"
+msgstr "añade ¯\\_(ツ)_/¯ tras tu texto"
+
+#: discord_shortcuts.lua
+msgid "adds (╯°□°)╯︵ ┻━┻ after your text"
+msgstr "añade (╯°□°)╯︵ ┻━┻ tras tu texto"
+
+#: discord_shortcuts.lua
+msgid "adds ┬─┬ ノ( ゜-゜ノ) after your text"
+msgstr "añade ┬─┬ ノ( ゜-゜ノ) tras tu texto"
+
+#: discord_shortcuts.lua
+msgid "adds ( ͡° ͜ʖ ͡°) after your text"
+msgstr "añade ( ͡° ͜ʖ ͡°) tras tu texto"
+
+#: discord_shortcuts.lua
+msgid "italic text, as an action"
+msgstr "texto en cursiva, como una acción"
+
+#: discord_shortcuts.lua
+msgid "hides the text behind a spoiler"
+msgstr "oculta el texto tras un spoiler"
+
+#: discord_shortcuts.lua
+msgid "bold text"
+msgstr "texto en negrita"
 
 #: main.lua
 msgid "Open Discord"
@@ -859,6 +1295,18 @@ msgstr "automático"
 #: main.lua
 msgid "Real-time connection: %1"
 msgstr "Conexión en tiempo real: %1"
+
+#: main.lua
+msgid "Download folder: %1"
+msgstr "Carpeta de descargas: %1"
+
+#: main.lua
+msgid "Download folder"
+msgstr "Carpeta de descargas"
+
+#: main.lua
+msgid "Where files from Discord are saved. Leave empty for the default."
+msgstr "Dónde se guardan los archivos de Discord. Déjalo vacío para usar la carpeta por defecto."
 
 #: main.lua
 msgid "Stay connected in background (notifications)"
@@ -1171,6 +1619,10 @@ msgstr "Enviar al terminar un capítulo"
 #: main.lua
 msgid "Send my highlights"
 msgstr "Enviar mis subrayados"
+
+#: main.lua
+msgid "Send a summary when I close the book"
+msgstr "Enviar un resumen al cerrar el libro"
 
 #: main.lua
 msgid "Send my progress now"
@@ -1503,6 +1955,10 @@ msgstr "Enviar a Discord"
 #: main.lua
 msgid "Send highlight to…"
 msgstr "Enviar subrayado a…"
+
+#: main.lua
+msgid "Send definition to…"
+msgstr "Enviar definición a…"
 
 #: main.lua
 msgid "Open a chat or add a favorite first, then you can send to it."

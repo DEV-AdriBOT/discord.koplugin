@@ -38,6 +38,14 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Pinned messages** and **search** within a channel, with "jump to message"
 - **"New" separator** at the last read position when a channel has unread messages
 - **Polls** with live results, and voting
+- **Send later**: schedule a message for a time (in 15 minutes, tomorrow at 08:00, or any HH:MM); it is sent even if the chat is closed
+- **Slash shortcuts** at the start of a message: `/shrug`, `/tableflip`, `/unflip`, `/lenny`, `/me`, `/spoiler`, `/bold`
+- **Spoilers** stay hidden until you reveal them in the message actions; **code blocks** are shown as an indented block and open in a monospaced viewer
+- **Mark unread from here**: hold a message to bring the channel back as unread from that point
+- **Jump to a date or message**: a date (`2026-11-05`, `05/11/2026`), `yesterday`, `3d`, a message id or a message link
+- **Threads**: start one from a message, and follow or leave it
+- **Files**: attachments show their size and type; download them to a folder of your choice with the right extension and KOReader metadata (title, the sender as author, tags and where they came from), and open readable ones straight away
+- **Moderation** (only what your account is allowed to do): delete other people's messages, time out or kick a member, and read the audit log
 - **Drafts** kept per channel, even across restarts
 - **Only messages for me**: a per-channel mode for busy channels
 - **Forward** messages, and keep **private notes** on users
@@ -49,11 +57,12 @@ Text only: no images, GIFs, voice or video. Just your servers, text channels and
 - **Notifications** for DMs and mentions while you read (optional background connection)
 - **Open as document**: read a long channel as a paginated book in KOReader's reader
 - **Send highlights** from a book to a chat (highlight menu → *Send to Discord*)
+- **Dictionary and Wikipedia**: look up any word of a message, and send a result to a chat (*Send to Discord* in the dictionary popup)
 - **Offline chats**: the latest messages of recent chats are saved and readable without Wi-Fi
 - **Links as QR codes**, to open them on your phone
 - **Sleep screen summary** (optional): unread DMs and mentions shown on the sleep screen
 - **Share the current page** of the book you are reading, as a grayscale image, in a chat
-- **Book club** (per book, optional): send your reading progress (every X % or per chapter) and your highlights to a channel
+- **Book club** (per book, optional): send your reading progress (every X % or per chapter), your highlights and, optionally, a summary of each reading session (time, pages, progress) to a channel
 - **Status bar counter** (optional): unread mentions and DMs in KOReader's status bar while you read
 - **Report a problem**: prepares a report (versions, device, recent Discord log lines, no token or private data) as a QR code with a pre-filled GitHub issue, and saves a copy to `discord-report.txt`
 - **Reading activity** (optional): your profile shows "Playing KOReader" with the book title, author and progress while a book is open
@@ -105,8 +114,8 @@ The interface follows KOReader's language, or the one chosen in *Discord → Set
 <!-- translations:start -->
 | Language | Code | Translated | Progress |
 | --- | --- | --- | --- |
-| English (source) | `en` | 379 / 379 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
-| Español | `es` | 379 / 379 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| English (source) | `en` | 493 / 493 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| Español | `es` | 493 / 493 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 <!-- translations:end -->
 
 Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
