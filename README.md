@@ -72,7 +72,7 @@ Text first: no voice or video, and images only when you ask for them. Just your 
 - **Fast start**: the connection state is cached on disk, lists open at once and sessions are resumed after restarts
 - Common emoji rendered as text, since e-reader fonts lack emoji glyphs (country flags as `:flag_pt:`)
 - **Secure connections**: server certificates and host names are verified on every connection (REST, real time and updates), so nobody on the same Wi-Fi can read your login or fake an update; optional **HTTP proxy** (*Settings → Network*)
-- Interface in English and Spanish (follows KOReader's language)
+- Interface in English, Spanish and Japanese (follows KOReader's language)
 
 ## Installation
 
@@ -120,6 +120,7 @@ The interface follows KOReader's language, or the one chosen in *Discord → Set
 | --- | --- | --- | --- |
 | English (source) | `en` | 515 / 515 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 | Español | `es` | 515 / 515 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
+| 日本語 | `ja` | 515 / 515 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 <!-- translations:end -->
 
 Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
