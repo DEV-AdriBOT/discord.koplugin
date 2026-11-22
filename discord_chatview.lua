@@ -1793,6 +1793,56 @@ function ChatView:viewFull(msg)
     })
 end
 
+-- Dictionary and Wikipedia
+
+--- Words of a message, in order of appearance and without repeats.
+function ChatView:wordsOf(msg)
+    local text = self:renderContent(msg):gsub("https?://%S+", " "):gsub("%[[^%]]-:[^%]]-%]", " ")
+    local words, seen = {}, {}
+    for raw in text:gmatch("[%w'’%-\128-\255]+") do
+        local word = raw:gsub("^[%-'’]+", ""):gsub("[%-'’]+$", "")
+        local key = word:lower()
+        if #key >= 2 and not seen[key] and not key:match("^%d+$") then
+            seen[key] = true
+            table.insert(words, word)
+        end
+    end
+    return words
+end
+
+--- Lists the words of a message: tap one for the dictionary, hold for Wikipedia.
+function ChatView:lookupWords(msg)
+    local words = self:wordsOf(msg)
+    if #words == 0 then
+        UIManager:show(Notification:new{ text = _("There are no words to look up.") })
+        return
+    end
+    local ui = self.plugin.ui
+    local menu
+    local items = {}
+    for __, word in ipairs(words) do
+        table.insert(items, {
+            text = word,
+            callback = function()
+                ui:handleEvent(require("ui/event"):new("LookupWord", word))
+            end,
+            hold_callback = function()
+                ui:handleEvent(require("ui/event"):new("LookupWikipedia", word, true))
+            end,
+        })
+    end
+    menu = Menu:new{
+        title = _("Look up (tap: dictionary, hold: Wikipedia)"),
+        item_table = items,
+        is_borderless = true,
+        is_popout = false,
+        covers_fullscreen = true,
+        items_per_page = 12,
+        close_callback = function() UIManager:close(menu) end,
+    }
+    UIManager:show(menu)
+end
+
 -- Files
 
 --- Saves an attachment in the download folder, tags it and offers to open it.
@@ -2256,6 +2306,13 @@ function ChatView:messageActions(msg)
             end,
         }})
     end
+    table.insert(buttons, {{
+        text = _("Look up a word"),
+        callback = function()
+            UIManager:close(dialog)
+            self:lookupWords(msg)
+        end,
+    }})
     local files = Files.of(msg)
     if #files > 0 and not self.offline then
         table.insert(buttons, {{

@@ -112,6 +112,9 @@ function Discord:init()
         self:addToHighlightDialog()
     end
     self:setupGatewayListeners()
+    if self.ui.dictionary and self.ui.dictionary.addToDictButtons then
+        self:registerDictButton()
+    end
     UIManager:scheduleIn(20, function() self:armOutbox() end)
     if self:wantsBackgroundConnection() and Gateway.state == "disconnected" then
         -- Not during startup: connecting and loading READY takes a few seconds
@@ -2581,6 +2584,44 @@ function Discord:shareText(text)
     self:pickDestination(_("Send highlight to…"), function(e)
         self:withLoading(_("Sending…"), function()
             local ok, err = self.api:sendMessage(e.id, quoted)
+            if ok then
+                UIManager:show(Notification:new{ text = T(_("Sent to %1"), e.title or "?") })
+            else
+                UIManager:show(InfoMessage:new{ text = _("Could not send: ") .. tostring(err) })
+            end
+        end)
+    end)
+end
+
+--- Adds "Send to Discord" to the dictionary and Wikipedia popups.
+function Discord:registerDictButton()
+    self.ui.dictionary:addToDictButtons({
+        id = "discord_send",
+        menu_text = _("Send to Discord"),
+        text = _("Send to Discord"),
+        show_func = function() return self:isLoggedIn() end,
+        callback = function(popup)
+            self:shareLookup(popup)
+        end,
+    })
+end
+
+--- Sends the dictionary or Wikipedia result shown in `popup` to a chat.
+function Discord:shareLookup(popup)
+    local word = popup.displayword or popup.lookupword or popup.word or "?"
+    local source = popup.is_wiki and "Wikipedia" or popup.displaydictname
+    local definition = popup.definition or ""
+    definition = util.htmlToPlainTextIfHtml(definition):gsub("\n%s*\n+", "\n"):gsub("^%s+", ""):gsub("%s+$", "")
+    -- Discord messages are limited to 2000 characters
+    if #definition > 1400 then
+        definition = util.utf8Truncate and util.utf8Truncate(definition, 1400) or definition:sub(1, 1400)
+        definition = definition .. "…"
+    end
+    local text = "**" .. word .. "**" .. (source and source ~= "" and (" (" .. source .. ")") or "")
+        .. "\n> " .. definition:gsub("\n", "\n> ")
+    self:pickDestination(_("Send definition to…"), function(e)
+        self:withLoading(_("Sending…"), function()
+            local ok, err = self.api:sendMessage(e.id, text)
             if ok then
                 UIManager:show(Notification:new{ text = T(_("Sent to %1"), e.title or "?") })
             else
