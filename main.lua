@@ -14,6 +14,7 @@ local DiscordAPI = require("discord_api")
 local ChatView = require("discord_chatview")
 local Dispatcher = require("dispatcher")
 local Gateway = require("discord_gateway")
+local Net = require("discord_net")
 local Outbox = require("discord_outbox")
 local StatusBar = require("discord_statusbar")
 local InfoMessage = require("ui/widget/infomessage")
@@ -100,6 +101,7 @@ function Discord:init()
         }
     end
     self.settings = shared.settings_file.data
+    Net.configure(self.settings)
     if not shared.accounts_ready then
         shared.accounts_ready = true
         Account.init(self.settings)
@@ -442,6 +444,13 @@ end
 function Discord:getLoginMenu()
     return {
         {
+            text = _("Log in with QR code (scan with your phone)"),
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                self:loginWithQR(touchmenu_instance)
+            end,
+        },
+        {
             text = _("Log in with email and password"),
             keep_menu_open = true,
             callback = function(touchmenu_instance)
@@ -691,6 +700,81 @@ function Discord:getSettingsMenu()
                 return T(_("Hidden servers (%1)"), util.tableSize(self.settings.hidden_guilds or {}))
             end,
             callback = function() self:showHiddenGuilds() end,
+        },
+        {
+            text = _("Network"),
+            sub_item_table_func = function() return self:getNetworkMenu() end,
+        },
+    }
+end
+
+function Discord:getNetworkMenu()
+    local function reconnect()
+        Net.configure(self.settings)
+        -- Drop the current connection so the new settings are used right away
+        if Gateway.state ~= "disconnected" then
+            Gateway:disconnect(true) -- keep the session: it is resumed on the new connection
+            self:updateConnection()
+        end
+    end
+    return {
+        {
+            text = _("Verify server certificates"),
+            help_text = _("Checks that you are really talking to Discord, so nobody on the same network can read your login. Turn it off only if connections fail because the device clock is wrong."),
+            checked_func = function() return self.settings.verify_tls ~= false end,
+            callback = function()
+                local turning_off = self.settings.verify_tls ~= false
+                local function apply()
+                    self.settings.verify_tls = not turning_off
+                    self:saveSettings()
+                    reconnect()
+                end
+                if turning_off then
+                    UIManager:show(ConfirmBox:new{
+                        text = _("Without certificate checks, someone on the same network could read your Discord login. Only do this on a network you trust, and turn it back on when you can."),
+                        ok_text = _("Turn off"),
+                        ok_callback = apply,
+                    })
+                else
+                    apply()
+                end
+            end,
+        },
+        {
+            text_func = function()
+                local proxy = self.settings.proxy
+                return T(_("HTTP proxy: %1"), (proxy and proxy ~= "") and proxy or _("none"))
+            end,
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                local dialog
+                dialog = InputDialog:new{
+                    title = _("HTTP proxy"),
+                    description = _("host:port of an HTTP proxy that supports CONNECT. Leave empty to connect directly."),
+                    input = self.settings.proxy or "",
+                    buttons = {{
+                        { text = _("Cancel"), id = "close", callback = function() UIManager:close(dialog) end },
+                        {
+                            text = _("Save"),
+                            is_enter_default = true,
+                            callback = function()
+                                local value = util.trim(dialog:getInputText())
+                                UIManager:close(dialog)
+                                if value ~= "" and not value:gsub("^%a+://", ""):match("^[^:/]+:%d+/?$") then
+                                    UIManager:show(InfoMessage:new{ text = _("Use the form host:port, e.g. 192.168.1.10:3128") })
+                                    return
+                                end
+                                self.settings.proxy = value ~= "" and value or nil
+                                self:saveSettings()
+                                reconnect()
+                                if touchmenu_instance then touchmenu_instance:updateItems() end
+                            end,
+                        },
+                    }},
+                }
+                UIManager:show(dialog)
+                dialog:onShowKeyboard()
+            end,
         },
     }
 end
@@ -1311,6 +1395,63 @@ function Discord:finishLogin(token, touchmenu_instance)
         touchmenu_instance:updateItems()
     end
     self:updateConnection()
+end
+
+--- QR code login: scan with the Discord app (Settings → Scan QR Code) and approve.
+function Discord:loginWithQR(touchmenu_instance)
+    NetworkMgr:runWhenOnline(function()
+        local RemoteAuth = require("discord_remoteauth")
+        local QRLogin = require("discord_qrlogin")
+        local session, screen, tick
+        local function finish()
+            if tick then UIManager:unschedule(tick) tick = nil end
+            if session then session:stop() end
+        end
+        local function errorMessage(err)
+            err = tostring(err)
+            if err == "expired" then
+                return _("The QR code expired. Close this screen and try again.")
+            elseif err:match("^refused:") then
+                return _("Discord refused the login (it may want a captcha). Log in with a token instead.")
+            elseif Net.isCertError(err) then
+                return DiscordAPI.certErrorText()
+            end
+            return T(_("QR login failed: %1"), err)
+        end
+        session = RemoteAuth.new(DiscordAPI:new{}, {
+            on_qr = function(url) screen:setQR(url) end,
+            on_user = function(user)
+                screen:setStatus(T(_("Hi %1! Now tap \"Log in\" on your phone."), user.username or "?"))
+            end,
+            on_token = function(token)
+                finish()
+                screen:dismiss()
+                self:withLoading(_("Checking token…"), function()
+                    self:finishLogin(token, touchmenu_instance)
+                end)
+            end,
+            on_error = function(err)
+                finish()
+                screen:setStatus(errorMessage(err))
+            end,
+            on_cancel = function()
+                finish()
+                screen:setStatus(_("The login was cancelled on the phone."))
+            end,
+        })
+        screen = QRLogin:new{ cancel_callback = finish }
+        UIManager:show(screen)
+        UIManager:forceRePaint()
+        local ok, err = session:start()
+        if not ok then
+            screen:setStatus(errorMessage(err))
+            return
+        end
+        tick = function()
+            if session:poll() then UIManager:scheduleIn(0.5, tick) end
+        end
+        UIManager:scheduleIn(0.2, tick)
+    end)
 end
 
 function Discord:loginWithTokenDialog(touchmenu_instance)

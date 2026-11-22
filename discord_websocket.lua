@@ -7,10 +7,10 @@ Call `poll()` regularly to read incoming frames.
 @module koplugin.discord.websocket
 ]]
 
+local Net = require("discord_net")
 local bit = require("bit")
 local mime = require("mime")
-local socket = require("socket")
-local ssl = require("ssl")
+local sha2 = require("ffi/sha2")
 
 local WebSocket = {}
 WebSocket.__index = WebSocket
@@ -35,23 +35,15 @@ end
 function WebSocket.connect(url, headers, timeout)
     local scheme, host, port, path = parseUrl(url)
     if not scheme then return nil, "invalid url" end
-    local tcp = socket.tcp()
-    tcp:settimeout(timeout or 15)
-    local ok, err = tcp:connect(host, port)
-    if not ok then return nil, err end
-    local conn = tcp
+    -- TLS with certificate checks, through the proxy if one is set
+    local conn, err
     if scheme == "wss" then
-        conn, err = ssl.wrap(tcp, {
-            mode = "client",
-            protocol = "any",
-            verify = "none",
-            options = { "all", "no_sslv2", "no_sslv3" },
-        })
-        if not conn then tcp:close() return nil, err end
-        conn:sni(host)
-        ok, err = conn:dohandshake()
-        if not ok then conn:close() return nil, err end
+        conn, err = Net.connect(host, port, timeout or 15)
+    else
+        conn, err = Net.tcp(host, port, timeout or 15)
     end
+    if not conn then return nil, err end
+    local ok
 
     local key = mime.b64(randomBytes(16))
     local req = {
@@ -73,10 +65,19 @@ function WebSocket.connect(url, headers, timeout)
         conn:close()
         return nil, "handshake failed: " .. tostring(status)
     end
+    local accept
     repeat
         local line = conn:receive("*l")
         if not line then conn:close() return nil, "handshake failed" end
+        local name, value = line:match("^([^:]+):%s*(.-)%s*$")
+        if name and name:lower() == "sec-websocket-accept" then accept = value end
     until line == ""
+    -- The server must prove it read our key (RFC 6455 section 4.2.2)
+    local expected = mime.b64(sha2.hex2bin(sha2.sha1(key .. "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")))
+    if accept ~= expected then
+        conn:close()
+        return nil, "handshake failed: bad Sec-WebSocket-Accept"
+    end
 
     conn:settimeout(0)
     return setmetatable({

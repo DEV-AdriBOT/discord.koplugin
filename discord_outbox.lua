@@ -44,7 +44,7 @@ local function save()
     os.rename(path() .. ".tmp", path())
 end
 
---- Queues a message. reply: { id, guild_id } or nil. due: Unix time before which it
+--- Queues a message. reply: { id, guild_id, no_ping } or nil. due: Unix time before which it
 -- must not be sent (scheduled messages). Returns the entry.
 function Outbox.add(channel_id, content, reply, due)
     local entries = load()
@@ -52,7 +52,7 @@ function Outbox.add(channel_id, content, reply, due)
         id = string.format("%d-%d", os.time(), #entries + math.random(1000)),
         channel_id = channel_id,
         content = content,
-        reply = reply and { id = reply.id, guild_id = reply.guild_id } or nil,
+        reply = reply and { id = reply.id, guild_id = reply.guild_id, no_ping = reply.no_ping } or nil,
         nonce = DiscordAPI.makeNonce(),
         time = os.time(),
         due = due,
@@ -136,7 +136,7 @@ function Outbox.flush(api)
         if e.error or Outbox.isScheduled(e) then
             i = i + 1 -- failed for good (waits for the user) or not due yet
         else
-            local reply = e.reply and { id = e.reply.id, guild_id = e.reply.guild_id } or nil
+            local reply = e.reply and { id = e.reply.id, guild_id = e.reply.guild_id, no_ping = e.reply.no_ping } or nil
             local ok, data, code = api:sendMessage(e.channel_id, e.content, reply, e.nonce)
             if ok then
                 table.remove(entries, i)

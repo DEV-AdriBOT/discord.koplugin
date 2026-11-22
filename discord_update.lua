@@ -5,6 +5,7 @@ Updates the plugin from the latest GitHub release.
 ]]
 
 local DataStorage = require("datastorage")
+local Net = require("discord_net")
 local http = require("socket.http")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
@@ -44,7 +45,7 @@ local function fetch(url, accept)
         -- A fresh sink per hop: only the final response's body is kept
         local chunks = {}
         socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
-        local code, resp_headers, status = socket.skip(1, http.request{
+        local code, resp_headers, status = socket.skip(1, http.request(Net.prepare{
             url = url,
             redirect = false,
             sink = ltn12.sink.table(chunks),
@@ -52,7 +53,7 @@ local function fetch(url, accept)
                 ["User-Agent"] = USER_AGENT,
                 ["Accept"] = accept or "application/vnd.github+json",
             },
-        })
+        }))
         socketutil:reset_timeout()
         if not resp_headers then return false, status or code end
         if (code == 301 or code == 302 or code == 303 or code == 307 or code == 308) and resp_headers.location then
