@@ -90,12 +90,12 @@ function Net.tlsParams()
     }
     if Net.verify then
         local ca = Net.caFile()
-        if ca then
-            params.verify = { "peer" }
-            params.cafile = ca
-        else
-            logger.warn("Discord: no CA bundle found, server certificates are not checked")
+        if not ca then
+            logger.warn("Discord: no CA bundle found, refusing secure connection")
+            return nil, "server certificate verification unavailable: no CA bundle found"
         end
+        params.verify = { "peer" }
+        params.cafile = ca
     end
     return params
 end
@@ -135,9 +135,10 @@ end
 
 --- Opens a TLS connection to host:port (SNI, certificate and host name checks).
 function Net.connect(host, port, timeout)
+    local params, perr = Net.tlsParams()
+    if not params then return nil, perr end
     local sock, err = Net.tcp(host, port, timeout)
     if not sock then return nil, err end
-    local params = Net.tlsParams()
     local conn, werr = ssl.wrap(sock, params)
     if not conn then
         sock:close()
