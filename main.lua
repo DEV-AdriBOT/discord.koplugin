@@ -264,6 +264,7 @@ function Discord:onReaderReady()
     if self.settings.statusbar_counter then StatusBar.attach(self.ui) end
     local ok, page = pcall(function() return self.ui:getCurrentPage() end)
     if ok then self.current_page = page end
+    pcall(require("discord_bookclub").startSession, self)
     if self.settings.share_reading then
         self:updateConnection()
         self:updateActivity(true)
@@ -274,6 +275,7 @@ function Discord:onPageUpdate(pageno)
     self.current_page = pageno
     if self.settings.share_reading then self:updateActivity() end
     if shared.reading then
+        pcall(require("discord_bookclub").trackPage, self, pageno)
         local ok, err = pcall(require("discord_bookclub").onPage, self, pageno)
         if not ok then logger.warn("Discord: book club progress failed", err) end
     end
@@ -287,6 +289,10 @@ function Discord:onAnnotationsModified(items)
 end
 
 function Discord:onCloseDocument()
+    if shared.reading then
+        local ok, err = pcall(require("discord_bookclub").onClose, self)
+        if not ok then logger.warn("Discord: book club summary failed", err) end
+    end
     shared.reading = false
     StatusBar.detach()
     if Gateway.activity then Gateway:setActivity(nil) end
@@ -1229,6 +1235,7 @@ function Discord:getBookClubMenu()
     end
     table.insert(items, toggle(_("Send when a chapter is finished"), "chapters"))
     table.insert(items, toggle(_("Send my highlights"), "highlights"))
+    table.insert(items, toggle(_("Send a summary when I close the book"), "summary"))
     table.insert(items, {
         text = _("Send my progress now"),
         enabled_func = function() return club().channel ~= nil end,

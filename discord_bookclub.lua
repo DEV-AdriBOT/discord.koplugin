@@ -18,6 +18,7 @@ Club.DEFAULTS = {
     step = 10,
     chapters = false,   -- send when a chapter is finished
     highlights = true,
+    summary = false,    -- send a summary of the reading session when the book is closed
     last_pct = 0,
     last_chapter = nil,
     finished = false,
@@ -115,6 +116,7 @@ function Club.onAnnotation(plugin, items)
     local club = Club.get(ui)
     if not club.enabled or not club.highlights or not club.channel then return end
     if not (items and items.nb_highlights_added and items[1]) then return end
+    if plugin.session then plugin.session.highlights = plugin.session.highlights + 1 end
     local item = items[1]
     local text = item.text and item.text:gsub("%s+", " ")
     if not text or text == "" then return end
@@ -124,6 +126,82 @@ function Club.onAnnotation(plugin, items)
     local msg = head .. "\n" .. quote
     if item.note and item.note ~= "" then msg = msg .. "\n" .. DiscordAPI.cleanEmoji(item.note, true) end
     Club.send(plugin, club, msg:sub(1, 1900))
+end
+
+-- Reading session: time, pages and highlights since the book was opened
+
+local IDLE_LIMIT = 180 -- seconds; a longer pause between page turns is not reading time
+local MIN_SESSION = 120 -- sessions shorter than this are not worth a message
+
+--- Starts a session (the book has just been opened).
+function Club.startSession(plugin)
+    local ui = plugin.ui
+    local ok, page = pcall(function() return ui:getCurrentPage() end)
+    local now = os.time()
+    plugin.session = {
+        start = now,
+        last_event = now,
+        active = 0,
+        start_page = ok and page or nil,
+        first_pct = ok and page and percent(ui, page) or nil,
+        pages = {},
+        highlights = 0,
+    }
+end
+
+--- Records a page turn in the session.
+function Club.trackPage(plugin, pageno)
+    local session = plugin.session
+    if not session then return end
+    local now = os.time()
+    session.active = session.active + math.min(now - session.last_event, IDLE_LIMIT)
+    session.last_event = now
+    if pageno then session.pages[pageno] = true end
+end
+
+local function minutes(seconds)
+    local m = math.floor(seconds / 60 + 0.5)
+    if m >= 60 then
+        return string.format(_("%d h %d min"), math.floor(m / 60), m % 60)
+    end
+    return string.format(_("%d min"), m)
+end
+
+--- Text of the session summary, or nil if there is nothing worth saying.
+function Club.summaryText(plugin)
+    local ui = plugin.ui
+    local session = plugin.session
+    if not session then return nil end
+    Club.trackPage(plugin, nil)
+    if session.active < MIN_SESSION then return nil end
+    local pages = 0
+    for __ in pairs(session.pages) do pages = pages + 1 end
+    local last = plugin.current_page
+    local last_pct = last and percent(ui, last)
+    local parts = { string.format(_("Reading session of **%s**: %s"), title(ui), minutes(session.active)) }
+    if pages > 0 then
+        table.insert(parts, string.format(_("%d pages"), pages))
+    end
+    if session.highlights > 0 then
+        table.insert(parts, string.format(_("%d highlights"), session.highlights))
+    end
+    local text = table.concat(parts, " · ")
+    if session.first_pct and last_pct and last_pct ~= session.first_pct then
+        text = text .. string.format("\n%d%% → %d%%", session.first_pct, last_pct)
+    end
+    return text
+end
+
+--- Called when the book is closed.
+function Club.onClose(plugin)
+    local club = Club.get(plugin.ui)
+    local session = plugin.session
+    plugin.session = nil
+    if not (session and club.enabled and club.summary and club.channel) then return end
+    plugin.session = session
+    local text = Club.summaryText(plugin)
+    plugin.session = nil
+    if text then Club.send(plugin, club, text) end
 end
 
 --- Sends the current progress right now.
