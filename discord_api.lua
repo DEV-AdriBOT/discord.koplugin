@@ -453,6 +453,40 @@ function DiscordAPI:ackMessage(channel_id, message_id)
     return self:post("/channels/" .. channel_id .. "/messages/" .. message_id .. "/ack", { token = rapidjson.null })
 end
 
+--- Marks a channel as unread after `previous_id`: Discord keeps that message as the
+-- last one read, so everything newer shows as new again.
+function DiscordAPI:markUnreadAfter(channel_id, previous_id)
+    return self:post("/channels/" .. channel_id .. "/messages/" .. previous_id .. "/ack", {
+        manual = true,
+        mention_count = 0,
+    })
+end
+
+--- Decimal id minus one (ids do not fit a Lua number exactly).
+function DiscordAPI.idDec(id)
+    local digits = {}
+    for d in id:gmatch("%d") do table.insert(digits, tonumber(d)) end
+    local i = #digits
+    while i >= 1 do
+        if digits[i] > 0 then
+            digits[i] = digits[i] - 1
+            break
+        end
+        digits[i] = 9
+        i = i - 1
+    end
+    return (table.concat(digits):gsub("^0+(%d)", "%1"))
+end
+
+--- Snowflake id that a message sent at this Unix time would have; used to ask for
+-- the messages around a date.
+function DiscordAPI.idFromTime(ts)
+    local ms = ts * 1000 - 1420070400000
+    if ms < 0 then ms = 0 end
+    -- a power of two multiplies a float exactly
+    return string.format("%.0f", ms * 4194304)
+end
+
 function DiscordAPI:openDM(user_id)
     return self:post("/users/@me/channels", { recipients = { user_id } })
 end

@@ -23,6 +23,7 @@ local Menu = require("ui/widget/menu")
 local NetworkMgr = require("ui/network/manager")
 local Emoji = require("discord_emoji")
 local Outbox = require("discord_outbox")
+local Shortcuts = require("discord_shortcuts")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
@@ -297,6 +298,12 @@ end
 function ChatView:renderContent(msg)
     if msg.deleted then return _("(deleted message)") end
     local text = msg.content or ""
+    -- Fenced code stays untouched by the formatting below and is shown as an indented block
+    local blocks = {}
+    text = text:gsub("```(%w*)[ \t]*\n?(.-)```", function(lang, body)
+        table.insert(blocks, { lang = lang, body = body })
+        return "\1" .. #blocks .. "\2"
+    end)
     local mentions = {}
     for __, u in ipairs(msg.mentions or {}) do
         mentions[u.id] = self:authorName(u)
@@ -321,13 +328,26 @@ function ChatView:renderContent(msg)
         end
         return os.date("%Y-%m-%d %H:%M", ts)
     end)
-    text = text:gsub("||(.-)||", "[spoiler: %1]")
+    if self.revealed and self.revealed[msg.id] then
+        text = text:gsub("||(.-)||", "[spoiler: %1]")
+    else
+        text = text:gsub("||(.-)||", "[spoiler]")
+    end
     text = text:gsub("%*%*(.-)%*%*", "%1")
     text = text:gsub("__(.-)__", "%1")
     text = text:gsub("~~(.-)~~", "%1")
     text = text:gsub("```%w*\n?", "")
     -- Markdown headings and subtext
     text = ("\n" .. text):gsub("\n%-?#+ ", "\n"):sub(2)
+    text = text:gsub("\1(%d+)\2", function(n)
+        local b = blocks[tonumber(n)]
+        if not b then return "" end
+        local lines = {}
+        for line in (b.body:gsub("\n$", "") .. "\n"):gmatch("(.-)\n") do
+            table.insert(lines, "  | " .. line)
+        end
+        return "\n[" .. (b.lang ~= "" and (b.lang .. " ") or "") .. _("code") .. "]\n" .. table.concat(lines, "\n") .. "\n"
+    end)
 
     local extras = {}
     for __, snap in ipairs(msg.message_snapshots or {}) do
@@ -763,6 +783,7 @@ function ChatView:saveCache()
 end
 
 function ChatView:markRead()
+    if self.unread_hold then return end
     local last = self.messages[#self.messages]
     if not last or last.id == self.acked_id then return end
     self.acked_id = last.id
@@ -770,6 +791,32 @@ function ChatView:markRead()
     if self.settings.mark_read ~= false then
         self.api:ackMessage(self.channel.id, last.id)
     end
+end
+
+--- Marks the channel as unread from this message on, so it comes back as "new".
+function ChatView:markUnreadFrom(msg)
+    local previous
+    for i, m in ipairs(self.messages) do
+        if m.id == msg.id then
+            previous = self.messages[i - 1] and self.messages[i - 1].id
+            break
+        end
+    end
+    previous = previous or DiscordAPI.idDec(msg.id)
+    local ok, err = self.api:markUnreadAfter(self.channel.id, previous)
+    if not ok then
+        UIManager:show(InfoMessage:new{ text = _("Could not mark as unread: ") .. tostring(err) })
+        return
+    end
+    -- Do not acknowledge the channel again while it is open
+    self.unread_hold = true
+    self.new_after = previous
+    self.acked_id = previous
+    Gateway.read_states[self.channel.id] = { last_message_id = previous, mention_count = 0 }
+    self:redraw()
+    self:scrollToNew()
+    UIManager:setDirty(self, "ui")
+    UIManager:show(Notification:new{ text = _("Marked as unread from here") })
 end
 
 --- Fetches messages newer than the last one we have. Returns the number added.
@@ -1241,6 +1288,7 @@ function ChatView:applyMentions(text)
     for name, id in pairs(self.mention_map) do
         text = text:gsub("@" .. name:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0"), "<@" .. id .. ">")
     end
+    text = Shortcuts.expand(text)
     return Emoji.resolve(text, self.guild and self.guild.id, self.emoji_map)
 end
 
@@ -1270,6 +1318,7 @@ function ChatView:send(text, edit_msg)
         return
     end
     if not edit_msg then self:setDraft(nil) end
+    self.unread_hold = nil
     self.reply_to = nil
     self.last_typing = nil
     self:addMessages({ data })
@@ -1525,12 +1574,116 @@ function ChatView:resultActions(msg, list_menu)
     UIManager:show(dialog)
 end
 
+--- Message id (or the id of a moment) from what the user typed: a message id, a
+-- Discord message link, a date (2026-11-05, 05/11/2026, 05.11.2026) with an optional
+-- time (14:30), "today", "yesterday" or "3d" (days ago).
+function ChatView:parseJumpTarget(input)
+    input = input:gsub("^%s+", ""):gsub("%s+$", "")
+    local link_id = input:match("channels/[%w@]+/%d+/(%d+)")
+    if link_id then return link_id, "message" end
+    if input:match("^%d+$") and #input >= 15 then return input, "message" end
+    local lower = input:lower()
+    local now = os.time()
+    local day = os.date("*t", now)
+    local y, mo, d
+    if lower:match("^today") then
+        y, mo, d = day.year, day.month, day.day
+    elseif lower:match("^yesterday") then
+        local t = os.date("*t", now - 86400)
+        y, mo, d = t.year, t.month, t.day
+    elseif lower:match("^%d+d$") then
+        local t = os.date("*t", now - tonumber(lower:match("^(%d+)d$")) * 86400)
+        y, mo, d = t.year, t.month, t.day
+    else
+        local a, b, c = input:match("^(%d%d%d%d)[%-/.](%d%d?)[%-/.](%d%d?)")
+        if a then
+            y, mo, d = tonumber(a), tonumber(b), tonumber(c)
+        else
+            a, b, c = input:match("^(%d%d?)[%-/.](%d%d?)[%-/.](%d%d%d%d)")
+            if a then y, mo, d = tonumber(c), tonumber(b), tonumber(a) end
+        end
+    end
+    if not y then return nil end
+    local hh, mm = input:match("(%d%d?):(%d%d)")
+    local ts = os.time{ year = y, month = mo, day = d, hour = tonumber(hh) or 0, min = tonumber(mm) or 0 }
+    if not ts then return nil end
+    return DiscordAPI.idFromTime(ts), "date", ts
+end
+
+function ChatView:jumpDialog()
+    local dialog
+    dialog = InputDialog:new{
+        title = _("Jump to date or message"),
+        description = _("A date (2026-11-05, 05/11/2026), with an optional time (14:30), \"today\", \"yesterday\", \"3d\" for days ago, a message id or a Discord message link."),
+        input = "",
+        buttons = {{
+            { text = _("Cancel"), id = "close", callback = function() UIManager:close(dialog) end },
+            {
+                text = _("Go"),
+                is_enter_default = true,
+                callback = function()
+                    local id, kind, ts = self:parseJumpTarget(dialog:getInputText())
+                    if not id then
+                        UIManager:show(InfoMessage:new{ text = _("Could not understand that. Try 2026-11-05 or a message id.") })
+                        return
+                    end
+                    UIManager:close(dialog)
+                    if kind == "date" and ts > os.time() then
+                        UIManager:show(Notification:new{ text = _("That date is in the future.") })
+                        return
+                    end
+                    self:jumpTo(id)
+                end,
+            },
+        }},
+    }
+    UIManager:show(dialog)
+    dialog:onShowKeyboard()
+end
+
 function ChatView:jumpTo(message_id)
     self.plugin:withLoading(_("Loading messages…"), function()
         self.around_id = message_id
         if not self:load() then self.around_id = nil end
         UIManager:show(Notification:new{ text = _("Showing older messages. Use Refresh to go back to the latest.") })
     end)
+end
+
+--- Fenced code blocks of a message: { { lang, body }, ... }
+function ChatView:codeBlocksOf(msg)
+    local blocks = {}
+    for lang, body in (msg.content or ""):gmatch("```(%w*)[ \t]*\n?(.-)```") do
+        table.insert(blocks, { lang = lang, body = (body:gsub("\n$", "")) })
+    end
+    return blocks
+end
+
+function ChatView:hasSpoilers(msg)
+    return (msg.content or ""):find("||", 1, true) ~= nil and (msg.content or ""):find("||.-||") ~= nil
+end
+
+--- Shows or hides the spoilers of one message.
+function ChatView:toggleSpoilers(msg)
+    self.revealed = self.revealed or {}
+    self.revealed[msg.id] = not self.revealed[msg.id] or nil
+    self:redraw()
+end
+
+--- Shows the code blocks of a message in a monospaced viewer.
+function ChatView:showCode(blocks)
+    local TextViewer = require("ui/widget/textviewer")
+    local parts = {}
+    for i, b in ipairs(blocks) do
+        if #blocks > 1 then
+            table.insert(parts, "--- " .. i .. (b.lang ~= "" and (" (" .. b.lang .. ")") or "") .. " ---")
+        end
+        table.insert(parts, b.body)
+    end
+    UIManager:show(TextViewer:new{
+        title = _("Code"),
+        text = table.concat(parts, "\n\n"),
+        monospace_font = true,
+    })
 end
 
 function ChatView:viewFull(msg)
@@ -1904,6 +2057,14 @@ function ChatView:messageActions(msg)
         end,
     }}
     table.insert(buttons, save_row)
+    table.insert(buttons, {{
+        text = _("Mark unread from here"),
+        enabled = not self.offline,
+        callback = function()
+            UIManager:close(dialog)
+            self:markUnreadFrom(msg)
+        end,
+    }})
     local versions = msg.edit_history and #msg.edit_history or 0
     if versions > 0 then
         table.insert(buttons, {{
@@ -1913,6 +2074,30 @@ function ChatView:messageActions(msg)
                 self:showVersions(msg)
             end,
         }})
+    end
+    local blocks = self:codeBlocksOf(msg)
+    local has_spoilers = self:hasSpoilers(msg)
+    if #blocks > 0 or has_spoilers then
+        local extra = {}
+        if has_spoilers then
+            table.insert(extra, {
+                text = (self.revealed and self.revealed[msg.id]) and _("Hide spoilers") or _("Reveal spoilers"),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:toggleSpoilers(msg)
+                end,
+            })
+        end
+        if #blocks > 0 then
+            table.insert(extra, {
+                text = T(_("Code (%1)"), #blocks),
+                callback = function()
+                    UIManager:close(dialog)
+                    self:showCode(blocks)
+                end,
+            })
+        end
+        table.insert(buttons, extra)
     end
     if self.offline then
         -- Only reading actions make sense without network
@@ -2068,6 +2253,17 @@ function ChatView:showMenu()
             },
             {
                 {
+                    text = _("Jump to date or message"),
+                    enabled = not self.offline,
+                    callback = function() close() self:jumpDialog() end,
+                },
+                {
+                    text = _("Shortcuts"),
+                    callback = function() close() self:showShortcuts() end,
+                },
+            },
+            {
+                {
                     text = _("Members"),
                     enabled = not self.offline,
                     callback = function() close() require("discord_members").show(self.plugin, self) end,
@@ -2130,6 +2326,14 @@ function ChatView:showMenu()
         },
     }
     UIManager:show(dialog)
+end
+
+function ChatView:showShortcuts()
+    local lines = { _("Write these at the start of a message:"), "" }
+    for __, row in ipairs(Shortcuts.list()) do
+        table.insert(lines, row[1] .. "  —  " .. row[2])
+    end
+    UIManager:show(InfoMessage:new{ text = table.concat(lines, "\n") })
 end
 
 function ChatView:pickFont()
