@@ -511,10 +511,11 @@ end
 
 --- Are we a member (following) of this thread?
 function DiscordAPI:isThreadMember(thread_id)
-    local ok, __, code = self:get("/channels/" .. thread_id .. "/thread-members/@me")
-    if ok then return true end
-    if code == 404 then return false end
-    return nil
+    -- GET /thread-members/@me is bot-only. A thread's channel object includes
+    -- `member` when the current user follows it; its absence means not joined.
+    local ok, channel = self:getChannel(thread_id)
+    if not ok or type(channel) ~= "table" then return nil end
+    return channel.member ~= nil
 end
 
 function DiscordAPI:joinThread(thread_id)
