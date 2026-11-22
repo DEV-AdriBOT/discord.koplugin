@@ -91,13 +91,26 @@ function Files.isReadable(path)
     return ext ~= nil and READABLE[ext:lower()] == true
 end
 
---- Folder where downloads go: the one chosen in the settings, else "Discord" inside
--- KOReader's home folder (or its data folder when there is none).
+-- Where e-readers keep the user's documents, in order of preference.
+local DOCUMENT_DIRS = { "/mnt/us/documents", "/mnt/onboard", "/sdcard/Documents" }
+
+--- Folder where downloads go: the one chosen in the settings, else "Discord" inside the
+-- device's documents folder, KOReader's home folder, or its data folder.
 function Files.downloadDir(settings)
     local dir = settings and settings.download_dir
     if not dir or dir == "" then
-        local home = G_reader_settings and G_reader_settings:readSetting("home_dir")
-        dir = (home or (DataStorage:getDataDir() .. "/downloads")) .. "/Discord"
+        local base
+        for __, candidate in ipairs(DOCUMENT_DIRS) do
+            if lfs.attributes(candidate, "mode") == "directory" then
+                base = candidate
+                break
+            end
+        end
+        if not base then
+            base = (G_reader_settings and G_reader_settings:readSetting("home_dir"))
+                or (DataStorage:getDataDir() .. "/downloads")
+        end
+        dir = base .. "/Discord"
     end
     return dir
 end

@@ -231,7 +231,7 @@ function Discord:readingActivity()
         name = "KOReader",
         type = 0,
         details = title:sub(1, 128),
-        timestamps = { start = shared.reading_since * 1000 },
+        timestamps = { start = (shared.reading_since or os.time()) * 1000 },
     }
     local parts = {}
     if props.authors and props.authors ~= "" then
