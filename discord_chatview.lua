@@ -25,6 +25,7 @@ local Emoji = require("discord_emoji")
 local Outbox = require("discord_outbox")
 local Shortcuts = require("discord_shortcuts")
 local Files = require("discord_files")
+local Moderation = require("discord_moderation")
 local Notification = require("ui/widget/notification")
 local ScrollTextWidget = require("ui/widget/scrolltextwidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
@@ -2306,6 +2307,15 @@ function ChatView:messageActions(msg)
             end,
         }})
     end
+    if self.guild and not self.offline and Moderation.available(self, msg) then
+        table.insert(buttons, {{
+            text = _("Moderation…"),
+            callback = function()
+                UIManager:close(dialog)
+                Moderation.messageDialog(self, msg)
+            end,
+        }})
+    end
     table.insert(buttons, {{
         text = _("Look up a word"),
         callback = function()
@@ -2573,6 +2583,13 @@ function ChatView:showMenu()
                 {
                     text = _("Shortcuts"),
                     callback = function() close() self:showShortcuts() end,
+                },
+            },
+            {
+                {
+                    text = _("Audit log"),
+                    enabled = not self.offline and self.guild ~= nil and Moderation.can(self).audit == true,
+                    callback = function() close() Moderation.auditLog(self) end,
                 },
             },
             {

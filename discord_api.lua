@@ -522,6 +522,7 @@ local PERM_VIEW_CHANNEL = 0x400
 local PERM_SEND_MESSAGES = 0x800
 DiscordAPI.PERM_VIEW_CHANNEL = PERM_VIEW_CHANNEL
 DiscordAPI.PERM_SEND_MESSAGES = PERM_SEND_MESSAGES
+DiscordAPI.PERM_MANAGE_MESSAGES = 0x2000
 
 local function low32(v)
     v = tonumber(v) or 0
@@ -570,6 +571,42 @@ function DiscordAPI:permissionResolver(guild, member)
         end
         return perms
     end
+end
+
+--- Permissions that are only granted guild-wide (not per channel), including the ones
+-- above bit 31: bit_index is the position of the flag (kick = 1, view audit log = 7,
+-- moderate members = 40). The owner and administrators (bit 3) have every permission.
+function DiscordAPI:hasGuildPerm(guild, my_roles, bit_index)
+    if self.user and guild.owner_id == self.user.id then return true end
+    local function has(perms, idx)
+        local n = tonumber(perms) or 0
+        return math.floor(n / 2 ^ idx) % 2 == 1
+    end
+    local by_id = {}
+    for __, role in ipairs(guild.roles or {}) do by_id[role.id] = role.permissions end
+    local ids = { guild.id }
+    for __, rid in ipairs(my_roles or {}) do table.insert(ids, rid) end
+    for __, id in ipairs(ids) do
+        local perms = by_id[id]
+        if perms and (has(perms, 3) or has(perms, bit_index)) then return true end
+    end
+    return false
+end
+
+--- Times out a member until `until_ts` (Unix time); nil removes the timeout.
+function DiscordAPI:timeoutMember(guild_id, user_id, until_ts)
+    return self:patch("/guilds/" .. guild_id .. "/members/" .. user_id, {
+        communication_disabled_until = until_ts and os.date("!%Y-%m-%dT%H:%M:%S.000Z", until_ts) or rapidjson.null,
+    })
+end
+
+function DiscordAPI:kickMember(guild_id, user_id)
+    return self:delete("/guilds/" .. guild_id .. "/members/" .. user_id)
+end
+
+--- Latest entries of the audit log (read-only).
+function DiscordAPI:getAuditLog(guild_id, limit)
+    return self:get("/guilds/" .. guild_id .. "/audit-logs?limit=" .. (limit or 50))
 end
 
 function DiscordAPI.hasPerm(perms, flag)
