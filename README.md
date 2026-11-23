@@ -2,8 +2,6 @@
 
 A lightweight Discord client for [KOReader](https://github.com/koreader/koreader), designed for e-ink devices (tested on a Kindle Paperwhite 11).
 
-Text first: no voice or video, and images only when you ask for them. Just your servers, text channels and direct messages, readable on an e-reader.
-
 ## Features
 
 **Navigation**
@@ -139,4 +137,4 @@ This is an unofficial client that uses your user account through Discord's API a
 
 ## License
 
-[AGPL-3.0](LICENSE), same as KOReader.
+[AGPL-3.0](LICENSE).
