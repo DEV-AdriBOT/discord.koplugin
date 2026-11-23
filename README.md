@@ -123,7 +123,9 @@ The interface follows KOReader's language, or the one chosen in *Discord → Set
 | 日本語 | `ja` | 515 / 515 | ![100 %](https://img.shields.io/badge/100%25-brightgreen) |
 <!-- translations:end -->
 
-Want the plugin in your language, or spotted a wrong translation? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
+All translations are done by hand. I'm a native speaker of English and Spanish, and I'm learning Japanese. If you spot a translation mistake, especially in Japanese, please open a [translation issue](../../issues/new?template=translation.yml).
+
+Want the plugin in your language? No programming needed: see [CONTRIBUTING.md](CONTRIBUTING.md#translating-the-plugin), or open a [translation issue](../../issues/new?template=translation.yml).
 
 ## Contributing
 
